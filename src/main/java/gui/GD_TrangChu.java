@@ -29,14 +29,14 @@ public class GD_TrangChu extends JFrame implements ActionListener {
 	private JPanel panel;
 	private JButton btnTrangChu;
 	private final GD_BanSanPham banSP = new GD_BanSanPham();
-	private final GD_TraSanPham1 traSP = new GD_TraSanPham1();
+	private final GD_TraSanPham traSP = new GD_TraSanPham();
 	private final GD_TroGiup troGiup = new GD_TroGiup();
 	private final GD_QuanLyKhachHang khachHang = new GD_QuanLyKhachHang();
 	private final GD_QuanLyNhanVien nhanVien = new GD_QuanLyNhanVien();
 	private final GD_QuanLySanPham sanPham = new GD_QuanLySanPham();
 	private final GD_QuanLyHoaDon hoaDon = new GD_QuanLyHoaDon();
 	private final GD_ThongKe thongKe = new GD_ThongKe();
-	private final GD_KhuyenMai khuyenMai = new GD_KhuyenMai();
+	private final GD_QuanLyKhuyenMai khuyenMai = new GD_QuanLyKhuyenMai();
 	private JLabel backgound;
 	private JButton btnThoat;
 

@@ -14,7 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-public class GD_KhuyenMai extends JPanel implements ActionListener, MouseListener {
+public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseListener {
 
     private static final long serialVersionUID = 1L;
     private JTextField textTenKM;
@@ -35,7 +35,7 @@ public class GD_KhuyenMai extends JPanel implements ActionListener, MouseListene
     private JTable table;
 	private JComboBox txtLoai;
 
-    public GD_KhuyenMai() {
+    public GD_QuanLyKhuyenMai() {
         setBackground(new Color(246, 245, 255));
         setSize(1140, 865);
         setLayout(null);
@@ -286,7 +286,7 @@ public class GD_KhuyenMai extends JPanel implements ActionListener, MouseListene
                 GD_XemChiTietKhuyenMai xemchitietKhuyenMai = new GD_XemChiTietKhuyenMai(maKM, loaiKM); // Assuming GD_SuaKhuyenMai is the name of your edit interface class
                 xemchitietKhuyenMai.setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần sửa!");
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xem chi tiết!");
             }
 
         }
