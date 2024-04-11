@@ -9,9 +9,9 @@ public class HoaDon {
     private String loaiHD;
     private String ghiChu;
     private KhachHang khachHang;
-    private KhuyenMai khuyenMai;
+    private KhuyenMaiHoaDon khuyenMai;
 
-    public HoaDon(String maHD, KhachHang khachHang, NhanVien nhanVien, Date ngayXuat, String loaiHD, String ghiChu, KhuyenMai khuyenMai) {
+    public HoaDon(String maHD, KhachHang khachHang, NhanVien nhanVien, Date ngayXuat, String loaiHD, String ghiChu, KhuyenMaiHoaDon khuyenMai) {
         this.maHD = maHD;
         this.khachHang = khachHang;
         this.nhanVien = nhanVien;
@@ -76,11 +76,11 @@ public class HoaDon {
     }
 
     // Getter và Setter cho khuyenMai
-    public KhuyenMai getKhuyenMai() {
+    public KhuyenMaiHoaDon getKhuyenMai() {
         return khuyenMai;
     }
 
-    public void setKhuyenMai(KhuyenMai khuyenMai) {
+    public void setKhuyenMai(KhuyenMaiHoaDon khuyenMai) {
         this.khuyenMai = khuyenMai;
     }
 }
