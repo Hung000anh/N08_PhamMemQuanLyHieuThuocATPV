@@ -6,13 +6,23 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+
+import dao.DangNhap_Dao;
+
+
 
 public class GD_DangNhap extends JFrame implements ActionListener{
 
@@ -22,8 +32,9 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 	private JTextField textMK;
 	private JTextField textTenDangNhap;
 	private JButton btnDangNhap ;
+	private DangNhap_Dao dangNhap_dao;
 	private String username;
-	private GD_TrangChu gD_TrangChu1;
+	private GD_TrangChu gD_TrangChu;
 	
 	/**
 	 * Launch the application.
@@ -46,7 +57,7 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 	 */
 	public GD_DangNhap() {
 		initialize();
-		 gD_TrangChu1=new GD_TrangChu();
+		 gD_TrangChu=new GD_TrangChu();
 	}
 
 	/**
@@ -126,6 +137,35 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		  
+		  DataManager.setUserName(textTenDangNhap.getText());
+	      Object o = e.getSource();
+	      if (o.equals(btnDangNhap)) {
+	    	 
+	           username = textTenDangNhap.getText();
+	      
+	          String mkstr = textMK.getText();
+	          dangNhap_dao = new DangNhap_Dao();
+	          if (dangNhap_dao.Timkiem(username, mkstr) == true) {
+	        	 
+	        	  String roleName = dangNhap_dao.getRole(username, mkstr);
+	        	    if (roleName.equals("Quản lý")) {
+						DataManager.setRole("QL");
+						DataManager.setRolePassword("QLpassword");
+					} else if (roleName.equals("Nhân viên")) {
+						DataManager.setRole("NV");
+						DataManager.setRolePassword("NVpassword");
+					   
+					   
+					    gD_TrangChu.btnNhanVien.setEnabled(false);
+					   
+					}
+	            gD_TrangChu.setVisible(true);
+	           
+	                frame.dispose();
+	              
+	          } else {
+	              JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu!");
+	          }
+	      } 
 	}
 }
