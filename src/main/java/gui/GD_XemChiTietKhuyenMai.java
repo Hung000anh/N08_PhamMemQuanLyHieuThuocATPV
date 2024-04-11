@@ -231,6 +231,24 @@ public class GD_XemChiTietKhuyenMai extends JFrame implements ItemListener, Mous
         panel.setBorder(border);
         panel.setLayout(null);
         
+        JLabel lbGiamGia = new JLabel("Giảm giá cho sản phẩm:");
+        lbGiamGia.setFont(new Font("Arial", Font.BOLD, 16));
+        lbGiamGia.setBounds(10, 30, 196, 30);
+        panel.add(lbGiamGia); 
+        
+        txtGiamGia = new JTextField();
+        txtGiamGia.setColumns(10);
+        txtGiamGia.setBounds(200, 30, 86, 30);
+        txtGiamGia.setEditable(false);
+        panel.add(txtGiamGia);
+
+        
+        JLabel lblNewLabel_1_1 = new JLabel("%");
+        lblNewLabel_1_1.setFont(new Font("Arial", Font.BOLD, 16));
+        lblNewLabel_1_1.setBounds(300, 30, 20, 25);
+        panel.add(lblNewLabel_1_1);
+
+        
         // Create a table with appropriate columns
         String[] columns = {"Mã SP", "Mã SP", "Tên SP", "Loại SP", "Ngày Hết Hạn", "Ngày Sản Xuất", "Số Lượng Tồn", "Đơn Giá Khuyến Mãi"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
@@ -238,7 +256,7 @@ public class GD_XemChiTietKhuyenMai extends JFrame implements ItemListener, Mous
         
         // Create a scroll pane for the table
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10, 30, 986, 446);
+        scrollPane.setBounds(10, 60, 986, 426);
         panel.add(scrollPane);
         
         // Additional components can be added here if needed

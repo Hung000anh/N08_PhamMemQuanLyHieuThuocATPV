@@ -7,11 +7,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import dao.KhuyenMaiSanPham_Dao;
+import entity.KhuyenMaiSanPham;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseListener {
@@ -209,7 +213,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         	
         	},
         	new String[] {
-        		"STT", "M\u00E3 Khuy\u1EBFn m\u00E3i", "T\u00EAn khuy\u1EBFn m\u00E3i", "Lo\u1EA1i ch\u01B0\u01A1ng tr\u00ECnh", "Ng\u00E0y b\u1EAFt \u0111\u1EA7u", "Ng\u00E0y k\u1EBFt th\u00FAc", "tr\u1EA1ng th\u00E1i"
+        		"STT", "M\u00E3 Khuy\u1EBFn m\u00E3i", "T\u00EAn khuy\u1EBFn m\u00E3i", "Lo\u1EA1i ch\u01B0\u01A1ng tr\u00ECnh", "Ng\u00E0y b\u1EAFt \u0111\u1EA7u", "Ng\u00E0y k\u1EBFt th\u00FAc" ,"tr\u1EA1ng th\u00E1i", "Giảm giá"
         	}
         ));
         addSampleData();
@@ -288,7 +292,6 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
             } else {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xem chi tiết!");
             }
-
         }
         if (o.equals(btnXoa)) {
             int selectedRow = table.getSelectedRow();
@@ -335,11 +338,17 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         int rowCount = model.getRowCount();
 
         for (int i = rowCount - 1; i >= 0; i--) {
-            String tenKM1 = (String) model.getValueAt(i, 2);
+            
             String maKM1 = (String) model.getValueAt(i, 1);
+            String tenKM1 = (String) model.getValueAt(i, 2);
             String loaiChuongTrinh = (String) model.getValueAt(i, 3);
-            String ngayBatDau = (String) model.getValueAt(i, 4);
-            String ngayKetThuc = (String) model.getValueAt(i, 5);
+            java.sql.Date date = (java.sql.Date) model.getValueAt(i, 4);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // Định dạng ngày theo ý muốn
+            String ngayBatDau = formatter.format(date); 
+            
+            java.sql.Date date2 = (java.sql.Date) model.getValueAt(i, 5);
+           
+            String ngayKetThuc = formatter.format(date2); 
             String trangThai1 = (String) model.getValueAt(i, 6);
 
             // Áp dụng các điều kiện lọc
@@ -361,39 +370,27 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
     
     private void addSampleData() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
+        KhuyenMaiSanPham_Dao ds = new KhuyenMaiSanPham_Dao();
+        ArrayList<KhuyenMaiSanPham> data = ds.docTubang();
+        String TrangThai;
+        String LoaiChuongTrinh;
+        int i = 0;
+        for(KhuyenMaiSanPham km : data)
+        {
+        	if(km.getTrangThai())
+        		TrangThai = "Kích hoạt";
+        	else
+        		TrangThai = "Không hoạt động";
+        	
+        	if(km.getLoaiChuongTrinh())
+        		LoaiChuongTrinh = "Khuyến mãi theo hóa đơn";
+        	else
+        		LoaiChuongTrinh = "Khuyến mãi theo sản phẩm";
+       
+    		Object[] rowData = { i, km.getMaKM(), km.getTenKM(),LoaiChuongTrinh, km.getNgayBatDau(), km.getNgayKetThuc(), TrangThai, km.getGiamGiaSanPham().toString()};
+    		model.addRow(rowData);
+        	i++;
+        }
 
-        // Khuyến mãi theo hóa đơn
-        model.addRow(new Object[] {1, "KM001", "Tết Nguyên Đán", "Khuyến mãi theo hóa đơn", "2024-01-20", "2024-02-05", "Kích hoạt"});
-        model.addRow(new Object[] {2, "KM002", "Tết Trung Thu", "Khuyến mãi theo hóa đơn", "2024-09-10", "2024-09-25", "Không hoạt động"});
-        model.addRow(new Object[] {3, "KM003", "Lễ Quốc Khánh", "Khuyến mãi theo hóa đơn", "2024-09-02", "2024-09-17", "Kích hoạt"});
-        model.addRow(new Object[] {4, "KM004", "Lễ Phục Sinh", "Khuyến mãi theo hóa đơn", "2024-04-15", "2024-04-30", "Kích hoạt"});
-        model.addRow(new Object[] {5, "KM005", "Ngày Nhà Giáo Việt Nam", "Khuyến mãi theo hóa đơn", "2024-11-20", "2024-12-05", "Không hoạt động"});
-        model.addRow(new Object[] {6, "KM006", "Ngày Phụ Nữ Việt Nam", "Khuyến mãi theo hóa đơn", "2024-10-20", "2024-11-05", "Kích hoạt"});
-        model.addRow(new Object[] {7, "KM007", "Ngày Thanh Niên Việt Nam", "Khuyến mãi theo hóa đơn", "2024-03-26", "2024-04-10", "Kích hoạt"});
-        model.addRow(new Object[] {8, "KM008", "Ngày Thống Nhất", "Khuyến mãi theo hóa đơn", "2024-04-30", "2024-05-15", "Không hoạt động"});
-        model.addRow(new Object[] {9, "KM009", "Ngày Quốc Tế Lao Động", "Khuyến mãi theo hóa đơn", "2024-05-01", "2024-05-16", "Kích hoạt"});
-        model.addRow(new Object[] {10, "KM010", "Ngày Quốc Tế Phụ Nữ", "Khuyến mãi theo hóa đơn", "2024-03-08", "2024-03-23", "Không hoạt động"});
-        model.addRow(new Object[] {11, "KM011", "Ngày Quốc Tế Thiếu Nhi", "Khuyến mãi theo hóa đơn", "2024-06-01", "2024-06-16", "Kích hoạt"});
-        model.addRow(new Object[] {12, "KM012", "Ngày Quốc Tế Tình Bạn", "Khuyến mãi theo hóa đơn", "2024-07-30", "2024-08-14", "Kích hoạt"});
-        model.addRow(new Object[] {13, "KM013", "Ngày Quốc Tế Hạnh Phúc", "Khuyến mãi theo hóa đơn", "2024-03-20", "2024-04-04", "Không hoạt động"});
-        model.addRow(new Object[] {14, "KM014", "Ngày Quốc Tế Y Tế", "Khuyến mãi theo hóa đơn", "2024-04-07", "2024-04-22", "Kích hoạt"});
-        model.addRow(new Object[] {15, "KM015", "Ngày Quốc Tế Trẻ Em Mất Cha Mẹ", "Khuyến mãi theo hóa đơn", "2024-06-01", "2024-06-16", "Kích hoạt"});
-
-        // Khuyến mãi theo sản phẩm
-        model.addRow(new Object[] {16, "KM016", "Lễ Tình Nhân", "Khuyến mãi theo sản phẩm", "2024-02-14", "2024-03-01", "Kích hoạt"});
-        model.addRow(new Object[] {17, "KM017", "Giỗ Tổ Hùng Vương", "Khuyến mãi theo sản phẩm", "2024-04-10", "2024-04-25", "Không hoạt động"});
-        model.addRow(new Object[] {18, "KM018", "Lễ Hội Đua Ngựa", "Khuyến mãi theo sản phẩm", "2024-03-25", "2024-04-09", "Kích hoạt"});
-        model.addRow(new Object[] {19, "KM019", "Lễ Hội Đèn Đỏ", "Khuyến mãi theo sản phẩm", "2024-12-15", "2025-01-01", "Không hoạt động"});
-        model.addRow(new Object[] {20, "KM020", "Lễ Hội Cà Phê", "Khuyến mãi theo sản phẩm", "2024-11-10", "2024-11-25", "Kích hoạt"});
-        model.addRow(new Object[] {21, "KM021", "Lễ Hội Văn Hóa Dân Gian", "Khuyến mãi theo sản phẩm", "2024-04-20", "2024-05-05", "Không hoạt động"});
-        model.addRow(new Object[] {22, "KM022", "Lễ Hội Lửa Và Nước", "Khuyến mãi theo sản phẩm", "2024-08-30", "2024-09-14", "Kích hoạt"});
-        model.addRow(new Object[] {23, "KM023", "Lễ Hội Hoa Anh Đào", "Khuyến mãi theo sản phẩm", "2024-04-05", "2024-04-20", "Kích hoạt"});
-        model.addRow(new Object[] {24, "KM024", "Lễ Hội Âm Nhạc", "Khuyến mãi theo sản phẩm", "2024-07-20", "2024-08-04", "Không hoạt động"});
-        model.addRow(new Object[] {25, "KM025", "Lễ Hội Trăng Rằm", "Khuyến mãi theo sản phẩm", "2024-08-14", "2024-08-29", "Kích hoạt"});
-        model.addRow(new Object[] {26, "KM026", "Lễ Hội Hoa Tulip", "Khuyến mãi theo sản phẩm", "2024-04-15", "2024-04-30", "Không hoạt động"});
-        model.addRow(new Object[] {27, "KM027", "Lễ Hội Nghệ Thuật Đường Phố", "Khuyến mãi theo sản phẩm", "2024-11-05", "2024-11-20", "Kích hoạt"});
-        model.addRow(new Object[] {28, "KM028", "Lễ Hội Biển", "Khuyến mãi theo sản phẩm", "2024-06-20", "2024-07-05", "Kích hoạt"});
-        model.addRow(new Object[] {29, "KM029", "Lễ Hội Lồng Đèn", "Khuyến mãi theo sản phẩm", "2024-09-15", "2024-09-30", "Không hoạt động"});
-        model.addRow(new Object[] {30, "KM030", "Lễ Hội Rượu Vang", "Khuyến mãi theo sản phẩm", "2024-12-20", "2025-01-05", "Kích hoạt"});
     }
 }

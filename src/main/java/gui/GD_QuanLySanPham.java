@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -98,6 +99,7 @@ public class GD_QuanLySanPham extends JPanel {
 		txtAnh.setBackground(Color.LIGHT_GRAY);
 		txtAnh.setBounds(865, 39, 220, 134);
 		tt_KhachHang.add(txtAnh);
+		txtAnh.setIcon(new ImageIcon("image//thuocVitamin.jpg"));
 		
 		JLabel ngaySX = new JLabel("Ngày sản xuất:");
 		ngaySX.setFont(new Font("Arial", Font.BOLD, 16));
