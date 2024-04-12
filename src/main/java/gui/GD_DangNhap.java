@@ -165,8 +165,8 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 	              JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu!");
 	          }
 	      } else if(o.equals(btnQuenMK)) {
-	    	  //	GD_QuenMatKhau qmk=new GD_QuenMatKhau();
-	    	  //	qmk.setVisible(true);
+	    	  	GD_QuenMatKhau qmk=new GD_QuenMatKhau();
+	    	  	qmk.setVisible(true);
 	    	  	frame.dispose();
 	      }
 	}
