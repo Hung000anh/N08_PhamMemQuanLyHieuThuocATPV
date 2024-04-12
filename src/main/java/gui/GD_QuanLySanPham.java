@@ -197,7 +197,7 @@ public class GD_QuanLySanPham extends JPanel {
 		btnTim.setBorderPainted(false);
 		btnTim.setBackground(Color.decode("#4a83d7"));
 		btnTim.setBounds(480, 38, 120, 40);
-		chucNang.add(btnTim);
+		chucNang.add(btnTim); 
 		
 		textField = new JTextField();
 		textField.setColumns(10);

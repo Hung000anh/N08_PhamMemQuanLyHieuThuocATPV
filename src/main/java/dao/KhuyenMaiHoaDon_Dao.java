@@ -66,4 +66,15 @@ public class KhuyenMaiHoaDon_Dao {
             return false;
         }
     }
+    public KhuyenMaiHoaDon timKhuyenMai(String maKM)
+    {
+    	for(KhuyenMaiHoaDon km : DanhSachKhuyenMaiHoaDon)
+    	{
+    		if(km.getMaKM().equals(maKM))
+    		{
+    			return km;
+    		}
+    	}
+    	return null;
+    }
 }
