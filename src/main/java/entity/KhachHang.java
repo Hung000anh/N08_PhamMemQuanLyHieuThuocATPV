@@ -7,6 +7,8 @@ public class KhachHang {
     private boolean gioiTinh;
     private int tuoi;
 
+    public KhachHang(String maKhachHang) { this.maKhachHang = maKhachHang; }
+
     public KhachHang(String maKhachHang, String tenKhachHang, String soDienThoai, boolean gioiTinh, int tuoi) {
         this.maKhachHang = maKhachHang;
         this.tenKhachHang = tenKhachHang;
