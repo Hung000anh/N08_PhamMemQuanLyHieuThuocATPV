@@ -13,8 +13,13 @@ import entity.NhanVien;
 
 public class NhanVien_Dao {
 
+	private ArrayList<NhanVien> dsNhanVien;
+	
+	public NhanVien_Dao() {
+		dsNhanVien = new ArrayList<NhanVien>();
+	}
+
 	public ArrayList<NhanVien> getAllNhanVien() {
-		ArrayList<NhanVien> dsNhanVien = new ArrayList<NhanVien>();
 			try {
 				ConnectDB.getConnection();
 			} catch (Exception e) {
@@ -161,6 +166,7 @@ public class NhanVien_Dao {
 		}
 		return nv;
 	}
+
 	public ArrayList<NhanVien> getNhanVienTheoTen(String tenNV) {
 		ArrayList<NhanVien> dsNhanVien = new ArrayList<NhanVien>();
 		try {

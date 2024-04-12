@@ -14,6 +14,7 @@ import entity.*;
 public class HoaDon_DAO {
     private ArrayList<HoaDon> DanhSachHoaDon;
     
+    
     public HoaDon_DAO() {
     	DanhSachHoaDon = new ArrayList<HoaDon>();
     }
@@ -29,7 +30,7 @@ public class HoaDon_DAO {
             	String maKhachHang = rs.getString(2);
             	KhachHang khachHang = new KhachHang(maKhachHang);
             	String maNV = rs.getString(3);
-            	NhanVien nhanVien = new NhanVien(maKhachHang);
+            	NhanVien nhanVien = (new NhanVien_Dao()).getNhanVienTheoMa(maNV);
             	Date ngayXuat = rs.getDate(4);;
             	String loaiHD = rs.getString(5);
             	String ghiChu = rs.getString(6);
@@ -37,6 +38,7 @@ public class HoaDon_DAO {
             	
             	KhuyenMaiHoaDon_Dao ds = new KhuyenMaiHoaDon_Dao();
             	ds.docTubang();
+            
             	HoaDon HoaDon = new HoaDon(maHD, khachHang, nhanVien, ngayXuat, loaiHD, ghiChu, ds.timKhuyenMai(maKhuyenMai));
             	DanhSachHoaDon.add(HoaDon);
             	

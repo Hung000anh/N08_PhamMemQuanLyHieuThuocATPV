@@ -16,12 +16,31 @@ public class SanPham implements Serializable{
 	private String hinhAnhSanPham;
 	private KhuyenMaiSanPham KhuyenMai;
 	
-	
+
+	public SanPham(String maKM) {
+		super();
+		this.maKM = maKM;
+	}
 	
 	
 	public SanPham(String maKM, String tenKM, String loai, Date ngayHetHan, Date ngaySanXuat, Double donGiaNhap,
 			Double donGiaBan, int soluongTon, String donViTinh, String hinhAnhSanPham, KhuyenMaiSanPham khuyenMai) {
 		super();
+		this.maKM = maKM;
+		this.tenKM = tenKM;
+		this.loai = loai;
+		this.ngayHetHan = ngayHetHan;
+		this.ngaySanXuat = ngaySanXuat;
+		this.donGiaNhap = donGiaNhap;
+		this.donGiaBan = donGiaBan;
+		this.soluongTon = soluongTon;
+		DonViTinh = donViTinh;
+		this.hinhAnhSanPham = hinhAnhSanPham;
+		KhuyenMai = khuyenMai;
+	}
+
+	public void set(String maKM, String tenKM, String loai, Date ngayHetHan, Date ngaySanXuat, Double donGiaNhap,
+			Double donGiaBan, int soluongTon, String donViTinh, String hinhAnhSanPham, KhuyenMaiSanPham khuyenMai) {
 		this.maKM = maKM;
 		this.tenKM = tenKM;
 		this.loai = loai;

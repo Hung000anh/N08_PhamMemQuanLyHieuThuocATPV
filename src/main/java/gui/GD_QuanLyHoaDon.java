@@ -227,7 +227,6 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		
 		list = hd_dao.docTubang();
 
-		/*
 		for (int i = 0; i < list.size(); i++) {
 			HoaDon hd = list.get(i);
 			// "STT", "Mã hóa đơn", "Mã sản phẩm", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"
@@ -239,11 +238,11 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 					hd.getKhachHang().getMaKhachHang(),
 					hd.getMaHD(),
 					hd.getNgayXuat(),
-					hd.getKhuyenMai().getMaKhuyenMai(),
+					hd.getKhuyenMai().getMaKM(),
 					"?", // chưa biết
 					hd.getGhiChu()
 			});
-		}			 */
+		}
 	}
 
 	@Override
