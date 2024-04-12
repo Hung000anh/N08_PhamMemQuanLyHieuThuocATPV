@@ -85,7 +85,7 @@ public class DangNhap_Dao {
 		try {
 			ConnectDB.getConnection();
 			Connection con = ConnectDB.getConnection();
-			String sql = "select * from NhanVien where soDienThoai = N'"+SDT+"'";
+			String sql = "select * from NhanVien where sdt = N'"+SDT+"'";
 			Statement sta = con.createStatement();
 			ResultSet rs = sta.executeQuery(sql);
 			if(rs.next()) {
@@ -102,7 +102,7 @@ public class DangNhap_Dao {
 	    try {
 	    	ConnectDB.getConnection();
 	        Connection con = ConnectDB.getConnection();
-	        String sql = "select TaiKhoan.* from TaiKhoan inner join NhanVien on TaiKhoan.maTaiKhoan = NhanVien.maNhanVien where NhanVien.maNhanVien = '" + maNhanVien + "'";
+	        String sql = "select TaiKhoan.* from TaiKhoan inner join NhanVien on TaiKhoan.maTaiKhoan = NhanVien.maNV where NhanVien.maNV = '" + maNhanVien + "'";
 	        Statement stm = con.createStatement();
 	        ResultSet rs = stm.executeQuery(sql);
 	        if (rs.next()) {
@@ -125,7 +125,7 @@ public class DangNhap_Dao {
 	    	ConnectDB.getConnection();
 	        Connection con = ConnectDB.getConnection();
 	        // Kiểm tra xem mã nhân viên có tồn tại không
-	        String sqlCheck = "select maNhanVien from NhanVien where maNhanVien = N'"+maNhanVien+"'";
+	        String sqlCheck = "select maNV from NhanVien where maNV = N'"+maNhanVien+"'";
 	        Statement staCheck = con.createStatement();
 	        ResultSet rsCheck = staCheck.executeQuery(sqlCheck);
 	        if(rsCheck.next()) {
