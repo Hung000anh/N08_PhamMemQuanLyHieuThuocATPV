@@ -35,6 +35,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import dao.DangNhap_Dao;
+import dao.NhanVien_Dao;
+import entity.NhanVien;
+import entity.TaiKhoan;
+
 import javax.swing.JRadioButton;
 
 
@@ -53,6 +58,8 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener,MouseLis
 	private JTextField textMaNV;
 	private JTextField textTenKH;
 	private JTextField textSDT;
+	private NhanVien_Dao nv_dao=new NhanVien_Dao();
+	private NhanVien nv=new NhanVien();
 	private JButton openButton;
 	private Container pnSouth;
 	private JLabel imageLabel;
@@ -63,6 +70,7 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener,MouseLis
 	private JComboBox comboBoxTrangThai;
 	private JLabel anhNhanVien;
 	private JButton btnThem;
+	private DangNhap_Dao dangNhap_dao=new DangNhap_Dao();
 	private JButton btnXoaTrang ;
 	private 	JButton btnXoa;
 	private JButton btnSua ;
@@ -306,35 +314,433 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener,MouseLis
 		rdoNu.addActionListener(this);
 		table.addMouseListener(this);
 		comboBoxChucVu.addActionListener(this);
+		loadData();
+		loadMa();
 	}
+	private String thuTuNhanVienTrongNam() {
+		int sl = 0;
+		for (NhanVien nv : nv_dao.getAllNhanVien()) {
+			if (nv.getMaNV().substring(2, 4).equals("24"))
+				sl++;
+		}
+		String slString = String.format("%03d", sl + 1);
+		return slString;
+	}
+	private String generateRandomCode() {
+		Year year = Year.now();
+		String ma;
+		int lastTwoDigitsOfYear = year.getValue() % 100;
+		String lastTwoDigitsString = String.valueOf(lastTwoDigitsOfYear);
+
+		
+		if (comboBoxChucVu.getSelectedIndex() == 0)
+			ma = "QL";
+		else
+			ma = "NV";
+		ma += lastTwoDigitsString;
+		
+		if (rdoNam.isSelected())
+			ma += "1";
+		else
+			ma += "0";
+		
+		return ma + thuTuNhanVienTrongNam();
+	}
+
+	private void loadData() {
+		int i = 0;
+		String gioiTinh="";
+		Double luong;
+		String trangThaiLV="";
+		String chucVu="";
+		DecimalFormat formatter = new DecimalFormat("#,###");
+		for (NhanVien nv : nv_dao.getAllNhanVien()) {
+			i++;
+			if(nv.isGioiTinh()==true)
+				gioiTinh="Nam";
+			else
+				gioiTinh="Nữ";
+			if(nv.isTrangThaiLV()==true)
+				trangThaiLV="Có";
+			else
+				trangThaiLV="Không";
+			if(nv.isChucVu()==true)
+				chucVu="Quản lí";
+			else
+				chucVu="Nhân viên";
+			Object[] row = { i, nv.getMaNV(), nv.getTenNV(), nv.getSdt(), gioiTinh,formatter.format(nv.getLuong()),nv.getCaTruc(), nv.getNgaySinh(),
+					trangThaiLV,chucVu, nv.getHinhAnhNhanVien()};
+			model.addRow(row);
+		}
+	}
+	private void loadMa() {
+		String code;
+		code = generateRandomCode();
+		textMaNV.setText(code);
+	}
+	private void clearTable() {
+		while (table.getRowCount() > 0) {
+			model.removeRow(0);
+		}
+	}
+	public static int calculateAge(Date birthDate) {
+        LocalDate birth = birthDate.toLocalDate();
+        LocalDate today = LocalDate.now();
+
+        Period period = Period.between(birth, today);
+
+        return period.getYears();
+    }
+	private void xoaTrang() {
+		loadMa();
+		textTenKH.setText("");
+		textSDT.setText("");
+		rdoNam.setSelected(false);
+		rdoNu.setSelected(false);
+		textNgaySinh.setText("yyyy-MM-dd");
+		textLuong.setText("");
+		comboBoxCaTruc.setSelectedItem(1);
+		comboBoxChucVu.setSelectedItem(1);
+		comboBoxTrangThai.setSelectedItem(1);
+	}
+	  
+	public void them() {
+		String anh="";
+		if(rdoNam.isSelected()) {
+			anhNhanVien.setIcon(new ImageIcon("D:\\btLon\\pharmacyManagement\\image\\nhanvien_nam.png"));
+			anh="D:\\btLon\\pharmacyManagement\\image\\nhanvien_nam.png";}
+		else {
+			anhNhanVien.setIcon(new ImageIcon("D:\\btLon\\pharmacyManagement\\image\\nhanvien_nu.png"));
+			anh="D:\\btLon\\pharmacyManagement\\image\\nhanvien_nu.png";
+		}
+		
+		String ma = textMaNV.getText();
+		String hoTen = textTenKH.getText();
+		String sDT = textSDT.getText();
+		
+		boolean gt;
+		if (rdoNam.isSelected())
+			gt = true;
+		else
+			gt = false;
+		Date ngaySinh= Date.valueOf(textNgaySinh.getText()) ;
+		Double luong=Double.parseDouble(textLuong.getText());
+		String caTruc= comboBoxCaTruc.getSelectedItem().toString();
+		Boolean chucVu;
+		
+
+		
+		
+		int tuoi = calculateAge(ngaySinh);
+		if (!((sDT.length() > 0) && sDT.matches("\\d{10}"))) {
+			JOptionPane.showMessageDialog(this,
+				"Không được rỗng và số điện thoại phải có đủ 10 số");
+		
+		}
+		else {
+		if(tuoi<18)
+			JOptionPane.showMessageDialog(this, "Nhân viên này chưa đủ 18 tuổi");
+			
+		else {
+			if(luong<15000000)
+				JOptionPane.showMessageDialog(this, "Lương phải lớn hơn hoặc bằng 15000000");
+			else {
+				String role,mk;
+				boolean trangthai;
+			if(comboBoxChucVu.getSelectedItem().toString().equals("Quản lí")) {
+				chucVu=true;
+				role="Quản lý";
+				trangthai=true;
+				mk=ma;
+			}
+			else {
+				chucVu=false;
+				role="Nhân viên";
+				trangthai=true;
+				mk=ma;
+			}
+			
+			
+			NhanVien nv=new NhanVien(ma, hoTen, sDT, gt, luong, caTruc, ngaySinh, trangthai, chucVu, anh);
+			if (nv_dao.addNhanVien(nv)) {
+				JOptionPane.showMessageDialog(this, "Thêm thành công | Tài Khoản và Mật Khẩu của bạn là: "+ma+"\nVui lòng tiến hành đổi mật khẩu để tăng bảo mật !");
+				TaiKhoan tk= new TaiKhoan(ma, mk, trangthai, nv= new NhanVien(ma, hoTen, sDT, gt, luong, caTruc, ngaySinh, chucVu, trangthai, anh), role);
+				dangNhap_dao.Them_taiKhoan_matKhau(tk);
+				clearTable();
+				xoaTrang();
+				loadData();
+				loadMa();
+				}
+			}}}
+	}
+	public void xoa() {
+		if (table.getSelectedRow() == -1) {
+			JOptionPane.showMessageDialog(null, "Bạn chưa chọn dòng để xóa!!");
+		} else if (table.getSelectedRowCount() > 1) {
+			JOptionPane.showMessageDialog(null, "Chỉ được chọn 1 nhân viên để xóa!!");
+		} else {
+			if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa nhân viên này không?", "Thông báo",
+					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				int row = table.getSelectedRow();
+				nv_dao.deleteNhanVien(model.getValueAt(row, 1).toString());
+				model.removeRow(row);
+				JOptionPane.showMessageDialog(this, "Xóa thành công!!");
+			}
+		}
+	}
+	private void sua() {
+		
+		
+			String anh="";
+			if(rdoNam.isSelected()) {
+				anhNhanVien.setIcon(new ImageIcon("D:\\btLon\\pharmacyManagement\\image\\nhanvien_nam.png"));
+				anh="D:\\btLon\\pharmacyManagement\\image\\nhanvien_nam.png";}
+			else {
+				anhNhanVien.setIcon(new ImageIcon("D:\\btLon\\pharmacyManagement\\image\\nhanvien_nu.png"));
+				anh="D:\\btLon\\pharmacyManagement\\image\\nhanvien_nu.png";
+			}
+		
+			String ma = textMaNV.getText();
+			String hoTen = textTenKH.getText().trim();
+			String sDT = textSDT.getText();
+			
+			boolean gt;
+			if (rdoNam.isSelected())
+				gt = true;
+			else
+				gt = false;
+			Date ngaySinh= Date.valueOf(textNgaySinh.getText()) ;
+			
+			Double luong=Double.parseDouble(textLuong.getText());
+	
+		
+			String caTruc= comboBoxCaTruc.getSelectedItem().toString();
+			boolean chucVu;
+			boolean trangthai;
+
+			
+			
+			int tuoi = calculateAge(ngaySinh);
+			if(tuoi<18)
+				JOptionPane.showMessageDialog(this, "Nhân viên này chưa đủ 18 tuổi");
+				
+			else {
+				if(luong<15000000)
+					JOptionPane.showMessageDialog(this, "Lương phải lớn hơn hoặc bằng 15000000");
+				else {
+					
+					
+				if(comboBoxChucVu.getSelectedItem().toString().equals("Quản lí")) {
+					chucVu=true;
+					
+				}
+				else {
+					chucVu=false;
+					
+				}
+				if(comboBoxTrangThai.getSelectedItem().toString().equals("Có"))
+					trangthai=true;
+				else
+					trangthai=false;
+				
+				NhanVien nv=new NhanVien(ma, hoTen, sDT, gt, luong, caTruc, ngaySinh, trangthai, chucVu, anh);
+				if (nv_dao.updateNhanVien(nv)) {
+					
+					if(nv.isTrangThaiLV()==false)
+					{
+						dangNhap_dao.doiTrangThaiTheoMa(ma, nv.isTrangThaiLV());}
+					clearTable();
+					loadData();
+					JOptionPane.showMessageDialog(null, "Sữa thành công");
+					}
+				else
+					JOptionPane.showMessageDialog(this,"Sửa không thành công");
+				}}
+		
+	}
+	public void tim() {
+		int i = 1;
+		if (btnTim.getText().equals("Tìm")) {
+			if (comboBoxLoaiTim.getSelectedItem().equals("Tìm theo mã")) {
+				NhanVien nv = null;
+				nv = nv_dao.getNhanVienTheoMa(textTuKhoaTim.getText());
+				if (nv != null) {
+					 textTenKH.setText(nv.getTenNV());
+					    textSDT.setText(nv.getSdt());
+					    if (nv.isGioiTinh()==true)
+					        rdoNam.setSelected(true);
+					    else
+					        rdoNu.setSelected(true);
+
+					    textLuong.setText( nv.getLuong().toString().replace(".", ""));
+					    comboBoxCaTruc.setSelectedItem(nv.getCaTruc());
+					    textNgaySinh.setText( nv.getNgaySinh().toString());
+					    String trangThai;
+					    if (nv.isTrangThaiLV()==true)
+					       trangThai="Có";
+					    else
+					    	 trangThai="Không";
+					    String chucVu;
+					    if (nv.isChucVu()==true)
+					       chucVu="Quản lí";
+					    else
+					    	 chucVu="Nhân viên";
+
+					    
+					    comboBoxTrangThai.setSelectedItem(trangThai);
+					    comboBoxChucVu.setSelectedItem(chucVu);
+					    anhNhanVien.setIcon(new ImageIcon(nv.getHinhAnhNhanVien()));
+					    textMaNV.setText(nv.getMaNV());
+					
+				} else {
+					JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin!!");
+				}
+				} else if (comboBoxLoaiTim.getSelectedItem().equals("Tìm theo tên")) {
+				ArrayList<NhanVien> dsNhanVien = nv_dao.getNhanVienTheoTen(textTuKhoaTim.getText());
+				if (dsNhanVien != null) {
+					
+					for (NhanVien nv : dsNhanVien) {
+				        int firstSelectedRow = -1;
+				        for (int row = 0; row < table.getRowCount(); row++) {
+				            if (table.getValueAt(row, 2).equals(nv.getTenNV())) {
+				                // Nếu tìm thấy, chọn dòng tương ứng
+				                table.addRowSelectionInterval(row, row);
+				                if (firstSelectedRow == -1) {
+				                    firstSelectedRow = row;
+				                }
+				            }
+				        }
+
+				        // Cuộn đến dòng đầu tiên được chọn
+				        if (firstSelectedRow != -1) {
+				            table.scrollRectToVisible(table.getCellRect(firstSelectedRow, 0, true));
+				        }
+
+
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin!!");
+				}
+			}
+				else if (comboBoxLoaiTim.getSelectedItem().equals("Tìm theo số điện thoại")) {
+					NhanVien nv = null;
+					nv = nv_dao.getNhanVienTheoSDT(textTuKhoaTim.getText());
+					if (nv != null) {
+						 textTenKH.setText(nv.getTenNV());
+						    textSDT.setText(nv.getSdt());
+						    if (nv.isGioiTinh()==true)
+						        rdoNam.setSelected(true);
+						    else
+						        rdoNu.setSelected(true);
+
+						    textLuong.setText( nv.getLuong().toString().replace(".", ""));
+						    comboBoxCaTruc.setSelectedItem(nv.getCaTruc());
+						    textNgaySinh.setText( nv.getNgaySinh().toString());
+						    String trangThai;
+						    if (nv.isTrangThaiLV()==true)
+						       trangThai="Có";
+						    else
+						    	 trangThai="Không";
+						    String chucVu;
+						    if (nv.isChucVu()==true)
+						       chucVu="Quản lí";
+						    else
+						    	 chucVu="Nhân viên";
+
+						    
+						    comboBoxTrangThai.setSelectedItem(trangThai);
+						    comboBoxChucVu.setSelectedItem(chucVu);
+						    anhNhanVien.setIcon(new ImageIcon(nv.getHinhAnhNhanVien()));
+						    textMaNV.setText(nv.getMaNV());
+					} else {
+						JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin!!");
+					}
+				}
+		} }
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		int row = table.getSelectedRow();
+		  
+		if (row != -1) {
+			
+		  
+		    textTenKH.setText(model.getValueAt(row, 2).toString());
+		    textSDT.setText(model.getValueAt(row, 3).toString());
+		    if (model.getValueAt(row, 4).toString().equals("Nam"))
+		        rdoNam.setSelected(true);
+		    else
+		        rdoNu.setSelected(true);
+
+		    textLuong.setText( model.getValueAt(row, 5).toString().replace(".", ""));
+		    comboBoxCaTruc.setSelectedItem(model.getValueAt(row, 6));
+		    textNgaySinh.setText( model.getValueAt(row, 7).toString());
+		    comboBoxTrangThai.setSelectedItem(model.getValueAt(row, 8));
+		    comboBoxChucVu.setSelectedItem(model.getValueAt(row, 9));
+		    anhNhanVien.setIcon(new ImageIcon(model.getValueAt(row, 10).toString()));
+		    textMaNV.setText(model.getValueAt(row, 1).toString());
+		} else {
+		    // Xử lý trường hợp không có hàng nào được chọn
+		}
+
 	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		Object obj = e.getSource();
+		 if (obj.equals(rdoNam)) {
 		
+			textMaNV.setText(null);
+			loadMa();
+			anhNhanVien.setIcon(new ImageIcon("D:\\btLon\\pharmacyManagement\\image\\nhanvien_nam.png"));
+		} else if (obj.equals(rdoNu)) {
+			
+			textMaNV.setText(null);
+			loadMa();
+			anhNhanVien.setIcon(new ImageIcon("D:\\btLon\\pharmacyManagement\\image\\nhanvien_nu.png"));
+		} else if (obj.equals(btnThem)) {
+			them();
+		}else if (obj.equals(btnXoaTrang)) {
+			xoaTrang();
+		}
+		else if (obj.equals(comboBoxChucVu)) {
+			textMaNV.setText(null);
+			loadMa();
+		}else if (obj.equals(btnXoa)) {
+			xoa();
+		}else if (obj.equals(btnSua)) {
+			sua();
+		}else if (obj.equals(btnTim)) {
+			table.clearSelection();
+			tim();
+		}
 	}
+	
+	
+	
 }

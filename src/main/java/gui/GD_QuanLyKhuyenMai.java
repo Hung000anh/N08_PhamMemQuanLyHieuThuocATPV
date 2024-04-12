@@ -7,7 +7,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import dao.KhuyenMaiHoaDon_Dao;
 import dao.KhuyenMaiSanPham_Dao;
+import entity.KhuyenMaiHoaDon;
 import entity.KhuyenMaiSanPham;
 
 import java.awt.*;
@@ -203,10 +205,20 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         add(panel_1);
         panel_1.setLayout(null);
         
+        
+        JLabel danhSach = new JLabel("Danh sách khuyến mãi");
+		danhSach.setHorizontalAlignment(SwingConstants.CENTER);
+		danhSach.setFont(new Font("Arial", Font.BOLD, 20));
+		danhSach.setBounds(0, 10 , 1120, 30);
+		
+		panel_1.add(danhSach);
+        
+        
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(0, 0, 1120, 410);
+        scrollPane.setBounds(0, 50, 1120, 410);
         panel_1.add(scrollPane);
         
+       
         table = new JTable();
         table.setModel(new DefaultTableModel(
         	new Object[][] {
@@ -216,7 +228,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         		"STT", "M\u00E3 Khuy\u1EBFn m\u00E3i", "T\u00EAn khuy\u1EBFn m\u00E3i", "Lo\u1EA1i ch\u01B0\u01A1ng tr\u00ECnh", "Ng\u00E0y b\u1EAFt \u0111\u1EA7u", "Ng\u00E0y k\u1EBFt th\u00FAc" ,"tr\u1EA1ng th\u00E1i", "Giảm giá"
         	}
         ));
-        addSampleData();
+        addData();
         scrollPane.setViewportView(table);
 
         model = new DefaultTableModel(col, 0);
@@ -263,6 +275,8 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
             // Open the new interface here
             GD_ThemKhuyenMai themKhuyenMai = new GD_ThemKhuyenMai(); // Assuming GD_ThemKhuyenMai is the name of your new interface class
             themKhuyenMai.setVisible(true);
+            
+            reloadDuLieuMau();
         }
         if (o.equals(btnSua)) {
             int selectedRow = table.getSelectedRow();
@@ -277,6 +291,8 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
             } else {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần sửa!");
             }
+            
+            reloadDuLieuMau();
         }
 
         if (o.equals(btnXemChiTiet)) {
@@ -292,6 +308,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
             } else {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xem chi tiết!");
             }
+            reloadDuLieuMau();
         }
         if (o.equals(btnXoa)) {
             int selectedRow = table.getSelectedRow();
@@ -304,6 +321,8 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
             } else {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xóa!");
             }
+            
+            reloadDuLieuMau();
         }
         if (o.equals(btnTim)) {
         	//lấy lại dữ liệu cữ
@@ -316,7 +335,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
     private void reloadDuLieuMau() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setRowCount(0); // Xóa hết các dòng trong bảng
-        addSampleData(); // Thêm dữ liệu mẫu ban đầu vào bảng
+        addData(); // Thêm dữ liệu mẫu ban đầu vào bảng
     }
     private void timKiemKhuyenMai() {
         // Lấy giá trị từ các ô nhập liệu
@@ -368,26 +387,48 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
 
 
     
-    private void addSampleData() {
+    private void addData() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        KhuyenMaiSanPham_Dao ds = new KhuyenMaiSanPham_Dao();
-        ArrayList<KhuyenMaiSanPham> data = ds.docTubang();
+       
+        
+        KhuyenMaiSanPham_Dao ds1 = new KhuyenMaiSanPham_Dao();
+        ArrayList<KhuyenMaiSanPham> data1 = ds1.docTubang();
+        
+        KhuyenMaiHoaDon_Dao ds2 = new KhuyenMaiHoaDon_Dao();
+        ArrayList<KhuyenMaiHoaDon> data2 = ds2.docTubang();
+        
         String TrangThai;
         String LoaiChuongTrinh;
+        String giamGia;
+
         int i = 0;
-        for(KhuyenMaiSanPham km : data)
+        for(KhuyenMaiSanPham km : data1)
         {
         	if(km.getTrangThai())
         		TrangThai = "Kích hoạt";
         	else
         		TrangThai = "Không hoạt động";
         	
-        	if(km.getLoaiChuongTrinh())
-        		LoaiChuongTrinh = "Khuyến mãi theo hóa đơn";
+        	
+        	LoaiChuongTrinh = "Khuyến mãi theo sản phẩm";
+        	giamGia = km.getGiamGiaSanPham()*100 + "%";
+    
+    		Object[] rowData = { i, km.getMaKM(), km.getTenKM(),LoaiChuongTrinh, km.getNgayBatDau(), km.getNgayKetThuc(), TrangThai, giamGia};
+    		model.addRow(rowData);
+        	i++;
+        }
+        for(KhuyenMaiHoaDon km : data2)
+        {
+        	if(km.getTrangThai())
+        		TrangThai = "Kích hoạt";
         	else
-        		LoaiChuongTrinh = "Khuyến mãi theo sản phẩm";
-       
-    		Object[] rowData = { i, km.getMaKM(), km.getTenKM(),LoaiChuongTrinh, km.getNgayBatDau(), km.getNgayKetThuc(), TrangThai, km.getGiamGiaSanPham().toString()};
+        		TrangThai = "Không hoạt động";
+        	
+        	
+        	LoaiChuongTrinh = "Khuyến mãi theo hóa đơn";
+        	giamGia = km.getGiamGiaHoaDon()*100 + "%";
+    
+    		Object[] rowData = { i, km.getMaKM(), km.getTenKM(),LoaiChuongTrinh, km.getNgayBatDau(), km.getNgayKetThuc(), TrangThai, giamGia};
     		model.addRow(rowData);
         	i++;
         }

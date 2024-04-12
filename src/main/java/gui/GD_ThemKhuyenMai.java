@@ -8,14 +8,26 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.table.DefaultTableModel;
+
+import dao.KhuyenMaiHoaDon_Dao;
+import dao.KhuyenMaiSanPham_Dao;
+import entity.KhuyenMaiHoaDon;
+import entity.KhuyenMaiSanPham;
 
 public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListener{
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTextField txtTenKhuyenMai;
-    private JTextField txtMaKhuyenMai;
+    private JTextField txtMaKhuyenMai; 
     private JTextField txtTuNgay;
     private JTextField txtDenNgay;
     private CardLayout cardLayout;
@@ -27,6 +39,8 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
     private JTextField txtGiamGia;
     private JTextField txtGiaKhuyenMai;
 	private boolean xacNhan;
+	private JTextField txtGiamGiaHD;
+	private JTextField txtGiaTriHD;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -75,13 +89,14 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
         lblMKhuynMi.setFont(new Font("Arial", Font.BOLD, 16));
         lblMKhuynMi.setBounds(30, 44, 150, 30);
         tt_TimKiem.add(lblMKhuynMi);
+        
 
         txtMaKhuyenMai = new JTextField();
         txtMaKhuyenMai.setEditable(false);
         txtMaKhuyenMai.setColumns(10);
         txtMaKhuyenMai.setBounds(190, 44, 250, 35);
         tt_TimKiem.add(txtMaKhuyenMai);
-
+        txtMaKhuyenMai.setText(taoMaKhuyenMai());
         JLabel lblLoiChngTrnh = new JLabel("Loại chương trình:");
         lblLoiChngTrnh.setHorizontalAlignment(SwingConstants.LEFT);
         lblLoiChngTrnh.setFont(new Font("Arial", Font.BOLD, 16));
@@ -133,6 +148,138 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
         btnLuu.setFont(new Font("Tahoma", Font.PLAIN, 16));
         btnLuu.setBounds(685, 690, 156, 31);
         contentPane.add(btnLuu);
+        btnLuu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	if(txtTenKhuyenMai.getText().isEmpty())
+            	{
+            		JOptionPane.showMessageDialog(null, "Tên khuyến mãi không được rỗng", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+            	}
+            	
+            	
+                String ngayBatDau = txtTuNgay.getText();
+                String ngayKetThuc = txtDenNgay.getText();
+                
+                // Kiểm tra ngày bắt đầu
+                if (!kiemTraNgayHopLe(ngayBatDau)) {
+                    JOptionPane.showMessageDialog(null, "Ngày bắt đầu không đúng định dạng (dd/MM/yyyy)", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Kiểm tra ngày kết thúc
+                if (!kiemTraNgayHopLe(ngayKetThuc)) {
+                    JOptionPane.showMessageDialog(null, "Ngày kết thúc không đúng định dạng (dd/MM/yyyy)", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Chuyển đổi chuỗi ngày thành đối tượng LocalDate
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate tuNgay = LocalDate.parse(ngayBatDau, formatter);
+                LocalDate denNgay = LocalDate.parse(ngayKetThuc, formatter);
+
+                // Kiểm tra ngày kết thúc phải lớn hơn ngày bắt đầu
+                if (denNgay.isEqual(tuNgay) || denNgay.isBefore(tuNgay)) {
+                    JOptionPane.showMessageDialog(null, "Ngày kết thúc phải sau ngày bắt đầu", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Kiểm tra ngày kết thúc phải lớn hơn ngày hiện tại
+                if (denNgay.isBefore(LocalDate.now())) {
+                    JOptionPane.showMessageDialog(null, "Ngày kết thúc phải lớn hơn ngày hiện tại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return; 
+                }
+
+                
+                
+                if (txtLoai.getSelectedItem().equals("Giảm giá theo hóa đơn")) 
+                {
+                	String giaTriHoaDonStr = txtGiaTriHD.getText();
+                    if (!kiemTraSoNguyenDuong(giaTriHoaDonStr)) {
+                        JOptionPane.showMessageDialog(null, "Giá trị hóa đơn phải là một số nguyên dương", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    int giaTriHoaDon = Integer.parseInt(giaTriHoaDonStr);
+                    // Kiểm tra giảm giá hóa đơn
+                    String giamGiaHoaDonStr = txtGiamGiaHD.getText();
+                    if (!kiemTraSoNguyenDuong(giamGiaHoaDonStr)) {
+                        JOptionPane.showMessageDialog(null, "Giảm giá hóa đơn phải là một số nguyên dương", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    int giamGiaHoaDon = Integer.parseInt(giamGiaHoaDonStr);
+
+                    if (giamGiaHoaDon > 100) {
+                        JOptionPane.showMessageDialog(null, "Giảm giá hóa đơn không được lớn hơn 100", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    
+                    String maKM = txtMaKhuyenMai.getText();
+                    String tenKM = txtTenKhuyenMai.getText();
+                    Date ngayBatDau1 = null;
+                    Date ngayKetThuc1 = null;
+                    try {
+                        ngayBatDau1 = new SimpleDateFormat("dd/MM/yyyy").parse(txtTuNgay.getText());
+                        ngayKetThuc1 = new SimpleDateFormat("dd/MM/yyyy").parse(txtDenNgay.getText());
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                    
+                    Double giaTriHoaDon1 = Double.parseDouble(txtGiaTriHD.getText());
+                    Double giamGiaHoaDon1 = Double.parseDouble(txtGiamGiaHD.getText());
+                    
+                    // Tạo đối tượng KhuyenMaiHoaDon
+                    KhuyenMaiHoaDon khuyenMaiHoaDon = new KhuyenMaiHoaDon(maKM, tenKM, ngayBatDau1, ngayKetThuc1,  true, true, giaTriHoaDon1, giamGiaHoaDon1);
+                    
+                    // Gọi phương thức thêm khuyến mãi hóa đơn từ DAO
+                    KhuyenMaiHoaDon_Dao khuyenMaiHoaDonDao = new KhuyenMaiHoaDon_Dao();
+                    boolean result = khuyenMaiHoaDonDao.themKhuyenMaiHoaDon(khuyenMaiHoaDon);
+                    
+                    if(result) {
+                        JOptionPane.showMessageDialog(null, "Thêm khuyến mãi hóa đơn thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Thêm khuyến mãi hóa đơn thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                }
+                else if(txtLoai.getSelectedItem().equals("Giảm giá theo sản phẩm")) {
+                    if(!xacNhan) {
+                        JOptionPane.showMessageDialog(null, "Vui lòng chọn xác nhận trước khi lưu", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    
+                    // Lấy thông tin từ các trường nhập liệu hoặc các thành phần giao diện người dùng
+                    String maKM = txtMaKhuyenMai.getText();
+                    String tenKM = txtTenKhuyenMai.getText();
+                    
+                    // Chuyển đổi ngày từ String thành Date
+                    Date ngayBatDau1 = null;
+                    Date ngayKetThuc1 = null;
+                    try {
+                        ngayBatDau1 = new SimpleDateFormat("dd/MM/yyyy").parse(txtTuNgay.getText());
+                        ngayKetThuc1 = new SimpleDateFormat("dd/MM/yyyy").parse(txtDenNgay.getText());
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                    
+                    Double giamGiaSanPham = Double.parseDouble(txtGiamGia.getText());
+                    
+                    // Tạo đối tượng KhuyenMaiSanPham
+                    KhuyenMaiSanPham khuyenMaiSanPham = new KhuyenMaiSanPham(maKM, tenKM, ngayBatDau1, ngayKetThuc1, true, true, giamGiaSanPham/100);
+                    
+                    // Gọi phương thức thêm khuyến mãi sản phẩm
+                    KhuyenMaiSanPham_Dao khuyenMaiSanPhamDao = new KhuyenMaiSanPham_Dao();
+                    boolean result = khuyenMaiSanPhamDao.themKhuyenMaiSanPham(khuyenMaiSanPham);
+                    
+                    if(result) {
+                        JOptionPane.showMessageDialog(null, "Thêm khuyến mãi sản phẩm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Thêm khuyến mãi sản phẩm thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
         
         JButton btnDong = new JButton("Đóng");
         btnDong.setForeground(new Color(255, 0, 0));
@@ -174,7 +321,7 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
             lblGiaTriHD.setBounds(19, 31, 263, 30);
             panel.add(lblGiaTriHD);
 
-            JTextField txtGiaTriHD = new JTextField();
+            txtGiaTriHD = new JTextField();
             txtGiaTriHD.setBounds(302, 34, 166, 30);
             panel.add(txtGiaTriHD);
 
@@ -189,7 +336,7 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
             lblGiamGiaHD.setBounds(19, 77, 263, 30);
             panel.add(lblGiamGiaHD);
 
-            JTextField txtGiamGiaHD = new JTextField();
+            txtGiamGiaHD = new JTextField();
             txtGiamGiaHD.setBounds(302, 80, 166, 30);
             panel.add(txtGiamGiaHD); 
 
@@ -388,7 +535,90 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
         
         return panel;
     }
+ // Biến để theo dõi số thứ tự khuyến mãi
+    private static int soThuTu = 0;
+    // Biến để lưu trữ ngày hiện tại
+    private static String ngayHienTai = "";
 
+    // Phương thức để tạo mã khuyến mãi tự động
+    private String taoMaKhuyenMai() {
+        // Lấy ngày hiện tại
+        LocalDate ngayHienTai = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        String ngayHienTaiFormatted = ngayHienTai.format(formatter);
+        
+        // Khởi tạo DAO để truy cập dữ liệu khuyến mãi sản phẩm
+        KhuyenMaiSanPham_Dao ds1 = new KhuyenMaiSanPham_Dao();
+        ArrayList<KhuyenMaiSanPham> data1 = ds1.docTubang();
+        // Khởi tạo DAO để truy cập dữ liệu khuyến mãi hóa đơn
+        KhuyenMaiHoaDon_Dao ds2 = new KhuyenMaiHoaDon_Dao();
+        ArrayList<KhuyenMaiHoaDon> data2 = ds2.docTubang();
+        
+        // Lấy danh sách khuyến mãi từ cơ sở dữ liệu
+        String[] arrMaKhuyenMai = new String[data1.size() + data2.size()];
+        int demMa = 0;
+        for(KhuyenMaiSanPham km : data1) {
+            arrMaKhuyenMai[demMa] = km.getMaKM();
+            demMa++;
+        }
+        
+        for(KhuyenMaiHoaDon km : data2) {
+            arrMaKhuyenMai[demMa] = km.getMaKM();
+            demMa++;
+        }
+        
+        int soThuTuLonNhat = 0;
+        // Kiểm tra xem ngày hiện tại có khác ngày trước đó không
+        if (arrMaKhuyenMai.length == 0) {
+            // Nếu không có dữ liệu, thiết lập số thứ tự về 1
+            soThuTuLonNhat = 1;
+        } else {
+            for (int i = 0; i < arrMaKhuyenMai.length; i++) {
+                String ma = arrMaKhuyenMai[i];
+                String ngaykm = ma.substring(2, 8);
+                if (ngayHienTaiFormatted.equals(ngaykm)) { //trùng ngày
+                    String sttMa = ma.substring(9, 11);
+                    int soThuTu = Integer.parseInt(sttMa);
+                    if (soThuTu > soThuTuLonNhat) {
+                        soThuTuLonNhat = soThuTu;
+                    }
+                }
+            }
+        }
+        // Tăng số thứ tự lên 1
+        soThuTuLonNhat++;
+
+        // Định dạng số thứ tự phát sinh
+        String soThuTuFormatted = String.format("%03d", soThuTuLonNhat);
+
+        // Kết hợp các phần thành mã khuyến mãi và trả về
+        String maKhuyenMai = "KM" + ngayHienTaiFormatted + soThuTuFormatted;
+
+        return maKhuyenMai;
+    }
+
+
+
+ // Hàm kiểm tra xem chuỗi ngày có đúng định dạng không
+    private boolean kiemTraNgayHopLe(String ngay) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate.parse(ngay, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+        	
+            return false;
+        }
+    }
+    //Kiểm tra số nguyên dương
+    private boolean kiemTraSoNguyenDuong(String str) {
+        try {
+            int number = Integer.parseInt(str);
+            return number > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
 
 	@Override

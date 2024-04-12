@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Properties;
 
@@ -18,11 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.UIManager;
 
-public class GD_BanSanPham extends JPanel {
+public class GD_BanSanPham extends JPanel implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	Font font = new Font("Arial", Font.BOLD, 16); // khung tittle
@@ -109,6 +108,8 @@ public class GD_BanSanPham extends JPanel {
 		btnUser = new JButton();
 		btnUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Dialog_User user=new Dialog_User();
+				user.setVisible(true);
 			}
 		});
 		btnUser.setBackground(Color.decode("#B5E6FB"));
@@ -177,10 +178,7 @@ public class GD_BanSanPham extends JPanel {
 		lblAnh.setFont(font2);
 		lblAnh.setBounds(58, 91, w + 20, h);
 
-		pnTTSP.add(openButton = new JButton("Chọn tệp"));
-		openButton.setBounds(219, 95, 87, 20);
-		pnTTSP.add(imageLabel = new JLabel());
-		imageLabel.setBounds(189, 46, 150, 115);
+	
 
 		JLabel lblMaSP = new JLabel("Mã sản phẩm:");
 		lblMaSP.setBounds(7, 135, 150, 100);
@@ -445,4 +443,10 @@ public class GD_BanSanPham extends JPanel {
 		pnNorth.add(btnNewButton);
 		
 	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -3,8 +3,6 @@ package gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
-import java.util.Vector;
-
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -199,7 +197,7 @@ public class GD_QuanLySanPham extends JPanel {
 		btnTim.setBorderPainted(false);
 		btnTim.setBackground(Color.decode("#4a83d7"));
 		btnTim.setBounds(480, 38, 120, 40);
-		chucNang.add(btnTim);
+		chucNang.add(btnTim); 
 		
 		textField = new JTextField();
 		textField.setColumns(10);
