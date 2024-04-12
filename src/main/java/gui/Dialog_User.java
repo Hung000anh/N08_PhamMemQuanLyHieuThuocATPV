@@ -184,13 +184,11 @@ public class Dialog_User extends JFrame implements ActionListener{
 			
 	}
 
-		
 		public void loadDuLieu() {
 			NhanVien nv = null;
 			nv = nv_dao.getNhanVienTheoMa(DataManager.getUserName());
 			textField.setText(nv.getTenNV());
 			String chucVu="";
-			
 			ma=nv.getMaNV();
 			if(nv.isChucVu()==true)
 				chucVu="Quản lí";
