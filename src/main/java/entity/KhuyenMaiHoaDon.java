@@ -13,6 +13,8 @@ public class KhuyenMaiHoaDon {
     private BigDecimal giaTriHoaDon;
     private float giamGiaHoaDon;
 
+    public KhuyenMaiHoaDon(String maKhuyenMai) { this.maKhuyenMai = maKhuyenMai; }
+    
     public KhuyenMaiHoaDon(String maKhuyenMai, String tenKhuyenMai, Date ngayBatDau, Date ngayKetThuc, String loaiChuongTrinh, boolean trangThai, BigDecimal giaTriHoaDon, float giamGiaHoaDon) {
         this.maKhuyenMai = maKhuyenMai;
         this.tenKhuyenMai = tenKhuyenMai;
