@@ -57,7 +57,7 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 	 */
 	public GD_DangNhap() {
 		initialize();
-		 gD_TrangChu=new GD_TrangChu();
+		
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 		frame.setBounds(100, 100, 1092, 721);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
+		 gD_TrangChu=new GD_TrangChu();
 		JLabel lblNewLabel = new JLabel("Hiệu thuốc ATPV");
 		lblNewLabel.setBounds(449, 225, 313, 38);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 30));

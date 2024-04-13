@@ -9,8 +9,10 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 
+import connectDB.ConnectDB;
 import connectDB.Database;
 import entity.KhuyenMaiSanPham;
+import entity.NhanVien;
 import entity.SanPham;
 
 public class SanPham_Dao {
@@ -195,22 +197,20 @@ public class SanPham_Dao {
                 Date ngaySanXuat = rs.getDate(5); // Corrected method for Date type
                 Double donGiaNhap = rs.getDouble(6); // Corrected method for Double type
                 int soluongTon = rs.getInt(7); // Corrected method for Integer type
-                Double donGiaBan = rs.getDouble(8); // Corrected method for Double type
+                Double donGiaBan = (double) rs.getFloat(8); // Corrected method for Double type
                 String hinhAnhSanPham = rs.getString(9);
                 String DonViTinh = rs.getString(10);
-                String idKhuyenMai = rs.getString(11);
-                KhuyenMaiSanPham khuyenMai = null;
-                for(KhuyenMaiSanPham km : DanhSachKhuyenMaiSP)
-                {
-                	if(km.getMaKM().equals(idKhuyenMai))	
-            		{
-                		khuyenMai = new KhuyenMaiSanPham(km.getMaKM(), km.getTenKM(), km.getNgayBatDau(), km.getNgayKetThuc(), km.getLoaiChuongTrinh(), km.getTrangThai(), km.getGiamGiaSanPham());
-                		break;
-            		}	
-                }
+                
+                KhuyenMaiSanPham khuyenMai = new KhuyenMaiSanPham(rs.getString(11));
+           
                 
                 
+<<<<<<< HEAD
                 sp = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, donGiaBan, soluongTon, DonViTinh, hinhAnhSanPham, khuyenMai);
+=======
+                SanPham s = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, soluongTon, donGiaBan,hinhAnhSanPham, DonViTinh,  khuyenMai);
+                DanhSachSanPham.add(s);
+>>>>>>> vantrung
             }
             rs.close();
             statement.close();
@@ -241,4 +241,27 @@ public class SanPham_Dao {
         }
     	return list;
     }
+    public SanPham getSanPhamTheoMa(String maSP) {
+		SanPham sp = null;
+		try {
+			ConnectDB.getConnection();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		Connection con = ConnectDB.getConnection();
+		try {
+			String sql = "select * from SanPham where maSanPham = '" + maSP + "'";
+			Statement stm = con.createStatement();
+			ResultSet rs = stm.executeQuery(sql);
+			while (rs.next()) {
+			
+				sp=new SanPham(rs.getString(1), rs.getString(2), rs.getString(3), rs.getDate(4), rs.getDate(5), rs.getDouble(6), rs.getInt(7),rs.getDouble(8), rs.getString(9), rs.getString(10), new KhuyenMaiSanPham(rs.getString(11)));
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return sp;
+	}
 }

@@ -29,6 +29,7 @@ public class KhuyenMaiSanPham_Dao {
         ArrayList<KhuyenMaiSanPham> DanhSachKhuyenMaiSanPham = new ArrayList<>();
         try {
             Connection con = Database.getInstance().getConnection();
+<<<<<<< HEAD
 
             // Lấy ngày hiện tại
             java.util.Date ngayHienTai = new java.util.Date();
@@ -56,6 +57,23 @@ public class KhuyenMaiSanPham_Dao {
                     KhuyenMaiSanPham khuyenMaiSanPham = new KhuyenMaiSanPham(maKM, tenKM, ngayBatDau, ngayKetThuc, loaiChuongTrinh, trangThai, giamGiaSanPham);
                     DanhSachKhuyenMaiSanPham.add(khuyenMaiSanPham);
                 }
+=======
+            String sql = "SELECT * FROM KhuyenMaiSanPham"; // Corrected table name
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+            	String maKM = rs.getString(1); 
+            	String tenKM = rs.getString(2);
+            	Date ngayBatDau = rs.getDate(3);
+            	Date ngayKetThuc = rs.getDate(4);;
+            	Boolean loaiChuongTrinh = rs.getBoolean(5);
+            	Boolean trangThai = rs.getBoolean(6);
+            	Double giamGiaSanPham = (double) rs.getFloat(7);
+                
+            	KhuyenMaiSanPham khuyenMaiSanPham = new KhuyenMaiSanPham(maKM, tenKM, ngayBatDau, ngayKetThuc, loaiChuongTrinh, trangThai, giamGiaSanPham);
+            	DanhSachKhuyenMaiSanPham.add(khuyenMaiSanPham);
+            	
+>>>>>>> vantrung
             }
         } catch (SQLException e) {
             e.printStackTrace();
