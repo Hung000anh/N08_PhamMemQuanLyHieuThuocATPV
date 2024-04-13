@@ -10,6 +10,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import dao.ChiTietHoaDon_DAO;
+import dao.HoaDon_DAO;
+import dao.SanPham_Dao;
+import entity.ChiTietHoaDon;
+import entity.HoaDon;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -20,9 +27,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class GD_TraSanPham extends JPanel {
+public class GD_TraSanPham extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -33,6 +41,14 @@ public class GD_TraSanPham extends JPanel {
 	private JTextField txtNhpLDo;
 	private JTextField txtNhpMSn;
 	private JTextField txtNhpSLng;
+
+	private HoaDon currentHoaDon = null;
+
+
+	private myJButton btnNewButton;
+
+
+	private DefaultTableModel model;
 
 	public GD_TraSanPham() {
 		setBackground(new Color(246, 245, 255));
@@ -78,9 +94,11 @@ public class GD_TraSanPham extends JPanel {
 		panel.add(txtNhpMCn);
 		txtNhpMCn.setColumns(10);
 		
-		myJButton btnNewButton = new myJButton("Tìm hóa đơn");
+		btnNewButton = new myJButton("Tìm hóa đơn");
 		btnNewButton.setBounds(413, 27, 161, 34);
 		panel.add(btnNewButton);
+
+		btnNewButton.addActionListener(this);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(10, 155, 541, 628);
@@ -90,7 +108,7 @@ public class GD_TraSanPham extends JPanel {
 		panel_1.setBackground(null);
 		
 		String cols[] = { "STT", "MaSP", "TenSP", "SL", "Gia" };
-		DefaultTableModel model = new DefaultTableModel(cols, 0);
+		model = new DefaultTableModel(cols, 0);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(Color.WHITE);
@@ -422,5 +440,26 @@ public class GD_TraSanPham extends JPanel {
 		myJButton btnThm = new myJButton("Thêm");
 		btnThm.setBounds(428, 18, 103, 34);
 		panel_1_1.add(btnThm);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if (o == btnNewButton) {
+			String ma = txtNhpMCn.getText();
+			HoaDon_DAO.docTubang();
+			SanPham_Dao.docTubang();
+			ChiTietHoaDon_DAO.docTubang();
+			
+			HoaDon hd = HoaDon_DAO.layHoaDonTheoMa(ma);
+			ArrayList<ChiTietHoaDon> lst = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(ma);
+
+			model.getDataVector().removeAllElements();
+			for (ChiTietHoaDon x : lst) {
+				
+			}
+			
+		}
+		
 	}
 }

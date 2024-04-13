@@ -23,7 +23,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import dao.ChiTietHoaDon_DAO;
 import dao.HoaDon_DAO;
+import dao.SanPham_Dao;
+import entity.ChiTietHoaDon;
 import entity.HoaDon;
 
 import javax.swing.JTextArea;
@@ -38,16 +41,15 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 	private JTextField textNgayXuatHD;
 	private DefaultTableModel model;
 	private JTable table;
-	private String col[] = { "STT", "Mã hóa đơn", "Mã sản phẩm", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"};
+	private String col[] = { "STT", "Mã hóa đơn", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"};
 	private JScrollPane scroll;
 	private JTextField textKhuyenMai;
 	private JTextField textTongTien;
 	private JTextField textTuKhoa;
 
-	private HoaDon_DAO hd_dao = new HoaDon_DAO();
-
 	private ArrayList<HoaDon> list;
 	private JButton btnTim;
+	private JTextArea textGhiChu;
 
 	/**
 	 * Create the panel.
@@ -159,7 +161,7 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		ghiChu.setBounds(468, 138, 120, 30);
 		tt_Hoadon.add(ghiChu);
 		
-		JTextArea textGhiChu = new JTextArea();
+		textGhiChu = new JTextArea();
 		textGhiChu.setEnabled(false);
 		textGhiChu.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 		textGhiChu.setBounds(605, 144, 220, 122);
@@ -225,21 +227,27 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		scroll.setBounds(10, 440, 1120, 405);
 		add(scroll);
 		
-		list = hd_dao.docTubang();
+		list = HoaDon_DAO.docTubang();
+		SanPham_Dao.docTubang();
+		ChiTietHoaDon_DAO.docTubang();
 
 		for (int i = 0; i < list.size(); i++) {
 			HoaDon hd = list.get(i);
-			// "STT", "Mã hóa đơn", "Mã sản phẩm", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"
+			// "STT", "Mã hóa đơn", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"
 
+			double tien = 0;
+			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(hd.getMaHD());
+			for (ChiTietHoaDon e : cthd_list) {
+				tien += e.getThanhTien();
+			}
 			model.addRow(new Object[] {
 					i+1,
 					hd.getMaHD(),
-					"?", // chưa biết
 					hd.getKhachHang().getMaKhachHang(),
 					hd.getMaHD(),
 					hd.getNgayXuat(),
 					hd.getKhuyenMai().getMaKM(),
-					"?", // chưa biết
+					tien,
 					hd.getGhiChu()
 			});
 		}
@@ -250,14 +258,11 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		// TODO Auto-generated method stub
 		Object o = e.getSource();
 		if (o == btnTim) {
+			HoaDon_DAO.docTubang();
+
 			String tukhoa = textTuKhoa.getText().trim();
-			HoaDon hd = null;
-			for (HoaDon s : list) {
-				if (s.getMaHD().equals(tukhoa)) {
-					hd = s;
-					break;
-				}
-			}
+			HoaDon hd = HoaDon_DAO.layHoaDonTheoMa(tukhoa);
+
 			if (hd == null) {
 				JOptionPane.showMessageDialog(this, "Không tìm thấy!");
 				return;
@@ -269,6 +274,15 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 			textMaNV.setText(hd.getNhanVien().getMaNV());
 			textLoai.setText(hd.getLoaiHD());
 			textNgayXuatHD.setText(hd.getNgayXuat().toString());
+			textGhiChu.setText(hd.getGhiChu());
+			
+			double tien = 0;
+			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(hd.getMaHD());
+			for (ChiTietHoaDon _e : cthd_list) {
+				tien += _e.getThanhTien();
+			}
+			
+			textTongTien.setText(String.valueOf(tien));
 		}
 	}
 }
