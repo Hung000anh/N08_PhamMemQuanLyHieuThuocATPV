@@ -7,6 +7,7 @@ import javax.swing.event.DocumentListener;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,10 +19,13 @@ import java.util.Date;
 
 import javax.swing.table.DefaultTableModel;
 
+import connectDB.Database;
 import dao.KhuyenMaiHoaDon_Dao;
 import dao.KhuyenMaiSanPham_Dao;
+import dao.SanPham_Dao;
 import entity.KhuyenMaiHoaDon;
 import entity.KhuyenMaiSanPham;
+import entity.SanPham;
 
 public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListener{
     private static final long serialVersionUID = 1L;
@@ -42,6 +46,7 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
 	private JTextField txtGiamGiaHD;
 	private JTextField txtGiaTriHD;
 
+	
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -83,7 +88,7 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
         txtTenKhuyenMai.setColumns(10);
         txtTenKhuyenMai.setBounds(190, 92, 250, 35);
         tt_TimKiem.add(txtTenKhuyenMai);
-
+ 
         JLabel lblMKhuynMi = new JLabel("Mã khuyến mãi:");
         lblMKhuynMi.setHorizontalAlignment(SwingConstants.RIGHT);
         lblMKhuynMi.setFont(new Font("Arial", Font.BOLD, 16));
@@ -246,7 +251,7 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
                     if(!xacNhan) {
                         JOptionPane.showMessageDialog(null, "Vui lòng chọn xác nhận trước khi lưu", "Lỗi", JOptionPane.ERROR_MESSAGE);
                         return;
-                    }
+                    } 
                     
                     // Lấy thông tin từ các trường nhập liệu hoặc các thành phần giao diện người dùng
                     String maKM = txtMaKhuyenMai.getText();
@@ -271,13 +276,26 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
                     KhuyenMaiSanPham_Dao khuyenMaiSanPhamDao = new KhuyenMaiSanPham_Dao();
                     boolean result = khuyenMaiSanPhamDao.themKhuyenMaiSanPham(khuyenMaiSanPham);
                     
+                    
                     if(result) {
-                        JOptionPane.showMessageDialog(null, "Thêm khuyến mãi sản phẩm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                        dispose();
+                       JOptionPane.showMessageDialog(null, "Thêm khuyến mãi sản phẩm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+
                     } else {
                         JOptionPane.showMessageDialog(null, "Thêm khuyến mãi sản phẩm thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     }
-                }
+                    
+                    
+                    SanPham_Dao sanPhamDao = new SanPham_Dao();
+                    //sanPhamDao.docTubang();
+                    DefaultTableModel model = (DefaultTableModel) table_1.getModel();
+                    int rowCount = model.getRowCount();
+                    // Duyệt qua từng hàng trong bảng
+                    for (int i = 0; i < rowCount; i++) {
+                        String maSanPham = model.getValueAt(i, 1).toString(); // Lấy mã sản phẩm từ cột thứ 2
+                        sanPhamDao.ghiDeMaKhuyenMaiChoSanPham(maSanPham, maKM); // Thêm sản phẩm vào cơ sở dữ liệu
+                    }
+                     dispose();
+                } 
             }
         });
         
@@ -407,16 +425,15 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
         scrollPane.setViewportView(table);
         table.setModel(new DefaultTableModel(
         	new Object[][] {
-        		{123, 123, 123, 123},
         	},
         	new String[] {
-        		"STT", "M\u00E3 s\u1EA3n ph\u1EA9m", "T\u00EAn S\u1EA3n ph\u1EA9m", "Gi\u00E1 b\u00E1n"
+        		"STT", "M\u00E3 s\u1EA3n ph\u1EA9m", "T\u00EAn S\u1EA3n ph\u1EA9m", "Gi\u00E1 b\u00E1n","Mã khuyến mãi"
         	}
         ));
         JScrollPane scrollPane_1 = new JScrollPane();
         scrollPane_1.setBounds(556, 82, 440, 408);
         panel.add(scrollPane_1);
-        
+        dayDulieuLenTable1();
         table_1 = new JTable();
         scrollPane_1.setViewportView(table_1);
         table_1.setModel(new DefaultTableModel(
@@ -424,7 +441,7 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
 
         	},
         	new String[] {
-        			"STT", "M\u00E3 s\u1EA3n ph\u1EA9m", "T\u00EAn S\u1EA3n ph\u1EA9m", "Giá bán mới"
+        			"STT", "M\u00E3 s\u1EA3n ph\u1EA9m", "T\u00EAn S\u1EA3n ph\u1EA9m", "Giá bán mới" 
         	}
         ));
         
@@ -472,8 +489,6 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
                 }
                 
                 
-                
-                
                 double giamGia = Double.parseDouble(txtGiamGia.getText());
                 double giaHienTai = Double.parseDouble( table.getValueAt(row, 3).toString());
                 Double giaKhuyenMai =  giaHienTai - giaHienTai* (giamGia/100);
@@ -481,13 +496,11 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
                 DefaultTableModel model1 = (DefaultTableModel) table_1.getModel();
                 DefaultTableModel model = (DefaultTableModel) table.getModel();
                 
-                
-                
-                
                 if (row != -1) {
                     // Lấy dữ liệu từ hàng được chọn của table
                     Object[] rowData = new Object[model.getColumnCount()];
                     for (int i = 0; i < model.getColumnCount(); i++) {
+                    
                         rowData[i] = model.getValueAt(row, i);
                     }
                     // Chèn dữ liệu vào table_1
@@ -619,7 +632,27 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
             return false;
         }
     }
-
+    private void dayDulieuLenTable1() {
+    	SanPham_Dao sanPhamDao = new SanPham_Dao();
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    ArrayList<SanPham> danhSachSanPham = sanPhamDao.docTubang();
+	    int stt = 1;
+	    for (SanPham sanPham : danhSachSanPham) {
+	    	String maKhuyenMai;
+	        if (sanPham.getKhuyenMai() != null) {
+	            maKhuyenMai = sanPham.getKhuyenMai().getMaKM();
+	        } else {
+	            maKhuyenMai = "NULL";
+	        }
+	        model.addRow(new Object[]{
+	                stt++,
+	                sanPham.getMaSP(),
+	                sanPham.getTenSP(),
+	                sanPham.getDonGiaBan(),
+	                maKhuyenMai
+	        });
+	    }
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

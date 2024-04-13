@@ -230,7 +230,6 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         ));
         addData();
         scrollPane.setViewportView(table);
-
         model = new DefaultTableModel(col, 0);
         
         btnThem.addActionListener(this);
@@ -303,7 +302,8 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
                 String loaiKM = table.getValueAt(selectedRow, 3).toString(); // Assume Loại chương trình is at column index 3
 
                 // Open the edit interface and pass the data
-                GD_XemChiTietKhuyenMai xemchitietKhuyenMai = new GD_XemChiTietKhuyenMai(maKM, loaiKM); // Assuming GD_SuaKhuyenMai is the name of your edit interface class
+             
+                GD_XemChiTietKhuyenMai xemchitietKhuyenMai = new GD_XemChiTietKhuyenMai(maKM, loaiKM);
                 xemchitietKhuyenMai.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xem chi tiết!");
@@ -311,18 +311,29 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
             reloadDuLieuMau();
         }
         if (o.equals(btnXoa)) {
+        	KhuyenMaiSanPham_Dao ds1 = new KhuyenMaiSanPham_Dao();
+            KhuyenMaiHoaDon_Dao ds2 = new KhuyenMaiHoaDon_Dao();
+        	
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) { // Check if any row is selected
                 int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa hàng này không?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
+                	if(table.getValueAt(selectedRow, 3).toString().equals("Khuyến mãi theo hóa đơn"))
+                	{
+                		ds2.xoaKhuyenMai(table.getValueAt(selectedRow, 1).toString());             
+                	}
+                	else if (table.getValueAt(selectedRow, 3).toString().equals("Khuyến mãi theo sản phẩm"))
+                	{
+                		ds1.xoaKhuyenMai(table.getValueAt(selectedRow, 1).toString());
+                	}
+                	JOptionPane.showMessageDialog(this, "Xóa khuyến mãi thành công!");
                     DefaultTableModel model = (DefaultTableModel) table.getModel();
-                    model.removeRow(selectedRow);
+                    model.removeRow(selectedRow);    
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xóa!");
             }
-            
-            reloadDuLieuMau();
+            //reloadDuLieuMau();
         }
         if (o.equals(btnTim)) {
         	//lấy lại dữ liệu cữ

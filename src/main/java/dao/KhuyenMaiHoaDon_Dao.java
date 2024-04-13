@@ -16,27 +16,40 @@ public class KhuyenMaiHoaDon_Dao {
     
     public KhuyenMaiHoaDon_Dao() {
     	DanhSachKhuyenMaiHoaDon = new ArrayList<KhuyenMaiHoaDon>();
+    	DanhSachKhuyenMaiHoaDon = docTubang();
     }
     
     public ArrayList<KhuyenMaiHoaDon> docTubang() {
+        ArrayList<KhuyenMaiHoaDon> DanhSachKhuyenMaiHoaDon = new ArrayList<>();
         try {
             Connection con = Database.getInstance().getConnection();
-            String sql = "SELECT * FROM KhuyenMaiHoaDon"; // Corrected table name
             Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery(sql);
+
+            // Lấy ngày hiện tại
+            java.util.Date ngayHienTai = new java.util.Date();
+
+            // Cập nhật trạng thái của các bản ghi có ngày kết thúc < ngày hiện tại
+            String updateSql = "UPDATE KhuyenMaiHoaDon SET TrangThai = 0 WHERE NgayKetThuc < ? AND TrangThai = 1"; // Trạng thái = 1 là true, 0 là false
+            PreparedStatement updateStatement = con.prepareStatement(updateSql);
+            updateStatement.setDate(1, new java.sql.Date(ngayHienTai.getTime()));
+            updateStatement.executeUpdate();
+            updateStatement.close();
+
+            // Lấy dữ liệu từ bảng KhuyenMaiHoaDon
+            String selectSql = "SELECT * FROM KhuyenMaiHoaDon";
+            ResultSet rs = statement.executeQuery(selectSql);
             while (rs.next()) {
-            	String maKM = rs.getString(1); 
-            	String tenKM = rs.getString(2);
-            	Date ngayBatDau = rs.getDate(3);
-            	Date ngayKetThuc = rs.getDate(4);;
-            	Boolean loaiChuongTrinh = rs.getBoolean(5);
-            	Boolean trangThai = rs.getBoolean(6);
-            	Double giaTriHoaDon= rs.getDouble(7);
-            	Double GiamGiaHoaDon = rs.getDouble(8);
-                
-            	KhuyenMaiHoaDon khuyenMaiHoaDon = new KhuyenMaiHoaDon(maKM, tenKM, ngayBatDau, ngayKetThuc, loaiChuongTrinh, trangThai, giaTriHoaDon, GiamGiaHoaDon);
-            	DanhSachKhuyenMaiHoaDon.add(khuyenMaiHoaDon);
-            	
+                String maKM = rs.getString(1); 
+                String tenKM = rs.getString(2);
+                Date ngayBatDau = rs.getDate(3);
+                Date ngayKetThuc = rs.getDate(4);
+                Boolean loaiChuongTrinh = rs.getBoolean(5);
+                Boolean trangThai = rs.getBoolean(6);
+                Double giaTriHoaDon = rs.getDouble(7); 
+                Double giamGiaHoaDon = rs.getDouble(8);
+
+                KhuyenMaiHoaDon khuyenMaiHoaDon = new KhuyenMaiHoaDon(maKM, tenKM, ngayBatDau, ngayKetThuc, loaiChuongTrinh, trangThai, giaTriHoaDon, giamGiaHoaDon);
+                DanhSachKhuyenMaiHoaDon.add(khuyenMaiHoaDon);
             }
             rs.close();
             statement.close();
@@ -45,6 +58,7 @@ public class KhuyenMaiHoaDon_Dao {
         }
         return DanhSachKhuyenMaiHoaDon;
     }
+
     public boolean themKhuyenMaiHoaDon(KhuyenMaiHoaDon k) {
         try (Connection con = Database.getInstance().getConnection();
                 PreparedStatement stmt = con.prepareStatement("INSERT INTO KhuyenMaiHoaDon VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
@@ -68,6 +82,7 @@ public class KhuyenMaiHoaDon_Dao {
     }
     public KhuyenMaiHoaDon timKhuyenMai(String maKM)
     {
+    	
     	for(KhuyenMaiHoaDon km : DanhSachKhuyenMaiHoaDon)
     	{
     		if(km.getMaKM().equals(maKM))
@@ -76,5 +91,20 @@ public class KhuyenMaiHoaDon_Dao {
     		}
     	}
     	return null;
+    }
+    
+    public void xoaKhuyenMai(String ma) {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = Database.getInstance().getConnection();
+            String sql = "DELETE FROM KhuyenMaiHoaDon WHERE maKhuyenMai = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, ma);
+            stmt.executeUpdate();
+           
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi xóa khuyến mãi: " + e.getMessage());
+        }
     }
 }

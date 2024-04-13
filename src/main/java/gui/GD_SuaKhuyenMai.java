@@ -8,8 +8,16 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
+
+import dao.KhuyenMaiHoaDon_Dao;
+import dao.KhuyenMaiSanPham_Dao;
+import dao.SanPham_Dao;
+import entity.KhuyenMaiHoaDon;
+import entity.KhuyenMaiSanPham;
+import entity.SanPham;
 
 public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListener{
     private static final long serialVersionUID = 1L;
@@ -29,6 +37,8 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
     private String maKM;
 	private String loaiKM;
 	private boolean xacNhan;
+	private JTextField txtGiamGiaHD;
+	private JTextField txtGiaTriHD;
 
 
     public GD_SuaKhuyenMai(String maKM, String loaiKM) {
@@ -202,7 +212,7 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
             lblGiaTriHD.setBounds(19, 31, 263, 30);
             panel.add(lblGiaTriHD);
 
-            JTextField txtGiaTriHD = new JTextField();
+            txtGiaTriHD = new JTextField();
             txtGiaTriHD.setBounds(302, 34, 166, 30);
             panel.add(txtGiaTriHD);
 
@@ -217,7 +227,7 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
             lblGiamGiaHD.setBounds(19, 77, 263, 30);
             panel.add(lblGiamGiaHD);
 
-            JTextField txtGiamGiaHD = new JTextField();
+            txtGiamGiaHD = new JTextField();
             txtGiamGiaHD.setBounds(302, 80, 166, 30);
             panel.add(txtGiamGiaHD); 
 
@@ -230,7 +240,7 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
                     "Giảm giá theo hóa đơn", TitledBorder.LEFT, TitledBorder.CENTER, new Font("Arial", Font.BOLD, 20),
                     Color.DARK_GRAY);
             panel.setBorder(border);
-            
+            dayDulieuTimKiemKMHD(name);
             return panel;
     }
     private JPanel createPanel2(String name, Color color) {
@@ -321,7 +331,7 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
         
         
         DecimalFormat decimalFormat = new DecimalFormat("#.####");
-        
+        dayDulieuTimKiemKMSP(name);
         
         bttnChuyen.addActionListener(new ActionListener() {
             @Override
@@ -389,8 +399,6 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
             }
         });
 
-        
-        
         bttnThuHoi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -400,7 +408,6 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn hàng cần thu hồi.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                
                 DefaultTableModel model = (DefaultTableModel) table.getModel();
                 DefaultTableModel model_1 = (DefaultTableModel) table_1.getModel();
                 double giamGia = Double.parseDouble(txtGiamGia.getText());
@@ -417,17 +424,63 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
                 txtGiamGia.setText("");
             }
         });
-
-        
         return panel;
     }
     
     
+    public void dayDulieuTimKiemKMSP(String str) {
+        // Xóa dữ liệu cũ khỏi bảng table
+        DefaultTableModel model = (DefaultTableModel) table_1.getModel();
+      
+        KhuyenMaiSanPham_Dao kmspdao = new KhuyenMaiSanPham_Dao();
+        ArrayList<KhuyenMaiSanPham> ds = kmspdao.docTubang();
+        for (KhuyenMaiSanPham sp : ds) {
+            if (sp.getMaKM().equals(txtMaKhuyenMai.getText())) {
+                // Hiển thị thông tin chi tiết của khuyến mãi trong giao diện
+                txtTenKhuyenMai.setText(sp.getTenKM());
+                txtTuNgay.setText(sp.getNgayBatDau().toString());
+                txtDenNgay.setText(sp.getNgayBatDau().toString());
+                txtGiamGia.setText(sp.getGiamGiaSanPham().toString());
+                SanPham_Dao spd = new SanPham_Dao();
+                ArrayList<SanPham> dssp = spd.docTubang();
+                int stt = 0;
+                //DefaultTableModel model1 = (DefaultTableModel) table.getModel();
+                for (SanPham sp1 : dssp) {
+                	if(sp1.getKhuyenMai() != null && sp1.getKhuyenMai().getMaKM().equals(txtMaKhuyenMai.getText()))
+                	{
+                	//System.out.println(sp1.getMaSP() + "MKM: " + sp1.getKhuyenMai().getMaKM());
+                		Object row[] = {stt, sp1.getMaSP(), sp1.getTenSP(), sp1.getDonGiaBan()};
+                        model.addRow(row);
+                        stt++;
+                	}       	
+                }
+                // Sau khi tìm thấy và hiển thị thông tin, bạn có thể thoát vòng lặp
+                return;
+            }
+        }
+        
+    }
 
-
-
-
-
+    
+    public void dayDulieuTimKiemKMHD(String str)
+    {
+    	KhuyenMaiHoaDon_Dao kmhddao = new KhuyenMaiHoaDon_Dao();
+    	ArrayList<KhuyenMaiHoaDon> ds = kmhddao.docTubang();
+    	for(KhuyenMaiHoaDon kmhd :  ds)
+    	{
+    		if (kmhd.getMaKM().equals(txtMaKhuyenMai.getText())) {
+    			txtTenKhuyenMai.setText(kmhd.getTenKM());
+                txtTuNgay.setText(kmhd.getNgayBatDau().toString());
+                txtDenNgay.setText(kmhd.getNgayBatDau().toString());
+                txtGiaTriHD.setText(kmhd.getGiaTriHoaDon().toString());
+                txtGiamGiaHD.setText(kmhd.getGiamGiaHoaDon().toString());
+    		}
+    	}
+    }
+    
+    
+    
+    
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	}

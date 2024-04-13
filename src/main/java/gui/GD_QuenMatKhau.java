@@ -22,7 +22,6 @@ import dao.DangNhap_Dao;
 
 
 public class GD_QuenMatKhau extends JFrame implements ActionListener{
-
 	/**
 	 * 
 	 */
