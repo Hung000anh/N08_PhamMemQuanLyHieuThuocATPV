@@ -31,7 +31,7 @@ public class KhuyenMaiSanPham_Dao {
             	Date ngayKetThuc = rs.getDate(4);;
             	Boolean loaiChuongTrinh = rs.getBoolean(5);
             	Boolean trangThai = rs.getBoolean(6);
-            	Double giamGiaSanPham = rs.getDouble(7);
+            	Double giamGiaSanPham = (double) rs.getFloat(7);
                 
             	KhuyenMaiSanPham khuyenMaiSanPham = new KhuyenMaiSanPham(maKM, tenKM, ngayBatDau, ngayKetThuc, loaiChuongTrinh, trangThai, giamGiaSanPham);
             	DanhSachKhuyenMaiSanPham.add(khuyenMaiSanPham);

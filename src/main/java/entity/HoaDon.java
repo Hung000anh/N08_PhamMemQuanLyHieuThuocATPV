@@ -11,7 +11,12 @@ public class HoaDon {
     private KhachHang khachHang;
     private KhuyenMaiHoaDon khuyenMai;
 
-    public HoaDon(String maHD, KhachHang khachHang, NhanVien nhanVien, Date ngayXuat, String loaiHD, String ghiChu, KhuyenMaiHoaDon khuyenMai) {
+    public HoaDon(String maHD) {
+		super();
+		this.maHD = maHD;
+	}
+
+	public HoaDon(String maHD, KhachHang khachHang, NhanVien nhanVien, Date ngayXuat, String loaiHD, String ghiChu, KhuyenMaiHoaDon khuyenMai) {
         this.maHD = maHD;
         this.khachHang = khachHang;
         this.nhanVien = nhanVien;

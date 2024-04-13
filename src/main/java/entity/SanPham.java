@@ -4,47 +4,54 @@ import java.io.Serializable;
 import java.sql.Date;
 
 public class SanPham implements Serializable{
-	private String maKM;
-	private String tenKM;
+	private String maSP;
+	private String tenSP;
 	private String loai;
 	private Date ngayHetHan;
 	private Date ngaySanXuat;
 	private Double donGiaNhap;
-	private Double donGiaBan;
 	private int soluongTon;
-	private String DonViTinh;
+	private Double donGiaBan;
 	private String hinhAnhSanPham;
+	private String DonViTinh;
 	private KhuyenMaiSanPham KhuyenMai;
 	
-	
-	
-	
-	public SanPham(String maKM, String tenKM, String loai, Date ngayHetHan, Date ngaySanXuat, Double donGiaNhap,
-			Double donGiaBan, int soluongTon, String donViTinh, String hinhAnhSanPham, KhuyenMaiSanPham khuyenMai) {
+	public SanPham(String maSP) {
 		super();
-		this.maKM = maKM;
-		this.tenKM = tenKM;
+		this.maSP = maSP;
+	}
+	public SanPham(String maSP, String tenSP, String loai, Date ngayHetHan, Date ngaySanXuat, Double donGiaNhap,
+			int soluongTon, Double donGiaBan, String hinhAnhSanPham, String donViTinh, KhuyenMaiSanPham khuyenMai) {
+		super();
+		this.maSP = maSP;
+		this.tenSP = tenSP;
 		this.loai = loai;
 		this.ngayHetHan = ngayHetHan;
 		this.ngaySanXuat = ngaySanXuat;
 		this.donGiaNhap = donGiaNhap;
-		this.donGiaBan = donGiaBan;
 		this.soluongTon = soluongTon;
-		DonViTinh = donViTinh;
+		this.donGiaBan = donGiaBan;
 		this.hinhAnhSanPham = hinhAnhSanPham;
+		DonViTinh = donViTinh;
 		KhuyenMai = khuyenMai;
 	}
-	public String getMaKM() {
-		return maKM;
+	public String getMaSP() {
+		return maSP;
 	}
-	public void setMaKM(String maKM) {
-		this.maKM = maKM;
+	public void setMaSP(String maSP) {
+		this.maSP = maSP;
 	}
-	public String getTenKM() {
-		return tenKM;
+	public String getTenSP() {
+		return tenSP;
 	}
-	public void setTenKM(String tenKM) {
-		this.tenKM = tenKM;
+	public void setTenSP(String tenSP) {
+		this.tenSP = tenSP;
+	}
+	public String getLoai() {
+		return loai;
+	}
+	public void setLoai(String loai) {
+		this.loai = loai;
 	}
 	public Date getNgayHetHan() {
 		return ngayHetHan;
@@ -70,11 +77,11 @@ public class SanPham implements Serializable{
 	public void setSoluongTon(int soluongTon) {
 		this.soluongTon = soluongTon;
 	}
-	public String getDonViTinh() {
-		return DonViTinh;
+	public Double getDonGiaBan() {
+		return donGiaBan;
 	}
-	public void setDonViTinh(String donViTinh) {
-		DonViTinh = donViTinh;
+	public void setDonGiaBan(Double donGiaBan) {
+		this.donGiaBan = donGiaBan;
 	}
 	public String getHinhAnhSanPham() {
 		return hinhAnhSanPham;
@@ -82,21 +89,27 @@ public class SanPham implements Serializable{
 	public void setHinhAnhSanPham(String hinhAnhSanPham) {
 		this.hinhAnhSanPham = hinhAnhSanPham;
 	}
+	public String getDonViTinh() {
+		return DonViTinh;
+	}
+	public void setDonViTinh(String donViTinh) {
+		DonViTinh = donViTinh;
+	}
 	public KhuyenMaiSanPham getKhuyenMai() {
 		return KhuyenMai;
 	}
 	public void setKhuyenMai(KhuyenMaiSanPham khuyenMai) {
 		KhuyenMai = khuyenMai;
 	}
-	public Double getDonGiaBan() {
-		return donGiaBan;
-	}
-	public String getLoai() {
-		return loai;
-	}
-	public void setLoai(String loai) {
-		this.loai = loai;
+	@Override
+	public String toString() {
+		return "SanPham [maSP=" + maSP + ", tenSP=" + tenSP + ", loai=" + loai + ", ngayHetHan=" + ngayHetHan
+				+ ", ngaySanXuat=" + ngaySanXuat + ", donGiaNhap=" + donGiaNhap + ", soluongTon=" + soluongTon
+				+ ", donGiaBan=" + donGiaBan + ", hinhAnhSanPham=" + hinhAnhSanPham + ", DonViTinh=" + DonViTinh
+				+ ", KhuyenMai=" + KhuyenMai + "]";
 	}
 	
-
+	
+	
+	
 }

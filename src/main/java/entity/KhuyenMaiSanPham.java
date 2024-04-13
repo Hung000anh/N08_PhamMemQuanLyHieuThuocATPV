@@ -12,6 +12,13 @@ public class KhuyenMaiSanPham implements Serializable{
 	private Boolean trangThai;
 	private Double giamGiaSanPham;
 	
+	
+	
+	public KhuyenMaiSanPham(String maKM) {
+		super();
+		this.maKM = maKM;
+	}
+
 	public KhuyenMaiSanPham(String maKM, String tenKM, Date ngayBatDau, Date ngayKetThuc, Boolean loaiChuongTrinh,
 			Boolean trangThai, Double giamGiaSanPham) {
 		super();

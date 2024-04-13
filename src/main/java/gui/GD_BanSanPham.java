@@ -5,6 +5,10 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.time.Year;
+import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import javax.swing.BorderFactory;
@@ -12,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -21,8 +26,16 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class GD_BanSanPham extends JPanel implements ActionListener{
+import dao.ChiTiecHoaDon_Dao;
+import dao.HoaDon_DAO;
+import dao.NhanVien_Dao;
+import dao.SanPham_Dao;
+import entity.HoaDon;
+import entity.NhanVien;
+import entity.SanPham;
+import entity.chiTiecHoaDon;
 
+public class GD_BanSanPham extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	Font font = new Font("Arial", Font.BOLD, 16); // khung tittle
 	Font font2 = new Font("Arial", Font.BOLD, 18); // thuộc tính
@@ -90,6 +103,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 	private JTextField textField_8;
 	private JLabel lblNewLabel_4;
 	private JTextField textField_9;
+	private int q=0;
 	/**
 	 * Create the panel.
 	 */
@@ -186,8 +200,8 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		pnTTSP.add(lblMaSP);
 
 		txtMaSp = new JTextField();
-		pnTTSP.add(txtMaSp);
 		txtMaSp.setEnabled(false);
+		pnTTSP.add(txtMaSp);
 		txtMaSp.setBounds(150, 171, 200, h);
 		txtMaSp.setFont(font3);
 		
@@ -281,6 +295,8 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		
 		
 		btnThemSPVaoHD = new JButton("Thêm vào hóa đơn");
+		btnThemSPVaoHD.addActionListener(this);
+			
 		btnThemSPVaoHD.setFont(font);
 		btnThemSPVaoHD.setBounds(100, 600, 200, 35);
 		btnThemSPVaoHD.setBackground(new Color(238, 233, 233));
@@ -389,7 +405,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		scroll.setBounds(13, 28, 644, 277);
 		pnNorth1.add(scroll);
 		
-		lblNewLabel_1 = new JLabel("Mã hóa đơn:");
+		lblNewLabel_1 = new JLabel("Tiền hàng:");
 		lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 18));
 		lblNewLabel_1.setBounds(43, 615, 120, 20);
 		pnNorth.add(lblNewLabel_1);
@@ -400,7 +416,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		textField_6.setBounds(170, 612, 188, 28);
 		pnNorth.add(textField_6);
 		
-		lblNewLabel_2 = new JLabel("Mã hóa đơn:");
+		lblNewLabel_2 = new JLabel("Tổng cộng:");
 		lblNewLabel_2.setFont(new Font("Arial", Font.BOLD, 18));
 		lblNewLabel_2.setBounds(381, 615, 120, 20);
 		pnNorth.add(lblNewLabel_2);
@@ -433,6 +449,8 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		textField_9.setBounds(249, 685, 106, 28);
 		pnNorth.add(textField_9);
 		
+		
+		comBoBoxMaSP.addActionListener(this);
 		JButton btnNewButton = new JButton("In hóa đơn");
 		btnNewButton.setForeground(new Color(255, 255, 255));
 		btnNewButton.setFont(new Font("Arial", Font.BOLD, 18));
@@ -441,12 +459,101 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		btnNewButton.setBorderPainted(false);
 		btnNewButton.setBounds(511, 683, 176, 34);
 		pnNorth.add(btnNewButton);
-		
+		updateComBoBoxMaSP();
+		updateDuLieuSP();
+		updateHoaDon();
 	}
+	public void updateComBoBoxMaSP() {
+		SanPham_Dao dsSP = new SanPham_Dao();
+	
+		List<SanPham> list = dsSP.docTubang();
+		for (SanPham ds : list) {
+			comBoBoxMaSP.addItem(ds.getMaSP());
+		}
+	}
+	public void updateDuLieuSP() {
+		SanPham_Dao sP_dao = new SanPham_Dao();
+		String masp=  comBoBoxMaSP.getSelectedItem().toString();
+		SanPham sp= sP_dao.getSanPhamTheoMa(masp);
+		
+		txtMaSp.setText(masp);
+		
+		txtTen.setText(sp.getTenSP());
+		txtLoai.setText(sp.getLoai());
+		txtNgayHH.setText(sp.getNgayHetHan().toString());
+		txtSLTon.setText(String.valueOf(sp.getSoluongTon()));
+	
+		txtDonViTinh.setText(sp.getDonViTinh());
+		txtKhuyenMai.setText(sp.getKhuyenMai().getMaKM());
+		txtGia.setText(sp.getDonGiaBan().toString());
+	}
+	private String thuTuHoaDonTrongNgay() {
+		int sl = 0;
+		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
+	    String currentDate = sdf.format(new Date());
+
+		HoaDon_DAO hd_Dao=new HoaDon_DAO();
+		for (HoaDon hd : hd_Dao.docTubang()) {
+			if (hd.getMaHD().substring(2, 8).equals(currentDate))
+				sl++;
+		}
+		String slString = String.format("%07d", sl + 1);
+		return slString;
+	}
+	private String generateRandomCode() {
+		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
+	    String currentDate = sdf.format(new Date());
+		String ma="HD";
+		
+		ma+=currentDate;
+		
+		return ma + thuTuHoaDonTrongNgay();
+	}
+	private void loadMa() {
+		String code;
+		code = generateRandomCode();
+		textField.setText(code);
+	}
+	
+	public void updateHoaDon() {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    String currentDate = sdf.format(new Date());
+	loadMa();
+
+	textField_1.setText(currentDate);
+	NhanVien_Dao nv_dao=new NhanVien_Dao();
+	NhanVien nv = null;
+	nv = nv_dao.getNhanVienTheoMa(DataManager.getUserName());
+	
+	textField_3.setText(null);
+	textField_4.setText("Hóa Đơn Bán");
+	textField_5.setText(null);
+	
+}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+		Object o=e.getSource();
+		if(o.equals(comBoBoxMaSP)) {
+			updateDuLieuSP();
+		}else if(o.equals(btnThemSPVaoHD)) {
+
+				
+				q++;
+				String ma =comBoBoxMaSP.getSelectedItem().toString();
+				String ten=txtTen.getText();
+				String dvt=txtDonViTinh.getText();
+				int soLuong=Integer.parseInt(txtSoLuong.getText());
+				SanPham_Dao sp_dao=new SanPham_Dao();		
+				SanPham sp=sp_dao.getSanPhamTheoMa(ma);
+				chiTiecHoaDon cthd=new chiTiecHoaDon(new HoaDon(textField.getText()), sp, soLuong)	;
+				sp.setSoluongTon(32);
+				JOptionPane.showMessageDialog(this, sp.getDonGiaBan());
+				Object[] row = { q, ma,ten,dvt,soLuong,cthd.getThanhTien()};
+				model.addRow(row);
+			
+		}
 	}
 
 }
