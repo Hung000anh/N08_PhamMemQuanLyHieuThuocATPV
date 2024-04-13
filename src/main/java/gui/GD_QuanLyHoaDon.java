@@ -3,6 +3,9 @@ package gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -10,6 +13,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -18,9 +22,13 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
+import dao.HoaDon_DAO;
+import entity.HoaDon;
+
 import javax.swing.JTextArea;
 
-public class GD_QuanLyHoaDon extends JPanel {
+public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField textMaNV;
@@ -34,7 +42,12 @@ public class GD_QuanLyHoaDon extends JPanel {
 	private JScrollPane scroll;
 	private JTextField textKhuyenMai;
 	private JTextField textTongTien;
-	private JTextField textField_3;
+	private JTextField textTuKhoa;
+
+	private HoaDon_DAO hd_dao = new HoaDon_DAO();
+
+	private ArrayList<HoaDon> list;
+	private JButton btnTim;
 
 	/**
 	 * Create the panel.
@@ -172,18 +185,19 @@ public class GD_QuanLyHoaDon extends JPanel {
 		tuKhoa.setBounds(10, 91, 240, 30);
 		traCuu.add(tuKhoa);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(30, 131, 200, 35);
-		traCuu.add(textField_3);
+		textTuKhoa = new JTextField();
+		textTuKhoa.setColumns(10);
+		textTuKhoa.setBounds(30, 131, 200, 35);
+		traCuu.add(textTuKhoa);
 		
-		JButton btnTim = new JButton("Tìm");
+		btnTim = new JButton("Tìm");
 		btnTim.setToolTipText("");
 		btnTim.setFont(new Font("Arial", Font.BOLD, 16));
 		btnTim.setBorderPainted(false);
 		btnTim.setBackground(new Color(74, 131, 215));
 		btnTim.setBounds(30, 176, 200, 40);
 		traCuu.add(btnTim);
+		btnTim.addActionListener(this);
 		
 		JButton btnXemChiTiet = new JButton("Chi Tiết Hóa Đơn");
 		btnXemChiTiet.setFont(new Font("Arial", Font.BOLD, 16));
@@ -210,5 +224,51 @@ public class GD_QuanLyHoaDon extends JPanel {
 		scroll.setViewportBorder(new LineBorder(new Color(0, 0, 0)));
 		scroll.setBounds(10, 440, 1120, 405);
 		add(scroll);
+		
+		list = hd_dao.docTubang();
+
+		for (int i = 0; i < list.size(); i++) {
+			HoaDon hd = list.get(i);
+			// "STT", "Mã hóa đơn", "Mã sản phẩm", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"
+
+			model.addRow(new Object[] {
+					i+1,
+					hd.getMaHD(),
+					"?", // chưa biết
+					hd.getKhachHang().getMaKhachHang(),
+					hd.getMaHD(),
+					hd.getNgayXuat(),
+					hd.getKhuyenMai().getMaKM(),
+					"?", // chưa biết
+					hd.getGhiChu()
+			});
+		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object o = e.getSource();
+		if (o == btnTim) {
+			String tukhoa = textTuKhoa.getText().trim();
+			HoaDon hd = null;
+			for (HoaDon s : list) {
+				if (s.getMaHD().equals(tukhoa)) {
+					hd = s;
+					break;
+				}
+			}
+			if (hd == null) {
+				JOptionPane.showMessageDialog(this, "Không tìm thấy!");
+				return;
+			}
+			
+			textMaHD.setText(hd.getMaHD());
+			textMaKH.setText(hd.getKhachHang().getMaKhachHang());
+			textKhuyenMai.setText(hd.getKhuyenMai().getMaKM());
+			textMaNV.setText(hd.getNhanVien().getMaNV());
+			textLoai.setText(hd.getLoaiHD());
+			textNgayXuatHD.setText(hd.getNgayXuat().toString());
+		}
 	}
 }
