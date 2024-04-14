@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import connectDB.ConnectDB;
+<<<<<<< HEAD
 import entity.HoaDon;
 import entity.KhachHang;
 
@@ -15,6 +16,13 @@ public class KhachHang_Dao {
 
 	public static ArrayList<KhachHang> getAllKhachHang() {
 		dsKhachHang.clear();
+=======
+import entity.KhachHang;
+
+public class KhachHang_Dao {
+	public ArrayList<KhachHang> getAllKhachHang() {
+		ArrayList<KhachHang> dsKhachHang = new ArrayList<KhachHang>();
+>>>>>>> vantrung
 		try {
 			Connection con = ConnectDB.getConnection();
 			String sql = "select * from KhachHang";
@@ -61,7 +69,11 @@ public class KhachHang_Dao {
 			psmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+<<<<<<< HEAD
 		}
+=======
+		} 
+>>>>>>> vantrung
 		return n > 0;
 	}
 
@@ -82,6 +94,7 @@ public class KhachHang_Dao {
 			psmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+<<<<<<< HEAD
 		}
 		return n > 0;
 	}
@@ -92,6 +105,27 @@ public class KhachHang_Dao {
     			return kh;
     	}
     	return new KhachHang(maKH); // TRÁNH LỖI
+=======
+		} 
+		return n > 0;
+	}
+
+	public KhachHang getKhachHangTheoMa(String maKH) {
+		KhachHang kh = null;
+		try {
+			Connection con = ConnectDB.getConnection();
+			String sql = "select * from KhachHang where maKhachHang = '" + maKH + "'";
+			Statement stm = con.createStatement();
+			ResultSet rs = stm.executeQuery(sql);
+			while (rs.next()) {
+				kh = new KhachHang(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getInt(5),
+						rs.getString(6));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return kh;
+>>>>>>> vantrung
 	}
 
 	public ArrayList<KhachHang> getKhachHangTheoTen(String tenKH) {
@@ -102,8 +136,13 @@ public class KhachHang_Dao {
 			Statement stm = con.createStatement();
 			ResultSet rs = stm.executeQuery(sql);
 			while (rs.next()) {
+<<<<<<< HEAD
 				dsKhachHang.add(new KhachHang(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4),
 						rs.getInt(5), rs.getString(6)));
+=======
+				dsKhachHang.add(new KhachHang(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getInt(5),
+						rs.getString(6)));
+>>>>>>> vantrung
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

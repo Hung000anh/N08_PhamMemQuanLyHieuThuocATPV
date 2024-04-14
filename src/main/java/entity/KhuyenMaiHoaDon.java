@@ -13,6 +13,10 @@ public class KhuyenMaiHoaDon {
 	private Double giamGiaHoaDon;
 	
 	
+	public KhuyenMaiHoaDon(String maKM) {
+		super();
+		this.maKM = maKM;
+	}
 	public KhuyenMaiHoaDon(String maKM, String tenKM, Date ngayBatDau, Date ngayKetThuc, Boolean loaiChuongTrinh,
 			Boolean trangThai, Double giaTriHoaDon, Double giamGiaHoaDon) {
 		super();
