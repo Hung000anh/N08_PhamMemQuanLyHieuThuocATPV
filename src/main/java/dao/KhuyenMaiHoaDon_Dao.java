@@ -20,11 +20,21 @@ public class KhuyenMaiHoaDon_Dao {
     	DanhSachKhuyenMaiHoaDon.clear();
         try {
             Connection con = ConnectDB.getConnection();
+            
+            // Cập nhật trạng thái của các bản ghi có ngày kết thúc < ngày hiện tại
+            java.util.Date ngayHienTai = new java.util.Date();
+            String updateSql = "UPDATE KhuyenMaiHoaDon SET TrangThai = 0 WHERE NgayKetThuc < ? OR NgayBatDau > ?";
+            PreparedStatement updateStatement = con.prepareStatement(updateSql);
+            updateStatement.setDate(1, new java.sql.Date(ngayHienTai.getTime())); // Ngày kết thúc < ngày hiện tại
+            updateStatement.setDate(2, new java.sql.Date(ngayHienTai.getTime())); // Ngày bắt đầu > ngày hiện tại
+            updateStatement.executeUpdate();
+            updateStatement.close();
+            
             String sql = "SELECT * FROM KhuyenMaiHoaDon"; // Corrected table name
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
-            	String maKM = rs.getString(1); 
+            	String maKM = rs.getString(1);  
             	String tenKM = rs.getString(2);
             	Date ngayBatDau = rs.getDate(3);
             	Date ngayKetThuc = rs.getDate(4);;
