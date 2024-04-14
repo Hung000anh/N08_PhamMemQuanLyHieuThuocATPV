@@ -548,7 +548,6 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 				SanPham_Dao sp_dao=new SanPham_Dao();		
 				SanPham sp=sp_dao.getSanPhamTheoMa(ma);
 				chiTiecHoaDon cthd=new chiTiecHoaDon(new HoaDon(textField.getText()), sp, soLuong)	;
-				sp.setSoluongTon(32);
 				JOptionPane.showMessageDialog(this, sp.getDonGiaBan());
 				Object[] row = { q, ma,ten,dvt,soLuong,cthd.getThanhTien()};
 				model.addRow(row);
