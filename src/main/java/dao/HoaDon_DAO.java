@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import connectDB.Database;
@@ -12,14 +14,14 @@ import entity.*;
 
 
 public class HoaDon_DAO {
-    private ArrayList<HoaDon> DanhSachHoaDon;
-    
-    
+    private static ArrayList<HoaDon> DanhSachHoaDon  = new ArrayList<HoaDon>();
+
     public HoaDon_DAO() {
-    	DanhSachHoaDon = new ArrayList<HoaDon>();
+    	docTubang();
     }
-    
-    public ArrayList<HoaDon> docTubang() {
+
+    public static ArrayList<HoaDon> docTubang() {
+    	DanhSachHoaDon.clear();
         try {
             Connection con = Database.getInstance().getConnection();
             String sql = "SELECT * FROM HoaDon"; // Corrected table name
@@ -49,5 +51,27 @@ public class HoaDon_DAO {
             e.printStackTrace();
         }
         return DanhSachHoaDon;
+    }
+
+    // gọi docTuBang() trước
+    public static HoaDon layHoaDonTheoMa(String maHD) {
+    	for (HoaDon hd : DanhSachHoaDon) {
+    		if (maHD.equals(hd.getMaHD()))
+    			return hd;
+    	}
+    	return null;
+    }
+
+    // gọi docTuBang() trước
+    public static int laySLHoaDonTheoNgay(String ngay) {
+    	int num = 0;
+    	for (HoaDon hd : DanhSachHoaDon) {
+    		java.util.Date date = hd.getNgayXuat();
+            DateFormat dateFormat = new SimpleDateFormat("ddmmyy");  
+            String strDate = dateFormat.format(date);
+    		if (ngay.equals(strDate))
+    			num++;
+    	}
+    	return num;
     }
 }

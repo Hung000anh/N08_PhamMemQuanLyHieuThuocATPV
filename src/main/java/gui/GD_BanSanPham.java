@@ -5,8 +5,10 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -27,6 +29,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import dao.HoaDon_DAO;
+import dao.KhuyenMaiSanPham_Dao;
 import dao.NhanVien_Dao;
 import dao.SanPham_Dao;
 import entity.ChiTietHoaDon;
@@ -463,17 +466,23 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		updateHoaDon();
 	}
 	public void updateComBoBoxMaSP() {
-		SanPham_Dao dsSP = new SanPham_Dao();
-	
-		List<SanPham> list = dsSP.docTubang();
-		for (SanPham ds : list) {
-			comBoBoxMaSP.addItem(ds.getMaSP());
+		KhuyenMaiSanPham_Dao.docTubang();
+		ArrayList<SanPham> list = SanPham_Dao.docTubang();
+		for (int i = 0; i < list.size(); i++) {
+			comBoBoxMaSP.addItem(list.get(i).getMaSP());
 		}
 	}
 	public void updateDuLieuSP() {
-		SanPham_Dao sP_dao = new SanPham_Dao();
-		String masp=  comBoBoxMaSP.getSelectedItem().toString();
-		SanPham sp= sP_dao.getSanPhamTheoMa(masp);
+		KhuyenMaiSanPham_Dao.docTubang();
+		SanPham_Dao.docTubang();
+		
+		Object obj = comBoBoxMaSP.getSelectedItem();
+		
+		if (obj == null) return;
+		
+		String masp = obj.toString();
+		
+		SanPham sp = SanPham_Dao.laySanPhamTheoMa(masp);
 		
 		txtMaSp.setText(masp);
 		
@@ -486,44 +495,30 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		txtKhuyenMai.setText(sp.getKhuyenMai().getMaKM());
 		txtGia.setText(sp.getDonGiaBan().toString());
 	}
-	private String thuTuHoaDonTrongNgay() {
-		int sl = 0;
-		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
-	    String currentDate = sdf.format(new Date());
 
-		HoaDon_DAO hd_Dao=new HoaDon_DAO();
-		for (HoaDon hd : hd_Dao.docTubang()) {
-			if (hd.getMaHD().substring(2, 8).equals(currentDate))
-				sl++;
-		}
-		String slString = String.format("%07d", sl + 1);
-		return slString;
-	}
-	private String generateRandomCode() {
-		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
-	    String currentDate = sdf.format(new Date());
-		String ma="HD";
-		
-		ma+=currentDate;
-		
-		return ma + thuTuHoaDonTrongNgay();
-	}
-	private void loadMa() {
-		String code;
-		code = generateRandomCode();
-		textField.setText(code);
+	private String taoMaHoaDon() {
+		// HDddmmyyxxxxxxx
+        Date date = new Date(); 
+        DateFormat dateFormat = new SimpleDateFormat("ddmmyy");  
+        String strDate = dateFormat.format(date);
+        
+        int number = HoaDon_DAO.laySLHoaDonTheoNgay(strDate) + 1;
+        int desiredWidth = 7; // Total width including leading zeros
+
+        // Convert the integer to a formatted string
+        String formattedString = String.format("%0" + desiredWidth + "d", number);
+        
+		return "HD" + strDate + formattedString;
 	}
 	
 	public void updateHoaDon() {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    String currentDate = sdf.format(new Date());
-	loadMa();
 
 	textField_1.setText(currentDate);
-	NhanVien_Dao nv_dao=new NhanVien_Dao();
-	NhanVien nv = null;
-	nv = nv_dao.getNhanVienTheoMa(DataManager.getUserName());
+	NhanVien_Dao.getAllNhanVien();
+	NhanVien nv = NhanVien_Dao.getNhanVienTheoMa(DataManager.getUserName());
 	
 	textField_3.setText(null);
 	textField_4.setText("Hóa Đơn Bán");
@@ -543,9 +538,8 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 				String ma =comBoBoxMaSP.getSelectedItem().toString();
 				String ten=txtTen.getText();
 				String dvt=txtDonViTinh.getText();
-				int soLuong=Integer.parseInt(txtSoLuong.getText());
-				SanPham_Dao sp_dao=new SanPham_Dao();		
-				SanPham sp=sp_dao.getSanPhamTheoMa(ma);
+				int soLuong=Integer.parseInt(txtSoLuong.getText());	
+				SanPham sp = SanPham_Dao.laySanPhamTheoMa(ma);
 				ChiTietHoaDon cthd=new ChiTietHoaDon(new HoaDon(textField.getText()), sp, soLuong)	;
 				sp.setSoluongTon(32);
 				JOptionPane.showMessageDialog(this, sp.getDonGiaBan());

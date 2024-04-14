@@ -13,13 +13,15 @@ import entity.NhanVien;
 
 public class NhanVien_Dao {
 
-	private ArrayList<NhanVien> dsNhanVien;
-	
-	public NhanVien_Dao() {
-		dsNhanVien = new ArrayList<NhanVien>();
-	}
+	private static ArrayList<NhanVien> dsNhanVien = new ArrayList<NhanVien>();
 
-	public ArrayList<NhanVien> getAllNhanVien() {
+    public NhanVien_Dao() {
+    	getAllNhanVien();
+    }
+
+	public static ArrayList<NhanVien> getAllNhanVien() {
+			dsNhanVien.clear();
+
 			try {
 				ConnectDB.getConnection();
 			} catch (Exception e) {
@@ -44,7 +46,7 @@ public class NhanVien_Dao {
 		}
 	
 	
-	public boolean addNhanVien(NhanVien nv) {
+	public static boolean addNhanVien(NhanVien nv) {
 		try {
 			ConnectDB.getConnection();
 		} catch (Exception e) {
@@ -80,7 +82,7 @@ public class NhanVien_Dao {
 		}
 		return n > 0;
 	}
-	public boolean deleteNhanVien(String maNV) {
+	public static boolean deleteNhanVien(String maNV) {
 		try {
 			ConnectDB.getConnection();
 		} catch (Exception e) {
@@ -109,7 +111,7 @@ public class NhanVien_Dao {
 		return n > 0;
 	}
 	
-	public boolean updateNhanVien(NhanVien nv) {
+	public static boolean updateNhanVien(NhanVien nv) {
 		try {
 			ConnectDB.getConnection();
 		} catch (Exception e) {
@@ -144,7 +146,7 @@ public class NhanVien_Dao {
 		return n > 0;
 	}
 
-	public NhanVien getNhanVienTheoMa(String maNV) {
+	public static NhanVien getNhanVienTheoMa(String maNV) {
 		NhanVien nv = null;
 		try {
 			ConnectDB.getConnection();
@@ -167,7 +169,7 @@ public class NhanVien_Dao {
 		return nv;
 	}
 
-	public ArrayList<NhanVien> getNhanVienTheoTen(String tenNV) {
+	public static ArrayList<NhanVien> getNhanVienTheoTen(String tenNV) {
 		ArrayList<NhanVien> dsNhanVien = new ArrayList<NhanVien>();
 		try {
 			ConnectDB.getConnection();
@@ -189,7 +191,7 @@ public class NhanVien_Dao {
 		}
 		return dsNhanVien;
 	}
-	public NhanVien getNhanVienTheoSDT(String sDT) {
+	public static NhanVien getNhanVienTheoSDT(String sDT) {
 		NhanVien nv = null;
 		try {
 			ConnectDB.getConnection();
