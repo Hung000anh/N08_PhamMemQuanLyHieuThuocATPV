@@ -34,6 +34,7 @@ import dao.NhanVien_Dao;
 import dao.SanPham_Dao;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
+import entity.KhuyenMaiSanPham;
 import entity.NhanVien;
 import entity.SanPham;
 
@@ -492,7 +493,8 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		txtSLTon.setText(String.valueOf(sp.getSoluongTon()));
 	
 		txtDonViTinh.setText(sp.getDonViTinh());
-		txtKhuyenMai.setText(sp.getKhuyenMai().getMaKM());
+		KhuyenMaiSanPham km = sp.getKhuyenMai();
+		txtKhuyenMai.setText(km == null? "" : km.getMaKM());
 		txtGia.setText(sp.getDonGiaBan().toString());
 	}
 
