@@ -32,7 +32,7 @@ public class HoaDon_DAO {
             while (rs.next()) {
             	String maHD = rs.getString(1); 
             	String maKhachHang = rs.getString(2);
-            	KhachHang khachHang = new KhachHang(maKhachHang);
+            	KhachHang khachHang = KhachHang_Dao.getKhachHangTheoMa(maKhachHang);
             	String maNV = rs.getString(3);
             	NhanVien nhanVien = NhanVien_Dao.getNhanVienTheoMa(maNV);
             	Date ngayXuat = rs.getDate(4);;
@@ -69,7 +69,7 @@ public class HoaDon_DAO {
     	int num = 0;
     	for (HoaDon hd : DanhSachHoaDon) {
     		java.util.Date date = hd.getNgayXuat();
-            DateFormat dateFormat = new SimpleDateFormat("ddmmyy");  
+            DateFormat dateFormat = new SimpleDateFormat("ddMMyy");  
             String strDate = dateFormat.format(date);
     		if (ngay.equals(strDate))
     			num++;

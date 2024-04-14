@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import connectDB.ConnectDB;
+import entity.HoaDon;
 import entity.KhachHang;
 
 public class KhachHang_Dao {
@@ -85,19 +86,12 @@ public class KhachHang_Dao {
 		return n > 0;
 	}
 
-	public KhachHang getKhachHangTheoMa(String maKH) {
-		KhachHang kh = null;
-		try {
-			Connection con = ConnectDB.getConnection();
-			String sql = "select * from KhachHang where maKhachHang = '" + maKH + "'";
-			Statement stm = con.createStatement();
-			ResultSet rs = stm.executeQuery(sql);
-			kh = new KhachHang(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getInt(5),
-					rs.getString(6));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return kh;
+	public static KhachHang getKhachHangTheoMa(String maKH) {
+    	for (KhachHang kh : dsKhachHang) {
+    		if (maKH.equals(kh.getMaKhachHang()))
+    			return kh;
+    	}
+    	return new KhachHang(maKH); // TRÁNH LỖI
 	}
 
 	public ArrayList<KhachHang> getKhachHangTheoTen(String tenKH) {
