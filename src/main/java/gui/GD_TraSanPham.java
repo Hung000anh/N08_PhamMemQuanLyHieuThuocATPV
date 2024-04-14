@@ -116,6 +116,11 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 
 	private myJButton btnThm;
 
+
+	private myJButton btnNewButton_1;
+
+	private ArrayList<ChiTietHoaDon> list = new ArrayList<ChiTietHoaDon>();
+
 	public GD_TraSanPham() {
 		setBackground(new Color(246, 245, 255));
 		setLayout(null);
@@ -482,10 +487,11 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		panel_1_1.add(txtNhpLDo);
 		txtNhpLDo.setColumns(10);
 		
-		myJButton btnNewButton_1 = new myJButton("Xác nhận");
+		btnNewButton_1 = new myJButton("Xác nhận");
 		btnNewButton_1.setBlue();
 		btnNewButton_1.setBounds(387, 566, 144, 31);
 		panel_1_1.add(btnNewButton_1);
+		btnNewButton_1.addActionListener(this);
 		
 		txtNhpMSn = new PlaceholderTextField();
 		txtNhpMSn.setPlaceholder("Nhập mã sản phẩm");
@@ -522,6 +528,15 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		return "HD" + strDate + formattedString;
 	}
 
+
+	private void capnhatThanhTien() {
+		double tien = 0;
+		for (ChiTietHoaDon _e : list) {
+			tien += _e.getThanhTien();
+		}
+		txtTienTra.setText(String.valueOf(tien));
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
@@ -532,6 +547,7 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 			ChiTietHoaDon_DAO.docTubang();
 			model.getDataVector().removeAllElements();
 			model_1.getDataVector().removeAllElements();
+			list.clear();
 			
 			HoaDon hd = HoaDon_DAO.layHoaDonTheoMa(ma);
 			ArrayList<ChiTietHoaDon> lst = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(ma);
@@ -621,22 +637,78 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 				if (model_1.getValueAt(i, 0).equals(maSP)) {
 					if (Integer.parseInt(sl) <= 0) {
 						model_1.removeRow(i);
+						{
+							for (ChiTietHoaDon _f : list) {
+								if (_f.getSanPham().getMaSP().equals(maSP)) {
+									list.remove(_f);
+									break;
+								}
+							}
+						}
+						capnhatThanhTien();
 						return;
 					}
 					model_1.setValueAt(sl, i, 2);
+					{
+						for (ChiTietHoaDon _f : list) {
+							if (_f.getSanPham().getMaSP().equals(maSP)) {
+								_f.setSoLuong(Integer.parseInt(sl));
+								break;
+							}
+						}
+					}
+					capnhatThanhTien();
 					return;
 				}
 			}
 
 			if (Integer.parseInt(sl) > 0)
-			model_1.addRow(
-					new Object[] {
-							cthd.getSanPham().getMaSP(),
-							cthd.getSanPham().getTenSP(),
-							txtNhpSLng.getText(),
-							cthd.getThanhTien()
-					}
-			);
+				model_1.addRow(
+						new Object[] {
+								cthd.getSanPham().getMaSP(),
+								cthd.getSanPham().getTenSP(),
+								sl,
+								cthd.getThanhTien()
+						}
+				);
+			list.add(new ChiTietHoaDon(HoaDonTra, cthd.getSanPham(), Integer.parseInt(sl)));
+			capnhatThanhTien();
+		}
+		if (o == btnNewButton_1) {
+			if (currentHoaDon == null) {
+				JOptionPane.showMessageDialog(this, "Vui lòng tìm hóa đơn trước");
+				return;
+			}
+			HoaDonTra.setGhiChu(txtNhpLDo.getText());
+			HoaDonTra.setLoaiHD("Hóa đơn trả");
+			HoaDon_DAO.them(HoaDonTra);
+			
+			txtHoaDon.setText("");
+			txtMaNV.setText("");
+			txtMaKM.setText("");
+			txtMaKH.setText("");
+			txtHoTen.setText("");
+			txtGioiTinh.setText("");
+			txtSDT.setText("");
+			txtNgayMua.setText("");
+			txtThanhTien.setText("");
+
+			txtHoaDon_1.setText(""); 
+			txtMaNV_1.setText("");
+			txtMaKH_1.setText("");
+			txtHoTen_1.setText("");
+			txtGioiTinh_1.setText("");
+			txtSDT_1.setText("");
+			txtNgayTra.setText("");
+			txtTienTra.setText("");
+			
+
+			model.getDataVector().removeAllElements();
+			model_1.getDataVector().removeAllElements();
+			currentHoaDon = null;
+			HoaDonTra = null;
+
+			JOptionPane.showMessageDialog(this, "Đã lưu hóa đơn trả hàng");
 		}
 		
 	}
