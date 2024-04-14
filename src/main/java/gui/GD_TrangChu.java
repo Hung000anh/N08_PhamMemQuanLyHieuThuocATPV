@@ -17,7 +17,7 @@ import javax.swing.border.LineBorder;
 
 public class GD_TrangChu extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	private JButton btnBanThuoc;
+	public JButton btnBanThuoc;
 	private JButton btnTraThuoc;
 	private JButton btnKhuyenMai;
 	public JButton btnNhanVien;

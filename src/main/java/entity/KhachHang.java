@@ -1,72 +1,85 @@
 package entity;
 
 public class KhachHang {
-    private String maKhachHang;
-    private String tenKhachHang;
-    private String soDienThoai;
-    private boolean gioiTinh;
-    private int tuoi;
+	private String maKhachHang;
+	private String tenKhachHang;
+	private String soDienThoai;
+	private boolean gioiTinh;
+	private int tuoi;
+	private String hinhAnhKhachHang;
 
-    public KhachHang(String maKhachHang) { this.maKhachHang = maKhachHang; }
+	public KhachHang() {
+		super();
+	}
 
-    public KhachHang(String maKhachHang, String tenKhachHang, String soDienThoai, boolean gioiTinh, int tuoi) {
-        this.maKhachHang = maKhachHang;
-        this.tenKhachHang = tenKhachHang;
-        this.soDienThoai = soDienThoai;
-        this.gioiTinh = gioiTinh;
-        this.tuoi = tuoi;
-    }
+	public KhachHang(String maKhachHang) {
+		super();
+		this.maKhachHang = maKhachHang;
+	}
 
-    // Getters và Setters cho mỗi thuộc tính
-    public String getMaKhachHang() {
-        return maKhachHang;
-    }
+	public KhachHang(String maKhachHang, String tenKhachHang, String soDienThoai, boolean gioiTinh, int tuoi,
+			String hinhAnhKhachHang) {
+		super();
+		this.maKhachHang = maKhachHang;
+		this.tenKhachHang = tenKhachHang;
+		this.soDienThoai = soDienThoai;
+		this.gioiTinh = gioiTinh;
+		this.tuoi = tuoi;
+		this.hinhAnhKhachHang = hinhAnhKhachHang;
+	}
 
-    public void setMaKhachHang(String maKhachHang) {
-        this.maKhachHang = maKhachHang;
-    }
+	public String getMaKhachHang() {
+		return maKhachHang;
+	}
 
-    public String getTenKhachHang() {
-        return tenKhachHang;
-    }
+	public void setMaKhachHang(String maKhachHang) {
+		this.maKhachHang = maKhachHang;
+	}
 
-    public void setTenKhachHang(String tenKhachHang) {
-        this.tenKhachHang = tenKhachHang;
-    }
+	public String getTenKhachHang() {
+		return tenKhachHang;
+	}
 
-    public String getSoDienThoai() {
-        return soDienThoai;
-    }
+	public void setTenKhachHang(String tenKhachHang) {
+		this.tenKhachHang = tenKhachHang;
+	}
 
-    public void setSoDienThoai(String soDienThoai) {
-        this.soDienThoai = soDienThoai;
-    }
+	public String getSoDienThoai() {
+		return soDienThoai;
+	}
 
-    public boolean isGioiTinh() {
-        return gioiTinh;
-    }
+	public void setSoDienThoai(String soDienThoai) {
+		this.soDienThoai = soDienThoai;
+	}
 
-    public void setGioiTinh(boolean gioiTinh) {
-        this.gioiTinh = gioiTinh;
-    }
+	public boolean isGioiTinh() {
+		return gioiTinh;
+	}
 
-    public int getTuoi() {
-        return tuoi;
-    }
+	public void setGioiTinh(boolean gioiTinh) {
+		this.gioiTinh = gioiTinh;
+	}
 
-    public void setTuoi(int tuoi) {
-        this.tuoi = tuoi;
-    }
+	public int getTuoi() {
+		return tuoi;
+	}
 
-    // Phương thức toString() để in thông tin KhachHang
-    @Override
-    public String toString() {
-        return "KhachHang{" +
-                "maKhachHang='" + maKhachHang + '\'' +
-                ", tenKhachHang='" + tenKhachHang + '\'' +
-                ", soDienThoai='" + soDienThoai + '\'' +
-                ", gioiTinh=" + gioiTinh +
-                ", tuoi=" + tuoi +
-                '}';
-    }
+	public void setTuoi(int tuoi) {
+		this.tuoi = tuoi;
+	}
+
+	public String getHinhAnhKhachHang() {
+		return hinhAnhKhachHang;
+	}
+
+	public void setHinhAnhKhachHang(String hinhAnhKhachHang) {
+		this.hinhAnhKhachHang = hinhAnhKhachHang;
+	}
+
+	@Override
+	public String toString() {
+		return "KhachHang [maKhachHang=" + maKhachHang + ", tenKhachHang=" + tenKhachHang + ", soDienThoai="
+				+ soDienThoai + ", gioiTinh=" + gioiTinh + ", tuoi=" + tuoi + ", hinhAnhKhachHang=" + hinhAnhKhachHang
+				+ "]";
+	}
 }

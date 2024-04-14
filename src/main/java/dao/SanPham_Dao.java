@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import connectDB.ConnectDB;
 import connectDB.Database;
+import entity.HoaDon;
 import entity.KhuyenMaiSanPham;
 import entity.NhanVien;
 import entity.SanPham;
@@ -205,12 +206,10 @@ public class SanPham_Dao {
            
                 
                 
-<<<<<<< HEAD
                 sp = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, donGiaBan, soluongTon, DonViTinh, hinhAnhSanPham, khuyenMai);
-=======
-                SanPham s = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, soluongTon, donGiaBan,hinhAnhSanPham, DonViTinh,  khuyenMai);
+                SanPham s = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, donGiaBan, soluongTon,hinhAnhSanPham, DonViTinh,  khuyenMai);
                 DanhSachSanPham.add(s);
->>>>>>> vantrung
+
             }
             rs.close();
             statement.close();
@@ -256,7 +255,7 @@ public class SanPham_Dao {
 			ResultSet rs = stm.executeQuery(sql);
 			while (rs.next()) {
 			
-				sp=new SanPham(rs.getString(1), rs.getString(2), rs.getString(3), rs.getDate(4), rs.getDate(5), rs.getDouble(6), rs.getInt(7),rs.getDouble(8), rs.getString(9), rs.getString(10), new KhuyenMaiSanPham(rs.getString(11)));
+				sp=new SanPham(rs.getString(1), rs.getString(2), rs.getString(3), rs.getDate(4), rs.getDate(5), rs.getDouble(6), rs.getDouble(8),rs.getInt(7), rs.getString(9), rs.getString(10), new KhuyenMaiSanPham(rs.getString(11)));
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -264,4 +263,35 @@ public class SanPham_Dao {
 		}
 		return sp;
 	}
+
+	public boolean updateSoLuongTonTheoMa(String ma,int soLuongTon) {
+		try {
+			ConnectDB.getConnection();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement psmt = null;
+		int n = 0;
+		try {
+			psmt = con.prepareStatement(
+					"UPDATE SanPham\r\n"
+					+ "SET soLuongTon=?\r\n"
+					+ "WHERE maSanPham=?;\r\n"
+					+ "");
+				psmt.setInt(1, soLuongTon);
+		        psmt.setString(2, ma);
+			n = psmt.executeUpdate();
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			try {
+				psmt.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+		}
+		return n > 0;
+	}
+
 }

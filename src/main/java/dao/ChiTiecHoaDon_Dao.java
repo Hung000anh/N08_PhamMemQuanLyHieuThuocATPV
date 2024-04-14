@@ -19,7 +19,7 @@ public class ChiTiecHoaDon_Dao {
 		PreparedStatement psmt = null;
 		int n = 0;
 		try {
-			psmt = con.prepareStatement("insert into ChiTiecHoaDon values(?,?,?,?)");
+			psmt = con.prepareStatement("insert into ChiTietHoaDon values(?,?,?,?)");
 			psmt.setString(1, cthd.getHoaDon().getMaHD());
 			psmt.setString(2, cthd.getSanPham().getMaSP());
 			psmt.setInt(3, cthd.getSoLuong());
@@ -35,6 +35,34 @@ public class ChiTiecHoaDon_Dao {
 			} catch (Exception e2) {
 				// TODO: handle exception
 				e2.printStackTrace();
+			}
+		}
+		return n > 0;
+	}
+	public boolean deleteChiTiecHoaDon(String tenSP) {
+		try {
+			ConnectDB.getConnection();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement psmt = null;
+
+		int n = 0;
+		try {
+			psmt = con.prepareStatement("DELETE FROM ChiTietHoaDon WHERE maSanPham=?;");
+			psmt.setString(1, tenSP);
+		
+			n = psmt.executeUpdate();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				psmt.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
 			}
 		}
 		return n > 0;
