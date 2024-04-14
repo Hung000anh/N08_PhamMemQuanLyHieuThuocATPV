@@ -6,15 +6,17 @@ public class KhachHang {
     private String soDienThoai;
     private boolean gioiTinh;
     private int tuoi;
+    private String hinhAnhKhachHang;
 
     public KhachHang(String maKhachHang) { this.maKhachHang = maKhachHang; }
 
-    public KhachHang(String maKhachHang, String tenKhachHang, String soDienThoai, boolean gioiTinh, int tuoi) {
+    public KhachHang(String maKhachHang, String tenKhachHang, String soDienThoai, boolean gioiTinh, int tuoi, String hinhAnhKhachHang) {
         this.maKhachHang = maKhachHang;
         this.tenKhachHang = tenKhachHang;
         this.soDienThoai = soDienThoai;
         this.gioiTinh = gioiTinh;
         this.tuoi = tuoi;
+        this.hinhAnhKhachHang = hinhAnhKhachHang;
     }
 
     // Getters và Setters cho mỗi thuộc tính
@@ -58,6 +60,14 @@ public class KhachHang {
         this.tuoi = tuoi;
     }
 
+    public String getHinhAnhKhachHang() {
+    	return hinhAnhKhachHang;
+    }
+
+    public void setHinhAnhKhachHang(String hinhAnhKhachHang) {
+    	this.hinhAnhKhachHang = hinhAnhKhachHang;
+    }
+    
     // Phương thức toString() để in thông tin KhachHang
     @Override
     public String toString() {
