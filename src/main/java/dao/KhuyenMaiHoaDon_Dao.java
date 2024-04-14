@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import connectDB.ConnectDB;
 import connectDB.Database;
 import entity.KhuyenMaiHoaDon;
 
@@ -15,8 +17,9 @@ public class KhuyenMaiHoaDon_Dao {
     private static ArrayList<KhuyenMaiHoaDon> DanhSachKhuyenMaiHoaDon = new ArrayList<KhuyenMaiHoaDon>();
     
     public static ArrayList<KhuyenMaiHoaDon> docTubang() {
+    	DanhSachKhuyenMaiHoaDon.clear();
         try {
-            Connection con = Database.getInstance().getConnection();
+            Connection con = ConnectDB.getConnection();
             String sql = "SELECT * FROM KhuyenMaiHoaDon"; // Corrected table name
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);
@@ -42,7 +45,7 @@ public class KhuyenMaiHoaDon_Dao {
         return DanhSachKhuyenMaiHoaDon;
     }
     public static boolean themKhuyenMaiHoaDon(KhuyenMaiHoaDon k) {
-        try (Connection con = Database.getInstance().getConnection();
+        try (Connection con = ConnectDB.getConnection();
                 PreparedStatement stmt = con.prepareStatement("INSERT INTO KhuyenMaiHoaDon VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
             
             // Thiết lập các giá trị cho câu lệnh truy vấn
@@ -78,7 +81,7 @@ public class KhuyenMaiHoaDon_Dao {
         Connection con = null;
         PreparedStatement stmt = null;
         try {
-            con = Database.getInstance().getConnection();
+            con = ConnectDB.getConnection();
             String sql = "DELETE FROM KhuyenMaiHoaDon WHERE maKhuyenMai = ?";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, ma);
@@ -88,4 +91,29 @@ public class KhuyenMaiHoaDon_Dao {
             System.err.println("Lỗi khi xóa khuyến mãi: " + e.getMessage());
         }
     }
+    public boolean suaKhuyenMai(KhuyenMaiHoaDon kmhd) {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = ConnectDB.getConnection();
+            String sql = "UPDATE KhuyenMaiHoaDon SET tenKhuyenMai = ?, ngayBatDau = ?, ngayKetThuc = ?, loaiChuongTrinh = ?, trangThai = ?, giaTriHoaDon = ?, giamGiaHoaDon = ? WHERE maKhuyenMai = ?";
+            stmt = con.prepareStatement(sql);
+            
+            // Set values using getters of KhuyenMaiHoaDon object
+            stmt.setString(1, kmhd.getTenKM());
+            stmt.setDate(2, new java.sql.Date(kmhd.getNgayBatDau().getTime()));
+            stmt.setDate(3, new java.sql.Date(kmhd.getNgayKetThuc().getTime()));
+            stmt.setBoolean(4, kmhd.getLoaiChuongTrinh());
+            stmt.setBoolean(5, kmhd.getTrangThai());
+            stmt.setDouble(6, kmhd.getGiaTriHoaDon());
+            stmt.setDouble(7,kmhd.getGiamGiaHoaDon() / 100 );
+            stmt.setString(8, kmhd.getMaKM());
+            int n = stmt.executeUpdate();
+            return n > 0;
+        } catch (SQLException e) {
+        	e.printStackTrace();
+        	return false;
+        } 
+    }
+    
 }

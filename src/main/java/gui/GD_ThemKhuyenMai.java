@@ -109,7 +109,7 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
         tt_TimKiem.add(lblLoiChngTrnh);
 
         txtLoai = new JComboBox<>();
-        txtLoai.setModel(new DefaultComboBoxModel<>(new String[] { "Giảm giá theo hóa đơn", "Giảm giá theo sản phẩm" }));
+        txtLoai.setModel(new DefaultComboBoxModel<>(new String[] { "Khuyến mãi theo hóa đơn", "Khuyến mãi theo sản phẩm" }));
         txtLoai.setBounds(650, 92, 250, 32);
         tt_TimKiem.add(txtLoai);
 
@@ -145,8 +145,8 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
         JPanel panel1 = createPanel1("Khuyến mãi theo hóa đơn", Color.white);
         JPanel panel2 = createPanel2("Khuyến mãi theo sản phẩm", Color.white);
 
-        cardPanel.add(panel1, "Giảm giá theo hóa đơn");
-        cardPanel.add(panel2, "Giảm giá theo sản phẩm");
+        cardPanel.add(panel1, "Khuyến mãi theo hóa đơn");
+        cardPanel.add(panel2, "Khuyến mãi theo sản phẩm");
         
         JButton btnLuu = new JButton("Lưu và áp dụng");
         btnLuu.setForeground(new Color(0, 0, 255));
@@ -194,24 +194,21 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
                     JOptionPane.showMessageDialog(null, "Ngày kết thúc phải lớn hơn ngày hiện tại", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return; 
                 }
-
-                
-                
-                if (txtLoai.getSelectedItem().equals("Giảm giá theo hóa đơn")) 
+                if (txtLoai.getSelectedItem().equals("Khuyến mãi theo hóa đơn")) 
                 {
                 	String giaTriHoaDonStr = txtGiaTriHD.getText();
-                    if (!kiemTraSoNguyenDuong(giaTriHoaDonStr)) {
-                        JOptionPane.showMessageDialog(null, "Giá trị hóa đơn phải là một số nguyên dương", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    if (!kiemTraSoThucDuong(giaTriHoaDonStr)) {
+                        JOptionPane.showMessageDialog(null, "Giá trị hóa đơn phải là một số thực dương", "Lỗi", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                    int giaTriHoaDon = Integer.parseInt(giaTriHoaDonStr);
+                    double giaTriHoaDon = Double.parseDouble(giaTriHoaDonStr);
                     // Kiểm tra giảm giá hóa đơn
                     String giamGiaHoaDonStr = txtGiamGiaHD.getText();
-                    if (!kiemTraSoNguyenDuong(giamGiaHoaDonStr)) {
-                        JOptionPane.showMessageDialog(null, "Giảm giá hóa đơn phải là một số nguyên dương", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    if (!kiemTraSoThucDuong(giamGiaHoaDonStr)) {
+                        JOptionPane.showMessageDialog(null, "Giảm giá hóa đơn phải là một số thực dương", "Lỗi", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                    int giamGiaHoaDon = Integer.parseInt(giamGiaHoaDonStr);
+                    double giamGiaHoaDon =  Double.parseDouble(giamGiaHoaDonStr);
 
                     if (giamGiaHoaDon > 100) {
                         JOptionPane.showMessageDialog(null, "Giảm giá hóa đơn không được lớn hơn 100", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -228,12 +225,9 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
                     } catch (ParseException ex) {
                         ex.printStackTrace();
                     }
-                    
-                    Double giaTriHoaDon1 = Double.parseDouble(txtGiaTriHD.getText());
-                    Double giamGiaHoaDon1 = Double.parseDouble(txtGiamGiaHD.getText());
-                    
+
                     // Tạo đối tượng KhuyenMaiHoaDon
-                    KhuyenMaiHoaDon khuyenMaiHoaDon = new KhuyenMaiHoaDon(maKM, tenKM, ngayBatDau1, ngayKetThuc1,  true, true, giaTriHoaDon1, giamGiaHoaDon1);
+                    KhuyenMaiHoaDon khuyenMaiHoaDon = new KhuyenMaiHoaDon(maKM, tenKM, ngayBatDau1, ngayKetThuc1,  true, true, giaTriHoaDon, giamGiaHoaDon/100);
                     
                     // Gọi phương thức thêm khuyến mãi hóa đơn từ DAO
                     KhuyenMaiHoaDon_Dao khuyenMaiHoaDonDao = new KhuyenMaiHoaDon_Dao();
@@ -247,7 +241,7 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
                     }
 
                 }
-                else if(txtLoai.getSelectedItem().equals("Giảm giá theo sản phẩm")) {
+                else if(txtLoai.getSelectedItem().equals("Khuyến mãi theo sản phẩm")) {
                     if(!xacNhan) {
                         JOptionPane.showMessageDialog(null, "Vui lòng chọn xác nhận trước khi lưu", "Lỗi", JOptionPane.ERROR_MESSAGE);
                         return;
@@ -266,7 +260,6 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
                     } catch (ParseException ex) {
                         ex.printStackTrace();
                     }
-                    
                     Double giamGiaSanPham = Double.parseDouble(txtGiamGia.getText());
                     
                     // Tạo đối tượng KhuyenMaiSanPham
@@ -405,21 +398,28 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
         scrollPane.setBounds(10, 82, 474, 408);
         panel.add(scrollPane);
         
-        JButton btnNewButton = new JButton("Xác nhận");
-        btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
-        btnNewButton.setBounds(322, 44, 107, 21);
-        panel.add(btnNewButton);
-        
-        btnNewButton.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-                if(txtGiamGia.getText().isEmpty()) {
+        JButton btnXacNhan = new JButton("Xác nhận");
+        btnXacNhan.setFont(new Font("Arial", Font.PLAIN, 16));
+        btnXacNhan.setBounds(322, 44, 107, 21);
+        panel.add(btnXacNhan);
+        btnXacNhan.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	if(txtGiamGia.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Vui lòng nhập giảm giá", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    txtGiamGia.setEditable(false);
-                    xacNhan = true;
+                } 
+            	
+            	// Lấy giá trị từ text field và chuyển đổi thành số thực
+                if(!kiemTraSoThucDuong(txtGiamGia.getText()))
+                {
+                	JOptionPane.showMessageDialog(null, "Giảm giá sản phẩm phải là một số thực dương ", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
+                
+                txtGiamGia.setEditable(false);
+                xacNhan = true;
             }
         });
+        
         
         table = new JTable();
         scrollPane.setViewportView(table);
@@ -475,16 +475,6 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
                 if(txtGiamGia.toString().isEmpty())
                 {
                 	JOptionPane.showMessageDialog(null, "Vui lòng nhập giảm giá", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                try {
-                    int giamGia = Integer.parseInt(txtGiamGia.getText());
-                    if (giamGia <= 0 || giamGia > 100) {
-                        JOptionPane.showMessageDialog(null, "Giảm giá phải là số nguyên dương và không được lớn hơn 100", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Giảm giá phải là một số nguyên dương", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 
@@ -624,10 +614,13 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
         }
     }
     //Kiểm tra số nguyên dương
-    private boolean kiemTraSoNguyenDuong(String str) {
+    private boolean kiemTraSoThucDuong(String str) {
+        if (str == null || str.isEmpty()) {
+            return false; // Hoặc true tùy thuộc vào yêu cầu của ứng dụng
+        }
         try {
-            int number = Integer.parseInt(str);
-            return number > 0;
+            double number = Double.parseDouble(str);
+            return number >= 0; // Số không âm là số dương hoặc số không
         } catch (NumberFormatException e) {
             return false;
         }

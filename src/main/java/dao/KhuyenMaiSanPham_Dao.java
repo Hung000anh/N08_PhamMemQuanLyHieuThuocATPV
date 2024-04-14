@@ -8,8 +8,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import connectDB.ConnectDB;
 import connectDB.Database;
 import entity.ChiTietHoaDon;
+import entity.KhuyenMaiHoaDon;
 import entity.KhuyenMaiSanPham;
 import entity.SanPham;
 
@@ -36,10 +38,8 @@ public class KhuyenMaiSanPham_Dao {
             	Boolean loaiChuongTrinh = rs.getBoolean(5);
             	Boolean trangThai = rs.getBoolean(6);
             	Double giamGiaSanPham = rs.getDouble(7);
-                
             	KhuyenMaiSanPham khuyenMaiSanPham = new KhuyenMaiSanPham(maKM, tenKM, ngayBatDau, ngayKetThuc, loaiChuongTrinh, trangThai, giamGiaSanPham);
             	DanhSachKhuyenMaiSanPham.add(khuyenMaiSanPham);
-            	
             }
             rs.close();
             statement.close();
@@ -49,9 +49,8 @@ public class KhuyenMaiSanPham_Dao {
         return DanhSachKhuyenMaiSanPham;
     }
     public static boolean themKhuyenMaiSanPham(KhuyenMaiSanPham k) {
-        try (Connection con = Database.getInstance().getConnection();
+        try (Connection con = ConnectDB.getConnection();
                 PreparedStatement stmt = con.prepareStatement("INSERT INTO KhuyenMaiSanPham VALUES (?, ?, ?, ?, ?, ?, ?)")) {
-            
             // Thiết lập các giá trị cho câu lệnh truy vấn
             stmt.setString(1, k.getMaKM());
             stmt.setString(2, k.getTenKM());
@@ -82,14 +81,44 @@ public class KhuyenMaiSanPham_Dao {
         Connection con = null;
         PreparedStatement stmt = null;
         try {
-            con = Database.getInstance().getConnection();
-            String sql = "DELETE FROM KhuyenMaiSanPham WHERE maKhuyenMai = ?";
-            stmt = con.prepareStatement(sql);
+            con = ConnectDB.getConnection();
+            // Cập nhật mã khuyến mãi của các sản phẩm về null
+            String updateSql = "UPDATE SanPham SET maKhuyenMai = NULL WHERE maKhuyenMai = ?";
+            PreparedStatement updateStmt = con.prepareStatement(updateSql);
+            updateStmt.setString(1, ma);
+            updateStmt.executeUpdate();
+            updateStmt.close();
+            
+            // Xóa khuyến mãi từ bảng khuyến mãi sản phẩm
+            String deleteSql = "DELETE FROM KhuyenMaiSanPham WHERE maKhuyenMai = ?";
+            stmt = con.prepareStatement(deleteSql);
             stmt.setString(1, ma);
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Lỗi khi xóa khuyến mãi: " + e.getMessage());
-            e.printStackTrace();
         }
     }
+    public boolean suaKhuyenMai(KhuyenMaiSanPham kmsp) {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = ConnectDB.getConnection();
+            String sql = "UPDATE KhuyenMaiSanPham SET tenKhuyenMai = ?, ngayBatDau = ?, ngayKetThuc = ?, loaiChuongTrinh = ?, trangThai = ?, giamGiaSP = ? WHERE maKhuyenMai = ?";
+            stmt = con.prepareStatement(sql);
+            // Set values using getters of KhuyenMaiHoaDon object
+            stmt.setString(1, kmsp.getTenKM());
+            stmt.setDate(2, new java.sql.Date(kmsp.getNgayBatDau().getTime()));
+            stmt.setDate(3, new java.sql.Date(kmsp.getNgayKetThuc().getTime()));
+            stmt.setBoolean(4, kmsp.getLoaiChuongTrinh());
+            stmt.setBoolean(5, kmsp.getTrangThai());
+            stmt.setDouble(6, kmsp.getGiamGiaSanPham());
+            stmt.setString(7, kmsp.getMaKM());
+            int n = stmt.executeUpdate();
+            return n > 0;
+        } catch (SQLException e) {
+        	e.printStackTrace();
+        	return false;
+        } 
+    }
+    
 }
