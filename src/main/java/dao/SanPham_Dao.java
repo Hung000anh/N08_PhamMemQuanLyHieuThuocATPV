@@ -97,7 +97,7 @@ public class SanPham_Dao {
                 // Duyệt qua dữ liệu KhuyenMai đã lấy được
                 while (kmResultSet.next()) {
                     // Kiểm tra mã khuyến mãi và trạng thái
-                    if (maKhuyenMai.equals(kmResultSet.getString("maKhuyenMai")) && kmResultSet.getBoolean("trangThai")) {
+                    if (maKhuyenMai != null && maKhuyenMai.equals(kmResultSet.getString("maKhuyenMai")) && kmResultSet.getBoolean("trangThai")) {
                         double donGiaNhap = rs.getDouble("donGiaNhap");
                         double giamGiaSanPham = kmResultSet.getDouble("giamGiaSP");
                         double donGiaBanMoi = donGiaNhap * (1 - giamGiaSanPham); // Giảm giá

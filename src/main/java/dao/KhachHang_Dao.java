@@ -10,8 +10,11 @@ import connectDB.ConnectDB;
 import entity.KhachHang;
 
 public class KhachHang_Dao {
-	public ArrayList<KhachHang> getAllKhachHang() {
-		ArrayList<KhachHang> dsKhachHang = new ArrayList<KhachHang>();
+
+	private static ArrayList<KhachHang> dsKhachHang = new ArrayList<KhachHang>();	
+
+	public static ArrayList<KhachHang> getAllKhachHang() {
+		dsKhachHang.clear();
 		try {
 			Connection con = ConnectDB.getConnection();
 			String sql = "select * from KhachHang";

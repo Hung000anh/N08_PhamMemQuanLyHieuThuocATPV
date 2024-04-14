@@ -1,8 +1,5 @@
 Manifest-Version: 1.0
-<<<<<<< HEAD
-Build-Jdk-Spec: 21
-=======
-Build-Jdk-Spec: 17
->>>>>>> 4cc5a5e69e1c2c396fc75d108361800c08cd15e5
+Built-By: LAPTOP MSI
+Build-Jdk: 17.0.6
 Created-By: Maven Integration for Eclipse
 

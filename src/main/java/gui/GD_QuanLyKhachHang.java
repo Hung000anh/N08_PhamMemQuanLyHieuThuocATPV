@@ -287,7 +287,7 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener, MouseL
 	private void loadData() {
 		int i = 0;
 		String gioiTinh = "";
-		for (KhachHang kh : kh_dao.getAllKhachHang()) {
+		for (KhachHang kh : KhachHang_Dao.getAllKhachHang()) {
 			i++;
 			if (kh.isGioiTinh() == true)
 				gioiTinh = "Nam";
