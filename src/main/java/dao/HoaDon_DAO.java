@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class HoaDon_DAO {
             	String maKhachHang = rs.getString(2);
             	KhachHang khachHang = new KhachHang(maKhachHang);
             	String maNV = rs.getString(3);
-            	NhanVien nhanVien = (new NhanVien_Dao()).getNhanVienTheoMa(maNV);
+            	NhanVien nhanVien = NhanVien_Dao.getNhanVienTheoMa(maNV);
             	Date ngayXuat = rs.getDate(4);;
             	String loaiHD = rs.getString(5);
             	String ghiChu = rs.getString(6);
@@ -87,7 +88,10 @@ public class HoaDon_DAO {
             stmt.setDate(4, new java.sql.Date(k.getNgayXuat().getTime())); // Chuyển đổi từ java.util.Date sang java.sql.Date
             stmt.setString(5, k.getLoaiHD());
             stmt.setString(6, k.getGhiChu());
-            stmt.setString(7, k.getKhuyenMai().getMaKM());
+            if (k.getKhuyenMai() == null)
+            		stmt.setNull(7,  Types.VARCHAR);
+            else
+            		stmt.setString(7, k.getKhuyenMai().getMaKM());
 
             int n = stmt.executeUpdate();
             return n > 0;
