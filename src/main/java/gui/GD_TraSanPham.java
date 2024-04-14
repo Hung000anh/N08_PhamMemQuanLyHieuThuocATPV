@@ -528,6 +528,19 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		return "HD" + strDate + formattedString;
 	}
 
+	private Date getDate() {
+		Date date = new Date(), date_1 = null; 
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+	    String strDate = dateFormat.format(date);
+	    
+	    try {
+	    	date_1 = dateFormat.parse(strDate);
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+	    
+	    return date_1;
+	}
 
 	private void capnhatThanhTien() {
 		double tien = 0;
@@ -595,7 +608,7 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 			txtHoTen_1.setText(hd.getKhachHang().getTenKhachHang());
 			txtGioiTinh_1.setText(hd.getKhachHang().isGioiTinh()? "Nam" : "Nữ");
 			txtSDT_1.setText(hd.getKhachHang().getSoDienThoai());
-			txtNgayTra.setText((new Date()).toString());
+			txtNgayTra.setText(getDate().toString());
 			txtThanhTien.setText("0");
 			
 
@@ -603,7 +616,7 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 			HoaDonTra.setMaHD(taoMaHoaDon());
 			HoaDonTra.setNhanVien(hd.getNhanVien());
 			HoaDonTra.setKhachHang(hd.getKhachHang());
-			HoaDonTra.setNgayXuat(new Date());
+			HoaDonTra.setNgayXuat(getDate());
 		}
 		if (o == btnThm) {
 			if (currentHoaDon == null) {
@@ -623,7 +636,7 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 					break;
 				}
 			}
-	
+
 			if (cthd == null) {
 				JOptionPane.showMessageDialog(this, "Sản phẩm bạn nhập không có trong hóa đơn");
 				return;
@@ -681,7 +694,14 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 			}
 			HoaDonTra.setGhiChu(txtNhpLDo.getText());
 			HoaDonTra.setLoaiHD("Hóa đơn trả");
-			HoaDon_DAO.them(HoaDonTra);
+			if (!HoaDon_DAO.them(HoaDonTra)) {
+				JOptionPane.showMessageDialog(this, "Lưu hóa đơn thất bại");
+				return;
+			}
+			
+			for (ChiTietHoaDon x : list) {
+				ChiTietHoaDon_DAO.them(x);
+			}
 			
 			txtHoaDon.setText("");
 			txtMaNV.setText("");
