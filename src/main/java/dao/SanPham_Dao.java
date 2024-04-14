@@ -46,8 +46,8 @@ public class SanPham_Dao {
                     String maSP = rs.getString(1);
                     String tenSP = rs.getString(2);
                     String loai = rs.getString(3);
-                    Date ngayHetHan = rs.getDate(4);
-                    Date ngaySanXuat = rs.getDate(5);
+                    java.util.Date ngayHetHan = rs.getDate(4);
+                    java.util.Date ngaySanXuat = rs.getDate(5);
                     Double donGiaNhap = rs.getDouble(6);
                     int soluongTon = rs.getInt(7);
                     Double donGiaBan = rs.getDouble(8);
@@ -63,7 +63,8 @@ public class SanPham_Dao {
                         }
                     }
 
-                    SanPham s = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, donGiaBan, soluongTon, DonViTinh, hinhAnhSanPham, khuyenMai);
+                    SanPham s = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap,
+                			soluongTon, donGiaBan, hinhAnhSanPham, DonViTinh, khuyenMai);
                     DanhSachSanPham.add(s);
                 }
             }
@@ -204,13 +205,8 @@ public class SanPham_Dao {
                 KhuyenMaiSanPham khuyenMai = new KhuyenMaiSanPham(rs.getString(11));
            
                 
-                
-<<<<<<< HEAD
-                sp = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, donGiaBan, soluongTon, DonViTinh, hinhAnhSanPham, khuyenMai);
-=======
                 SanPham s = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, soluongTon, donGiaBan,hinhAnhSanPham, DonViTinh,  khuyenMai);
                 DanhSachSanPham.add(s);
->>>>>>> vantrung
             }
             rs.close();
             statement.close();

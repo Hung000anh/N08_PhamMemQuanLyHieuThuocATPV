@@ -26,14 +26,13 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-import dao.ChiTiecHoaDon_Dao;
 import dao.HoaDon_DAO;
 import dao.NhanVien_Dao;
 import dao.SanPham_Dao;
+import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.NhanVien;
 import entity.SanPham;
-import entity.chiTiecHoaDon;
 
 public class GD_BanSanPham extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
@@ -547,7 +546,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 				int soLuong=Integer.parseInt(txtSoLuong.getText());
 				SanPham_Dao sp_dao=new SanPham_Dao();		
 				SanPham sp=sp_dao.getSanPhamTheoMa(ma);
-				chiTiecHoaDon cthd=new chiTiecHoaDon(new HoaDon(textField.getText()), sp, soLuong)	;
+				ChiTietHoaDon cthd=new ChiTietHoaDon(new HoaDon(textField.getText()), sp, soLuong)	;
 				sp.setSoluongTon(32);
 				JOptionPane.showMessageDialog(this, sp.getDonGiaBan());
 				Object[] row = { q, ma,ten,dvt,soLuong,cthd.getThanhTien()};
