@@ -12,8 +12,10 @@ import entity.NhanVien;
 import entity.TaiKhoan;
 
 public class DangNhap_Dao {
-	public ArrayList<TaiKhoan> getAllTaiKhoan() {
-		ArrayList<TaiKhoan> dsTK = new ArrayList<TaiKhoan>();
+	private static ArrayList<TaiKhoan>  dsTK = new ArrayList<TaiKhoan>();
+
+	public static ArrayList<TaiKhoan> getAllTaiKhoan() {
+		dsTK.clear();
 		try {
 			ConnectDB.getConnection();
 			Connection con = ConnectDB.getConnection();
