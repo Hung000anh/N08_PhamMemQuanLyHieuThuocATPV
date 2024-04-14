@@ -516,7 +516,7 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 	private String taoMaHoaDon() {
 		// HDddmmyyxxxxxxx
         Date date = new Date(); 
-        DateFormat dateFormat = new SimpleDateFormat("ddmmyy");  
+        DateFormat dateFormat = new SimpleDateFormat("ddMMyy");  
         String strDate = dateFormat.format(date);
         
         int number = HoaDon_DAO.laySLHoaDonTheoNgay(strDate) + 1;
