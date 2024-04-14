@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -73,5 +74,26 @@ public class HoaDon_DAO {
     			num++;
     	}
     	return num;
+    }
+
+    public static boolean them(HoaDon k) {
+        try (Connection con = Database.getInstance().getConnection();
+                PreparedStatement stmt = con.prepareStatement("INSERT INTO HoaDon VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+
+            // Thiết lập các giá trị cho câu lệnh truy vấn
+            stmt.setString(1, k.getMaHD());
+            stmt.setString(2, k.getKhachHang().getMaKhachHang());
+            stmt.setString(3, k.getNhanVien().getMaNV()); // Chuyển đổi từ java.util.Date sang java.sql.Date
+            stmt.setDate(4, new java.sql.Date(k.getNgayXuat().getTime())); // Chuyển đổi từ java.util.Date sang java.sql.Date
+            stmt.setString(5, k.getLoaiHD());
+            stmt.setString(6, k.getGhiChu());
+            stmt.setString(7, k.getKhuyenMai().getMaKM());
+
+            int n = stmt.executeUpdate();
+            return n > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

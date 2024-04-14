@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -16,8 +17,12 @@ import dao.HoaDon_DAO;
 import dao.SanPham_Dao;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
+import entity.SanPham;
 
 import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Window;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -27,7 +32,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;  
 import java.util.ArrayList;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 
 public class GD_TraSanPham extends JPanel implements ActionListener {
@@ -38,17 +46,75 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 	private JTextField txtNhpMCn;
 	private JTable table;
 	private JTable table_1;
-	private JTextField txtNhpLDo;
-	private JTextField txtNhpMSn;
-	private JTextField txtNhpSLng;
+	private PlaceholderTextField txtNhpLDo;
+	private PlaceholderTextField txtNhpMSn;
+	private PlaceholderTextField txtNhpSLng;
 
 	private HoaDon currentHoaDon = null;
+	private HoaDon HoaDonTra = null;
 
 
 	private myJButton btnNewButton;
 
 
 	private DefaultTableModel model;
+
+
+	private JTextField txtHoaDon_1;
+
+
+	private JTextField txtMaNV_1;
+
+
+	private JTextField txtMaKH_1;
+
+
+	private JTextField txtHoTen_1;
+
+
+	private JTextField txtGioiTinh_1;
+
+
+	private JTextField txtSDT_1;
+
+
+	private JTextField txtNgayTra;
+
+
+	private JTextField txtTienTra;
+
+
+	private JTextField txtHoaDon;
+
+
+	private JTextField txtMaNV;
+
+
+	private JTextField txtMaKM;
+
+
+	private JTextField txtMaKH;
+
+
+	private JTextField txtHoTen;
+
+
+	private JTextField txtGioiTinh;
+
+
+	private JTextField txtSDT;
+
+
+	private JTextField txtNgayMua;
+
+
+	private JTextField txtThanhTien;
+
+
+	private DefaultTableModel model_1;
+
+
+	private myJButton btnThm;
 
 	public GD_TraSanPham() {
 		setBackground(new Color(246, 245, 255));
@@ -107,7 +173,7 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		panel_1.setLayout(null);
 		panel_1.setBackground(null);
 		
-		String cols[] = { "STT", "MaSP", "TenSP", "SL", "Gia" };
+		String cols[] = { "MaSP", "TenSP", "SL", "Gia" };
 		model = new DefaultTableModel(cols, 0);
 		
 		JPanel panel_2 = new JPanel();
@@ -138,12 +204,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1.setBounds(5, 10, 86, 19);
 		panel_5.add(lblNewLabel_1);
 		
-		JPanel panel_6 = new JPanel();
-		panel_6.setBackground(Color.WHITE);
-		panel_6.setBounds(130, 10, 348, 20);
-		FlowLayout flowLayout = (FlowLayout) panel_6.getLayout();
-		flowLayout.setHgap(10);
-		panel_5.add(panel_6);
+		txtHoaDon = new JTextField();
+		txtHoaDon.setBackground(Color.WHITE);
+		txtHoaDon.setBounds(130, 10, 348, 20);
+		panel_5.add(txtHoaDon);
 		
 		JPanel panel_5_1 = new JPanel();
 		panel_5_1.setBackground(null);
@@ -155,10 +219,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_1.setBounds(5, 10, 97, 19);
 		panel_5_1.add(lblNewLabel_1_1);
 		
-		JPanel panel_6_1 = new JPanel();
-		panel_6_1.setBackground(Color.WHITE);
-		panel_6_1.setBounds(130, 10, 348, 20);
-		panel_5_1.add(panel_6_1);
+		txtMaNV = new JTextField();
+		txtMaNV.setBackground(Color.WHITE);
+		txtMaNV.setBounds(130, 10, 348, 20);
+		panel_5_1.add(txtMaNV);
 		
 		JPanel panel_5_2 = new JPanel();
 		panel_5_2.setBackground(null);
@@ -170,10 +234,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_2.setBounds(5, 10, 86, 19);
 		panel_5_2.add(lblNewLabel_1_2);
 		
-		JPanel panel_6_2 = new JPanel();
-		panel_6_2.setBackground(Color.WHITE);
-		panel_6_2.setBounds(130, 10, 348, 20);
-		panel_5_2.add(panel_6_2);
+		txtMaKM = new JTextField();
+		txtMaKM.setBackground(Color.WHITE);
+		txtMaKM.setBounds(130, 10, 348, 20);
+		panel_5_2.add(txtMaKM);
 		
 		JPanel panel_5_3 = new JPanel();
 		panel_5_3.setBackground(null);
@@ -185,10 +249,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_3.setBounds(5, 10, 86, 19);
 		panel_5_3.add(lblNewLabel_1_3);
 		
-		JPanel panel_6_3 = new JPanel();
-		panel_6_3.setBackground(Color.WHITE);
-		panel_6_3.setBounds(130, 10, 348, 20);
-		panel_5_3.add(panel_6_3);
+		txtMaKH = new JTextField();
+		txtMaKH.setBackground(Color.WHITE);
+		txtMaKH.setBounds(130, 10, 348, 20);
+		panel_5_3.add(txtMaKH);
 		
 		JPanel panel_5_4 = new JPanel();
 		panel_5_4.setBackground(null);
@@ -200,10 +264,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_4.setBounds(5, 10, 86, 19);
 		panel_5_4.add(lblNewLabel_1_4);
 		
-		JPanel panel_6_4 = new JPanel();
-		panel_6_4.setBackground(Color.WHITE);
-		panel_6_4.setBounds(130, 10, 348, 20);
-		panel_5_4.add(panel_6_4);
+		txtHoTen = new JTextField();
+		txtHoTen.setBackground(Color.WHITE);
+		txtHoTen.setBounds(130, 10, 348, 20);
+		panel_5_4.add(txtHoTen);
 		
 		JPanel panel_5_5 = new JPanel();
 		panel_5_5.setBackground(null);
@@ -215,10 +279,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_5.setBounds(5, 10, 86, 19);
 		panel_5_5.add(lblNewLabel_1_5);
 		
-		JPanel panel_6_5 = new JPanel();
-		panel_6_5.setBackground(Color.WHITE);
-		panel_6_5.setBounds(130, 10, 348, 20);
-		panel_5_5.add(panel_6_5);
+		txtGioiTinh = new JTextField();
+		txtGioiTinh.setBackground(Color.WHITE);
+		txtGioiTinh.setBounds(130, 10, 348, 20);
+		panel_5_5.add(txtGioiTinh);
 		
 		JPanel panel_5_6 = new JPanel();
 		panel_5_6.setBackground(null);
@@ -230,10 +294,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_6.setBounds(5, 10, 115, 19);
 		panel_5_6.add(lblNewLabel_1_6);
 		
-		JPanel panel_6_6 = new JPanel();
-		panel_6_6.setBackground(Color.WHITE);
-		panel_6_6.setBounds(130, 10, 348, 20);
-		panel_5_6.add(panel_6_6);
+		txtSDT = new JTextField();
+		txtSDT.setBackground(Color.WHITE);
+		txtSDT.setBounds(130, 10, 348, 20);
+		panel_5_6.add(txtSDT);
 		
 		JPanel panel_5_7 = new JPanel();
 		panel_5_7.setBackground(null);
@@ -245,10 +309,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_7.setBounds(5, 10, 86, 19);
 		panel_5_7.add(lblNewLabel_1_7);
 		
-		JPanel panel_6_7 = new JPanel();
-		panel_6_7.setBackground(Color.WHITE);
-		panel_6_7.setBounds(130, 10, 348, 20);
-		panel_5_7.add(panel_6_7);
+		txtNgayMua = new JTextField();
+		txtNgayMua.setBackground(Color.WHITE);
+		txtNgayMua.setBounds(130, 10, 348, 20);
+		panel_5_7.add(txtNgayMua);
 		
 		JPanel panel_5_8 = new JPanel();
 		panel_5_8.setBackground(null);
@@ -260,10 +324,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_8.setBounds(5, 10, 86, 19);
 		panel_5_8.add(lblNewLabel_1_8);
 		
-		JPanel panel_6_8 = new JPanel();
-		panel_6_8.setBackground(Color.WHITE);
-		panel_6_8.setBounds(130, 10, 348, 20);
-		panel_5_8.add(panel_6_8);
+		txtThanhTien = new JTextField();
+		txtThanhTien.setBackground(Color.WHITE);
+		txtThanhTien.setBounds(130, 10, 348, 20);
+		panel_5_8.add(txtThanhTien);
 		
 		JPanel panel_1_1 = new JPanel();
 		panel_1_1.setBackground(null);
@@ -278,7 +342,7 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		panel_2_1.setBounds(10, 74, 521, 126);
 		panel_1_1.add(panel_2_1);
 		
-		DefaultTableModel model_1 = new DefaultTableModel(cols, 0);
+		model_1 = new DefaultTableModel(cols, 0);
 		table_1 = new JTable(model_1);
 		JScrollPane scrollpane_1 = new JScrollPane(table_1);
 		scrollpane_1.setBounds(0, 0, 521, 176);
@@ -301,10 +365,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_9.setBounds(5, 10, 86, 19);
 		panel_5_9.add(lblNewLabel_1_9);
 		
-		JPanel panel_6_9 = new JPanel();
-		panel_6_9.setBackground(Color.WHITE);
-		panel_6_9.setBounds(130, 10, 348, 20);
-		panel_5_9.add(panel_6_9);
+		txtHoaDon_1 = new JTextField();
+		txtHoaDon_1.setBackground(Color.WHITE);
+		txtHoaDon_1.setBounds(130, 10, 348, 20);
+		panel_5_9.add(txtHoaDon_1);
 		
 		JPanel panel_5_1_1 = new JPanel();
 		panel_5_1_1.setBackground(null);
@@ -316,10 +380,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_1_1.setBounds(5, 10, 102, 19);
 		panel_5_1_1.add(lblNewLabel_1_1_1);
 		
-		JPanel panel_6_1_1 = new JPanel();
-		panel_6_1_1.setBackground(Color.WHITE);
-		panel_6_1_1.setBounds(130, 10, 348, 20);
-		panel_5_1_1.add(panel_6_1_1);
+		txtMaNV_1 = new JTextField();
+		txtMaNV_1.setBackground(Color.WHITE);
+		txtMaNV_1.setBounds(130, 10, 348, 20);
+		panel_5_1_1.add(txtMaNV_1);
 		
 		JPanel panel_5_2_1 = new JPanel();
 		panel_5_2_1.setBackground(null);
@@ -331,10 +395,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_2_1.setBounds(5, 10, 86, 19);
 		panel_5_2_1.add(lblNewLabel_1_2_1);
 		
-		JPanel panel_6_2_1 = new JPanel();
-		panel_6_2_1.setBackground(Color.WHITE);
-		panel_6_2_1.setBounds(130, 10, 348, 20);
-		panel_5_2_1.add(panel_6_2_1);
+		txtMaKH_1 = new JTextField();
+		txtMaKH_1.setBackground(Color.WHITE);
+		txtMaKH_1.setBounds(130, 10, 348, 20);
+		panel_5_2_1.add(txtMaKH_1);
 		
 		JPanel panel_5_3_1 = new JPanel();
 		panel_5_3_1.setBackground(null);
@@ -346,10 +410,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_3_1.setBounds(5, 10, 86, 19);
 		panel_5_3_1.add(lblNewLabel_1_3_1);
 		
-		JPanel panel_6_3_1 = new JPanel();
-		panel_6_3_1.setBackground(Color.WHITE);
-		panel_6_3_1.setBounds(130, 10, 348, 20);
-		panel_5_3_1.add(panel_6_3_1);
+		txtHoTen_1 = new JTextField();
+		txtHoTen_1.setBackground(Color.WHITE);
+		txtHoTen_1.setBounds(130, 10, 348, 20);
+		panel_5_3_1.add(txtHoTen_1);
 		
 		JPanel panel_5_4_1 = new JPanel();
 		panel_5_4_1.setBackground(null);
@@ -361,10 +425,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_4_1.setBounds(5, 10, 86, 19);
 		panel_5_4_1.add(lblNewLabel_1_4_1);
 		
-		JPanel panel_6_4_1 = new JPanel();
-		panel_6_4_1.setBackground(Color.WHITE);
-		panel_6_4_1.setBounds(130, 10, 348, 20);
-		panel_5_4_1.add(panel_6_4_1);
+		txtGioiTinh_1 = new JTextField();
+		txtGioiTinh_1.setBackground(Color.WHITE);
+		txtGioiTinh_1.setBounds(130, 10, 348, 20);
+		panel_5_4_1.add(txtGioiTinh_1);
 		
 		JPanel panel_5_5_1 = new JPanel();
 		panel_5_5_1.setBackground(null);
@@ -376,10 +440,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_5_1.setBounds(5, 10, 103, 19);
 		panel_5_5_1.add(lblNewLabel_1_5_1);
 		
-		JPanel panel_6_5_1 = new JPanel();
-		panel_6_5_1.setBackground(Color.WHITE);
-		panel_6_5_1.setBounds(130, 10, 348, 20);
-		panel_5_5_1.add(panel_6_5_1);
+		txtSDT_1 = new JTextField();
+		txtSDT_1.setBackground(Color.WHITE);
+		txtSDT_1.setBounds(130, 10, 348, 20);
+		panel_5_5_1.add(txtSDT_1);
 		
 		JPanel panel_5_6_1 = new JPanel();
 		panel_5_6_1.setBackground(null);
@@ -391,10 +455,10 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		lblNewLabel_1_6_1.setBounds(5, 10, 86, 19);
 		panel_5_6_1.add(lblNewLabel_1_6_1);
 		
-		JPanel panel_6_6_1 = new JPanel();
-		panel_6_6_1.setBackground(Color.WHITE);
-		panel_6_6_1.setBounds(130, 10, 348, 20);
-		panel_5_6_1.add(panel_6_6_1);
+		txtNgayTra = new JTextField();
+		txtNgayTra.setBackground(Color.WHITE);
+		txtNgayTra.setBounds(130, 10, 348, 20);
+		panel_5_6_1.add(txtNgayTra);
 		
 		JPanel panel_5_7_1 = new JPanel();
 		panel_5_7_1.setBackground(null);
@@ -405,14 +469,14 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		myJLabel lblNewLabel_1_7_1 = new myJLabel("Số tiền trả:");
 		lblNewLabel_1_7_1.setBounds(5, 10, 86, 19);
 		panel_5_7_1.add(lblNewLabel_1_7_1);
+
+		txtTienTra = new JTextField();
+		txtTienTra.setBackground(Color.WHITE);
+		txtTienTra.setBounds(130, 10, 348, 20);
+		panel_5_7_1.add(txtTienTra);
 		
-		JPanel panel_6_7_1 = new JPanel();
-		panel_6_7_1.setBackground(Color.WHITE);
-		panel_6_7_1.setBounds(130, 10, 348, 20);
-		panel_5_7_1.add(panel_6_7_1);
-		
-		txtNhpLDo = new JTextField();
-		txtNhpLDo.setText("Nhập lý do trả hàng");
+		txtNhpLDo = new PlaceholderTextField();
+		txtNhpLDo.setPlaceholder("Nhập lý do trả hàng");
 		txtNhpLDo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtNhpLDo.setBounds(10, 566, 367, 31);
 		panel_1_1.add(txtNhpLDo);
@@ -423,23 +487,39 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		btnNewButton_1.setBounds(387, 566, 144, 31);
 		panel_1_1.add(btnNewButton_1);
 		
-		txtNhpMSn = new JTextField();
-		txtNhpMSn.setText("Nhập mã sản phẩm");
+		txtNhpMSn = new PlaceholderTextField();
+		txtNhpMSn.setPlaceholder("Nhập mã sản phẩm");
 		txtNhpMSn.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtNhpMSn.setColumns(10);
 		txtNhpMSn.setBounds(10, 21, 254, 31);
 		panel_1_1.add(txtNhpMSn);
 		
-		txtNhpSLng = new JTextField();
-		txtNhpSLng.setText("Nhập số lượng");
+		txtNhpSLng = new PlaceholderTextField();
+		txtNhpSLng.setPlaceholder("Nhập số lượng");
 		txtNhpSLng.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtNhpSLng.setColumns(10);
 		txtNhpSLng.setBounds(274, 21, 144, 31);
 		panel_1_1.add(txtNhpSLng);
 		
-		myJButton btnThm = new myJButton("Thêm");
+		btnThm = new myJButton("Thêm");
 		btnThm.setBounds(428, 18, 103, 34);
 		panel_1_1.add(btnThm);
+		btnThm.addActionListener(this);
+	}
+
+	private String taoMaHoaDon() {
+		// HDddmmyyxxxxxxx
+        Date date = new Date(); 
+        DateFormat dateFormat = new SimpleDateFormat("ddmmyy");  
+        String strDate = dateFormat.format(date);
+        
+        int number = HoaDon_DAO.laySLHoaDonTheoNgay(strDate) + 1;
+        int desiredWidth = 7; // Total width including leading zeros
+
+        // Convert the integer to a formatted string
+        String formattedString = String.format("%0" + desiredWidth + "d", number);
+        
+		return "HD" + strDate + formattedString;
 	}
 
 	@Override
@@ -450,15 +530,113 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 			HoaDon_DAO.docTubang();
 			SanPham_Dao.docTubang();
 			ChiTietHoaDon_DAO.docTubang();
+			model.getDataVector().removeAllElements();
+			model_1.getDataVector().removeAllElements();
 			
 			HoaDon hd = HoaDon_DAO.layHoaDonTheoMa(ma);
 			ArrayList<ChiTietHoaDon> lst = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(ma);
 
-			model.getDataVector().removeAllElements();
-			for (ChiTietHoaDon x : lst) {
-				
+			if (hd == null) {
+				JOptionPane.showMessageDialog(this, "Không tìm thấy hóa đơn");
+				return;
 			}
 			
+			currentHoaDon = hd;
+
+			for (int i = 0; i < lst.size(); i++) {
+				ChiTietHoaDon cthd = lst.get(i);
+				model.addRow(
+						new Object[] {
+								//i+1,
+								cthd.getSanPham().getMaSP(),
+								cthd.getSanPham().getTenSP(),
+								cthd.getSoLuong(),
+								cthd.getThanhTien()
+						}
+					);
+			}
+
+			double tien = 0;
+			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(hd.getMaHD());
+			for (ChiTietHoaDon _e : cthd_list) {
+				tien += _e.getThanhTien();
+			}
+
+			txtHoaDon.setText(hd.getMaHD());
+			txtMaNV.setText(hd.getNhanVien().getMaNV());
+			txtMaKM.setText(hd.getKhuyenMai().getMaKM());
+			txtMaKH.setText(hd.getKhachHang().getMaKhachHang());
+			txtHoTen.setText(hd.getKhachHang().getTenKhachHang());
+			txtGioiTinh.setText(hd.getKhachHang().isGioiTinh()? "Nam" : "Nữ");
+			txtSDT.setText(hd.getKhachHang().getSoDienThoai());
+			txtNgayMua.setText(hd.getNgayXuat().toString());
+			txtThanhTien.setText(String.valueOf(tien));
+
+			
+			txtHoaDon_1.setText(taoMaHoaDon()); // TODO: Tạo mã hóa đơn tự động
+			txtMaNV_1.setText(hd.getNhanVien().getMaNV()); //TODO: Lấy nhân viên đang dùng app
+			txtMaKH_1.setText(hd.getKhachHang().getMaKhachHang());
+			txtHoTen_1.setText(hd.getKhachHang().getTenKhachHang());
+			txtGioiTinh_1.setText(hd.getKhachHang().isGioiTinh()? "Nam" : "Nữ");
+			txtSDT_1.setText(hd.getKhachHang().getSoDienThoai());
+			txtNgayTra.setText((new Date()).toString());
+			txtThanhTien.setText("0");
+			
+
+			HoaDonTra = new HoaDon();
+			HoaDonTra.setMaHD(taoMaHoaDon());
+			HoaDonTra.setNhanVien(hd.getNhanVien());
+			HoaDonTra.setKhachHang(hd.getKhachHang());
+			HoaDonTra.setNgayXuat(new Date());
+		}
+		if (o == btnThm) {
+			if (currentHoaDon == null) {
+				JOptionPane.showMessageDialog(this, "Vui lòng tìm hóa đơn trước");
+				return;
+			}
+			String maSP = txtNhpMSn.getText();
+			String sl = txtNhpSLng.getText();
+			
+			// Kiểm tra mã Sản Pham
+			ChiTietHoaDon cthd = null;
+			
+			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(currentHoaDon.getMaHD());
+			for (ChiTietHoaDon _e : cthd_list) {
+				if (maSP.equals(_e.getSanPham().getMaSP())) {
+					cthd = _e;
+					break;
+				}
+			}
+	
+			if (cthd == null) {
+				JOptionPane.showMessageDialog(this, "Sản phẩm bạn nhập không có trong hóa đơn");
+				return;
+			}
+			if (cthd.getSoLuong() < Integer.parseInt(sl)) {
+				JOptionPane.showMessageDialog(this, "Số lượng sản phẩm cần trả vượt quá số lượng sản phẩm đã mua");
+				return;
+			}
+			
+			for (int i = 0; i < model_1.getRowCount(); i++) {
+				if (model_1.getValueAt(i, 0).equals(maSP)) {
+					if (Integer.parseInt(sl) <= 0) {
+						model_1.removeRow(i);
+						return;
+					}
+					model_1.setValueAt(sl, i, 2);
+					return;
+				}
+			}
+
+			if (Integer.parseInt(sl) > 0)
+			model_1.addRow(
+					new Object[] {
+							cthd.getSanPham().getMaSP(),
+							cthd.getSanPham().getTenSP(),
+							txtNhpSLng.getText(),
+							cthd.getThanhTien()
+					}
+			);
 		}
 		
 	}

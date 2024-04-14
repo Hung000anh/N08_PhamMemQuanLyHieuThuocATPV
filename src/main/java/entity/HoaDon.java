@@ -10,6 +10,10 @@ public class HoaDon {
     private String ghiChu;
     private KhachHang khachHang;
     private KhuyenMaiHoaDon khuyenMai;
+    
+    public HoaDon() {
+		// TODO Auto-generated constructor stub
+	}
 
     public HoaDon(String maHD) {
 		super();
@@ -26,7 +30,8 @@ public class HoaDon {
         this.khuyenMai = khuyenMai;
     }
 
-    // Getter và Setter cho maHD
+
+	// Getter và Setter cho maHD
     public String getMaHD() {
         return maHD;
     }
