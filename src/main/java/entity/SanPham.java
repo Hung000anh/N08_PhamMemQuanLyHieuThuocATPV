@@ -15,19 +15,18 @@ public class SanPham implements Serializable{
 	private String hinhAnhSanPham;
 	private String DonViTinh;
 	private KhuyenMaiSanPham KhuyenMai;
-	
 	public SanPham(String maSP) {
 		super();
 		this.maSP = maSP;
 	}
-	public SanPham(String maSP, String tenSP, String loai, Date ngayHetHan, Date ngaySanXuat, Double donGiaNhap,
-			int soluongTon, Double donGiaBan, String hinhAnhSanPham, String donViTinh, KhuyenMaiSanPham khuyenMai) {
+	public SanPham(String maSP, String tenSP, String loai, java.util.Date date1, java.util.Date date2, Double donGiaNhap,
+			 int soluongTon, Double donGiaBan,String hinhAnhSanPham, String donViTinh, KhuyenMaiSanPham khuyenMai) {
 		super();
 		this.maSP = maSP;
 		this.tenSP = tenSP;
 		this.loai = loai;
-		this.ngayHetHan = ngayHetHan;
-		this.ngaySanXuat = ngaySanXuat;
+		this.ngayHetHan = date1;
+		this.ngaySanXuat = date2;
 		this.donGiaNhap = donGiaNhap;
 		this.soluongTon = soluongTon;
 		this.donGiaBan = donGiaBan;
@@ -54,7 +53,8 @@ public class SanPham implements Serializable{
 	public void setLoai(String loai) {
 		this.loai = loai;
 	}
-	public Date getNgayHetHan() {
+	public java.util.Date getNgayHetHan() {
+
 		return ngayHetHan;
 	}
 	public void setNgayHetHan(Date ngayHetHan) {
@@ -102,7 +102,6 @@ public class SanPham implements Serializable{
 	public void setKhuyenMai(KhuyenMaiSanPham khuyenMai) {
 		KhuyenMai = khuyenMai;
 	}
-
 	@Override
 	public String toString() {
 		return "SanPham [maSP=" + maSP + ", tenSP=" + tenSP + ", loai=" + loai + ", ngayHetHan=" + ngayHetHan
@@ -110,4 +109,5 @@ public class SanPham implements Serializable{
 				+ ", donGiaBan=" + donGiaBan + ", hinhAnhSanPham=" + hinhAnhSanPham + ", DonViTinh=" + DonViTinh
 				+ ", KhuyenMai=" + KhuyenMai + "]";
 	}	
+
 }

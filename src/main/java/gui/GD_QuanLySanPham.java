@@ -245,7 +245,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		        
 		        // Kiểm tra định dạng ngày tháng 
 		        String ngaySX = textNgaySX.getText();
-		        
+		        String ngayHH = txtNgayHetHan.getText();
 		        if (!ngaySX.matches("\\d{2}/\\d{2}/\\d{4}")) {
 		            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày tháng theo định dạng dd/MM/yyyy!");
 		            return; // Dừng thực thi nếu dữ liệu không hợp lệ
@@ -255,14 +255,14 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		        sdf.setLenient(false); // Không cho phép ngày tháng năm không hợp lệ
 		        java.util.Date date1;
 		        try {
-		        	date1 = sdf.parse(ngaySX);
+		        	date1 = sdf.parse(ngayHH);
 		            // Nếu không có ngoại lệ ném ra, có nghĩa là ngày tháng năm hợp lệ
 		        } catch (ParseException ex) {
 		            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày tháng theo định dạng dd/MM/yyyy!");
 		            return; // Dừng thực thi nếu dữ liệu không hợp lệ
 		        }
 		        
-		        String ngayHH = txtNgayHetHan.getText();
+		        
 		        if (!ngayHH.matches("\\d{2}/\\d{2}/\\d{4}")) {
 		            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày tháng theo định dạng dd/MM/yyyy!");
 		            return; // Dừng thực thi nếu dữ liệu không hợp lệ

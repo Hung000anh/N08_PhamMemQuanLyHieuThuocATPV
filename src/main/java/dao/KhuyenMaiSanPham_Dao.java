@@ -25,8 +25,22 @@ public class KhuyenMaiSanPham_Dao {
 
     public static ArrayList<KhuyenMaiSanPham> docTubang() {
     	DanhSachKhuyenMaiSanPham.clear();
+    	
+    	
+    	
         try {
             Connection con = Database.getInstance().getConnection();
+            
+            java.util.Date ngayHienTai = new java.util.Date();
+            
+            // Cập nhật trạng thái của các bản ghi có ngày bắt đầu <= ngày hiện tại và ngày kết thúc >= ngày hiện tại
+            String updateActiveSql = "UPDATE KhuyenMaiSanPham SET trangThai = 1 WHERE ngayBatDau <= ? AND ngayKetThuc >= ? AND trangThai = 0"; 
+            PreparedStatement updateActiveStatement = con.prepareStatement(updateActiveSql);
+            updateActiveStatement.setDate(1, new java.sql.Date(ngayHienTai.getTime()));
+            updateActiveStatement.setDate(2, new java.sql.Date(ngayHienTai.getTime()));
+            updateActiveStatement.executeUpdate();
+            updateActiveStatement.close();
+            
             String sql = "SELECT * FROM KhuyenMaiSanPham"; // Corrected table name
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);

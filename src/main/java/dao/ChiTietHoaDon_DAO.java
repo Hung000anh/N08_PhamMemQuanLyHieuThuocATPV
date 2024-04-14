@@ -2,9 +2,11 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 
 import connectDB.Database;
@@ -50,5 +52,23 @@ public class ChiTietHoaDon_DAO {
     			lst.add(hd);
     	}
     	return lst;
+    }
+
+    public static boolean them(ChiTietHoaDon k) {
+        try (Connection con = Database.getInstance().getConnection();
+                PreparedStatement stmt = con.prepareStatement("INSERT INTO ChiTietHoaDon VALUES (?, ?, ?, ?)")) {
+
+            // Thiết lập các giá trị cho câu lệnh truy vấn
+            stmt.setString(1, k.getHoaDon().getMaHD());
+            stmt.setString(2, k.getSanPham().getMaSP());
+            stmt.setInt(3, k.getSoLuong());
+            stmt.setDouble(4, k.getThanhTien());
+
+            int n = stmt.executeUpdate();
+            return n > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
