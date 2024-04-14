@@ -75,7 +75,7 @@ public class KhuyenMaiSanPham_Dao {
     		if (id.equals(e.getMaKM()))
     			return e;
     	}
-    	return null;
+    	return new KhuyenMaiSanPham(id);
     }
 
     public void xoaKhuyenMai(String ma) {

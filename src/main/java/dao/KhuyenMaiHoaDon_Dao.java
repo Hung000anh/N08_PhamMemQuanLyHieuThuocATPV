@@ -71,7 +71,7 @@ public class KhuyenMaiHoaDon_Dao {
     			return km;
     		}
     	}
-    	return null;
+    	return new KhuyenMaiHoaDon(maKM);
     }
 
     public void xoaKhuyenMai(String ma) {

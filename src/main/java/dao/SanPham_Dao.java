@@ -62,7 +62,7 @@ public class SanPham_Dao {
     		if (maSP.equals(sp.getMaSP()))
     			return sp;
     	}
-    	return null;
+    	return new SanPham(maSP);
     }
 
     public void ghiDeMaKhuyenMaiChoSanPham(String maSanPham, String maKhuyenMai) {

@@ -61,7 +61,7 @@ public class HoaDon_DAO {
     		if (maHD.equals(hd.getMaHD()))
     			return hd;
     	}
-    	return null;
+    	return new HoaDon(maHD);
     }
 
     // gọi docTuBang() trước
