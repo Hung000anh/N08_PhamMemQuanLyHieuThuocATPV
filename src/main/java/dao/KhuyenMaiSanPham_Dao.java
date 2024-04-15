@@ -92,4 +92,27 @@ public class KhuyenMaiSanPham_Dao {
             e.printStackTrace();
         }
     }
+
+    public boolean suaKhuyenMai(KhuyenMaiSanPham kmsp) {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = Database.getInstance().getConnection();
+            String sql = "UPDATE KhuyenMaiSanPham SET tenKhuyenMai = ?, ngayBatDau = ?, ngayKetThuc = ?, loaiChuongTrinh = ?, trangThai = ?, giamGiaSP = ? WHERE maKhuyenMai = ?";
+            stmt = con.prepareStatement(sql);
+            // Set values using getters of KhuyenMaiHoaDon object
+            stmt.setString(1, kmsp.getTenKM());
+            stmt.setDate(2, new java.sql.Date(kmsp.getNgayBatDau().getTime()));
+            stmt.setDate(3, new java.sql.Date(kmsp.getNgayKetThuc().getTime()));
+            stmt.setBoolean(4, kmsp.getLoaiChuongTrinh());
+            stmt.setBoolean(5, kmsp.getTrangThai());
+            stmt.setDouble(6, kmsp.getGiamGiaSanPham());
+            stmt.setString(7, kmsp.getMaKM());
+            int n = stmt.executeUpdate();
+            return n > 0;
+        } catch (SQLException e) {
+        	e.printStackTrace();
+        	return false;
+        } 
+    }
 }

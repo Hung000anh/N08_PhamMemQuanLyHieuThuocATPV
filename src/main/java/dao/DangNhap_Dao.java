@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import connectDB.ConnectDB;
+import connectDB.Database;
 import entity.NhanVien;
 import entity.TaiKhoan;
 
@@ -17,8 +17,7 @@ public class DangNhap_Dao {
 	public static ArrayList<TaiKhoan> getAllTaiKhoan() {
 		dsTK.clear();
 		try {
-			ConnectDB.getConnection();
-			Connection con = ConnectDB.getConnection();
+			Connection con = Database.getInstance().getConnection();
 			String sql = "select * from TaiKhoan";
 			Statement stm = con.createStatement();
 			ResultSet rs = stm.executeQuery(sql);
@@ -42,8 +41,7 @@ public class DangNhap_Dao {
 	public boolean Timkiem(String maNV, String mk) {
         boolean found = false;
         try {
-        	ConnectDB.getConnection();
-            Connection con = ConnectDB.getConnection();
+            Connection con = Database.getInstance().getConnection();
             String sql = "select * from TaiKhoan where maTaiKhoan = N'" + maNV + "' and matkhau = N'" + mk + "'";
             Statement sta = con.createStatement();
             ResultSet rs = sta.executeQuery(sql);
@@ -60,8 +58,7 @@ public class DangNhap_Dao {
 	public boolean doiMatKhau(String soDienThoai, String matKhauMoi) {
 		boolean updated = false;
 		try {
-			ConnectDB.getConnection();
-			Connection con = ConnectDB.getConnection();
+			Connection con = Database.getInstance().getConnection();
 			// Kiểm tra xem số điện thoại có phù hợp với mã nhân viên không
 			String sqlCheck = "select maNhanVien from NhanVien where soDienThoai = N'"+soDienThoai+"'";
 			Statement staCheck = con.createStatement();
@@ -85,8 +82,7 @@ public class DangNhap_Dao {
 	public boolean TimkiemSDT(String SDT){
 		boolean found = false;
 		try {
-			ConnectDB.getConnection();
-			Connection con = ConnectDB.getConnection();
+			Connection con = Database.getInstance().getConnection();
 			String sql = "select * from NhanVien where sdt = N'"+SDT+"'";
 			Statement sta = con.createStatement();
 			ResultSet rs = sta.executeQuery(sql);
@@ -102,8 +98,7 @@ public class DangNhap_Dao {
 	public TaiKhoan LayMatKhauTheoMaNhanVien(String maNhanVien) {
 	    TaiKhoan taiKhoan = null;
 	    try {
-	    	ConnectDB.getConnection();
-	        Connection con = ConnectDB.getConnection();
+	        Connection con = Database.getInstance().getConnection();
 	        String sql = "select TaiKhoan.* from TaiKhoan inner join NhanVien on TaiKhoan.maTaiKhoan = NhanVien.maNV where NhanVien.maNV = '" + maNhanVien + "'";
 	        Statement stm = con.createStatement();
 	        ResultSet rs = stm.executeQuery(sql);
@@ -124,8 +119,7 @@ public class DangNhap_Dao {
 	public boolean doiMatKhauTheoMaNV(String maNhanVien, String matKhauMoi) {
 	    boolean updated = false;
 	    try {
-	    	ConnectDB.getConnection();
-	        Connection con = ConnectDB.getConnection();
+	        Connection con = Database.getInstance().getConnection();
 	        // Kiểm tra xem mã nhân viên có tồn tại không
 	        String sqlCheck = "select maNV from NhanVien where maNV = N'"+maNhanVien+"'";
 	        Statement staCheck = con.createStatement();
@@ -146,13 +140,7 @@ public class DangNhap_Dao {
 	}
 	//thêm tk và  mk cho nv mới
 	public boolean Them_taiKhoan_matKhau(TaiKhoan tk) {
-		try {
-			ConnectDB.getConnection();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		Connection con = ConnectDB.getConnection();
+		Connection con = Database.getInstance().getConnection();
 		PreparedStatement psmt = null;
 		int n = 0;
 		try {
@@ -178,8 +166,7 @@ public class DangNhap_Dao {
 	public String getRole(String maTaiKhoan, String matkhau) {
 	    String role = null;
 	    try {
-	    	ConnectDB.getConnection();
-	        Connection con = ConnectDB.getConnection();
+	        Connection con = Database.getInstance().getConnection();
 	        String sql = "select roleName from TaiKhoan where maTaiKhoan = ? and matkhau = ?";
 	        PreparedStatement stmt = con.prepareStatement(sql);
 	        stmt.setString(1, maTaiKhoan);
@@ -194,17 +181,11 @@ public class DangNhap_Dao {
 	    return role;
 	}
 	public Boolean doiTrangThaiTheoMa(String ma, boolean trangThai) {
-		try {
-			ConnectDB.getConnection();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
 	    Connection con = null;
 	    PreparedStatement psmt = null;
 	    int n = 0;
 	    try {
-	        con = ConnectDB.getConnection();
+	        con = Database.getInstance().getConnection();
 	        psmt = con.prepareStatement(
 	                "update TaiKhoan set trangThai=? where maTaiKhoan=?");
 	        psmt.setBoolean(1, trangThai);

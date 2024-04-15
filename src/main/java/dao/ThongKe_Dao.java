@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import connectDB.ConnectDB;
+import connectDB.Database;
 import entity.HoaDon;
 import entity.KhuyenMaiSanPham;
 import entity.NhanVien;
@@ -42,7 +42,7 @@ public class ThongKe_Dao {
 		List<SanPham> dssp = new ArrayList<SanPham>();
 		List<ChiTietHoaDon> ds_ctHD = new ArrayList<ChiTietHoaDon>();
 		try {
-			Connection con = ConnectDB.getConnection();
+			Connection con = Database.getInstance().getConnection();
 			String sql = "SELECT TOP 5\r\n"
 					+ "    SP.maSanPham,\r\n"
 					+ "    SP.tenSanPham,\r\n"

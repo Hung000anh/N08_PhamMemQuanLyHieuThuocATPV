@@ -15,6 +15,7 @@ public class KhuyenMaiHoaDon_Dao {
     private static ArrayList<KhuyenMaiHoaDon> DanhSachKhuyenMaiHoaDon = new ArrayList<KhuyenMaiHoaDon>();
     
     public static ArrayList<KhuyenMaiHoaDon> docTubang() {
+    	DanhSachKhuyenMaiHoaDon.clear();
         try {
             Connection con = Database.getInstance().getConnection();
             String sql = "SELECT * FROM KhuyenMaiHoaDon"; // Corrected table name
@@ -87,5 +88,30 @@ public class KhuyenMaiHoaDon_Dao {
         } catch (SQLException e) {
             System.err.println("Lỗi khi xóa khuyến mãi: " + e.getMessage());
         }
+    }
+
+    public boolean suaKhuyenMai(KhuyenMaiHoaDon kmhd) {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = Database.getInstance().getConnection();
+            String sql = "UPDATE KhuyenMaiHoaDon SET tenKhuyenMai = ?, ngayBatDau = ?, ngayKetThuc = ?, loaiChuongTrinh = ?, trangThai = ?, giaTriHoaDon = ?, giamGiaHoaDon = ? WHERE maKhuyenMai = ?";
+            stmt = con.prepareStatement(sql);
+
+            // Set values using getters of KhuyenMaiHoaDon object
+            stmt.setString(1, kmhd.getTenKM());
+            stmt.setDate(2, new java.sql.Date(kmhd.getNgayBatDau().getTime()));
+            stmt.setDate(3, new java.sql.Date(kmhd.getNgayKetThuc().getTime()));
+            stmt.setBoolean(4, kmhd.getLoaiChuongTrinh());
+            stmt.setBoolean(5, kmhd.getTrangThai());
+            stmt.setDouble(6, kmhd.getGiaTriHoaDon());
+            stmt.setDouble(7,kmhd.getGiamGiaHoaDon() / 100 );
+            stmt.setString(8, kmhd.getMaKM());
+            int n = stmt.executeUpdate();
+            return n > 0;
+        } catch (SQLException e) {
+        	e.printStackTrace();
+        	return false;
+        } 
     }
 }

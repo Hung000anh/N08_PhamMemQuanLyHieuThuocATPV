@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import connectDB.ConnectDB;
+import connectDB.Database;
 import entity.NhanVien;
 
 
@@ -21,15 +21,7 @@ public class NhanVien_Dao {
 
 	public static ArrayList<NhanVien> getAllNhanVien() {
 			dsNhanVien.clear();
-
-			try {
-				ConnectDB.getConnection();
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-				
-			}
-			Connection con = ConnectDB.getConnection();
+			Connection con = Database.getInstance().getConnection();
 			try {
 				String sql = "select * from NhanVien";
 				Statement stm = con.createStatement();
@@ -47,13 +39,7 @@ public class NhanVien_Dao {
 	
 	
 	public static boolean addNhanVien(NhanVien nv) {
-		try {
-			ConnectDB.getConnection();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		Connection con = ConnectDB.getConnection();
+		Connection con = Database.getInstance().getConnection();
 		PreparedStatement psmt = null;
 		int n = 0;
 		try {
@@ -83,13 +69,7 @@ public class NhanVien_Dao {
 		return n > 0;
 	}
 	public static boolean deleteNhanVien(String maNV) {
-		try {
-			ConnectDB.getConnection();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		Connection con = ConnectDB.getConnection();
+		Connection con = Database.getInstance().getConnection();
 		PreparedStatement psmt = null;
 
 		int n = 0;
@@ -112,12 +92,7 @@ public class NhanVien_Dao {
 	}
 	
 	public static boolean updateNhanVien(NhanVien nv) {
-		try {
-			ConnectDB.getConnection();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Connection con = ConnectDB.getConnection();
+		Connection con = Database.getInstance().getConnection();
 		PreparedStatement psmt = null;
 		int n = 0;
 		try {
@@ -148,13 +123,7 @@ public class NhanVien_Dao {
 
 	public static NhanVien getNhanVienTheoMa(String maNV) {
 		NhanVien nv = null;
-		try {
-			ConnectDB.getConnection();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		Connection con = ConnectDB.getConnection();
+		Connection con = Database.getInstance().getConnection();
 		try {
 			String sql = "select * from NhanVien where maNV = '" + maNV + "'";
 			Statement stm = con.createStatement();
@@ -171,13 +140,7 @@ public class NhanVien_Dao {
 
 	public static ArrayList<NhanVien> getNhanVienTheoTen(String tenNV) {
 		ArrayList<NhanVien> dsNhanVien = new ArrayList<NhanVien>();
-		try {
-			ConnectDB.getConnection();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		Connection con = ConnectDB.getConnection();
+		Connection con = Database.getInstance().getConnection();
 		try {
 			String sql = "SELECT * FROM NhanVien WHERE tenNV LIKE N'%" + tenNV + "%'";
 			Statement stm = con.createStatement();
@@ -193,13 +156,7 @@ public class NhanVien_Dao {
 	}
 	public static NhanVien getNhanVienTheoSDT(String sDT) {
 		NhanVien nv = null;
-		try {
-			ConnectDB.getConnection();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		Connection con = ConnectDB.getConnection();
+		Connection con = Database.getInstance().getConnection();
 		try {
 			String sql = "select * from NhanVien where sdt = '" + sDT + "'";
 			Statement stm = con.createStatement();
