@@ -112,6 +112,8 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 	private JComboBox<String> comBoBoxMaSP_1 ;
 	private String maKh="";
 	private JButton btnInHoaDon ;
+
+	private NhanVien currentNV;
 	/**
 	 * Create the panel.
 	 */
@@ -484,8 +486,8 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		updateComBoBoxMaSP();
 		updateComBoBoxMaKH();
 		updateHoaDon();
-		
 	}
+	
 	public void updateComBoBoxMaSP() {
 		SanPham_Dao dsSP = new SanPham_Dao();
 	
@@ -557,9 +559,9 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 	code = generateRandomCode();
 
 	textField_1.setText(currentDate);
-	NhanVien_Dao nv_dao=new NhanVien_Dao();
 	NhanVien nv = null;
-	nv = nv_dao.getNhanVienTheoMa(DataManager.getUserName());
+	NhanVien_Dao.getAllNhanVien();
+	nv = NhanVien_Dao.getNhanVienTheoMa(DataManager.getUserName());
 	
 	if (nv != null)
 	textField_3.setText(nv.getMaNV());
@@ -702,13 +704,8 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 			code = textField.getText();
 
 			
-			NhanVien_Dao nv_dao=new NhanVien_Dao();
-			NhanVien nv = null;
-			nv = nv_dao.getNhanVienTheoMa(DataManager.getUserName());
-			
-			
-
-			
+			NhanVien_Dao.getAllNhanVien();
+			NhanVien nv = NhanVien_Dao.getNhanVienTheoMa(DataManager.getUserName());
 			
 			KhuyenMaiHoaDon_Dao dsKMHD = new KhuyenMaiHoaDon_Dao();
 			String text = textField_6.getText();

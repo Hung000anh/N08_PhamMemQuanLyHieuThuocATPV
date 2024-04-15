@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import connectDB.Database;
+import entity.HoaDon;
 import entity.NhanVien;
 
 
@@ -122,20 +123,11 @@ public class NhanVien_Dao {
 	}
 
 	public static NhanVien getNhanVienTheoMa(String maNV) {
-		NhanVien nv = null;
-		Connection con = Database.getInstance().getConnection();
-		try {
-			String sql = "select * from NhanVien where maNV = '" + maNV + "'";
-			Statement stm = con.createStatement();
-			ResultSet rs = stm.executeQuery(sql);
-			while (rs.next()) {
-				nv=new NhanVien(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getDouble(5), rs.getString(6), rs.getDate(7), rs.getBoolean(8), rs.getBoolean(9), rs.getString(10));
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		return nv;
+    	for (NhanVien nv : dsNhanVien) {
+    		if (maNV.equals(nv.getMaNV()))
+    			return nv;
+    	}
+    	return new NhanVien(maNV); // TRÁNH LỖI
 	}
 
 	public static ArrayList<NhanVien> getNhanVienTheoTen(String tenNV) {
