@@ -227,10 +227,15 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		scroll.setBounds(10, 440, 1120, 405);
 		add(scroll);
 		
+		docVaoTable();
+	}
+
+	public void docVaoTable() {
 		list = HoaDon_DAO.docTubang();
 		SanPham_Dao.docTubang();
 		ChiTietHoaDon_DAO.docTubang();
 
+		model.getDataVector().removeAllElements();
 		for (int i = 0; i < list.size(); i++) {
 			HoaDon hd = list.get(i);
 			// "STT", "Mã hóa đơn", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"
@@ -243,10 +248,10 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 			model.addRow(new Object[] {
 					i+1,
 					hd.getMaHD(),
-					hd.getKhachHang().getMaKhachHang(),
+					(hd.getKhachHang() == null)? "" : hd.getKhachHang().getMaKhachHang(),
 					hd.getMaHD(),
 					hd.getNgayXuat(),
-					hd.getKhuyenMai().getMaKM(),
+					(hd.getKhuyenMai() == null)? "" : hd.getKhuyenMai().getMaKM(),
 					tien,
 					hd.getGhiChu()
 			});

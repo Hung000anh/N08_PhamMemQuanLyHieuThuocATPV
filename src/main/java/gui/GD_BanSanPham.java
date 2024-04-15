@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -114,6 +115,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 	/**
 	 * Create the panel.
 	 */
+
 	public GD_BanSanPham() {
 		setBackground(new Color(246, 245, 255));
 		setLayout(null);
@@ -602,7 +604,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		    tongTienHang += donGia;
 		}
 		textField_6.setText(String.valueOf(tongTienHang));
-		Double tienGiam= tongTienHang*Double.parseDouble(textField_8.getText());
+		Double tienGiam= (textField_8.getText().isEmpty())? 0 : tongTienHang*Double.parseDouble(textField_8.getText());
 		textField_9.setText(String.valueOf(tienGiam));
 		Double tongTien=tongTienHang-tienGiam;
 		textField_7.setText(String.valueOf(tongTien));
@@ -681,10 +683,10 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 				if(maxDiscountPromotion != null) {
 				    // maxDiscountPromotion là đối tượng KhuyenMaiHoaDon có giá trị giảm giá lớn nhất
 				    // Bạn có thể sử dụng nó ở đây
+					textField_5.setText(maxDiscountPromotion.getMaKM());
+					textField_8.setText(String.valueOf(maxDiscountPromotion.getGiamGiaHoaDon()));
 				}
 
-				textField_5.setText(maxDiscountPromotion.getMaKM());
-				textField_8.setText(String.valueOf(maxDiscountPromotion.getGiamGiaHoaDon()));
 				int s=Integer.parseInt(txtSLTon.getText())- Integer.parseInt(txtSoLuong.getText()); 
 				txtSoLuong.setText("");
 				SanPham_Dao.updateSoLuongTonTheoMa(ma, s);
@@ -730,10 +732,10 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 			if(maxDiscountPromotion != null) {
 			    // maxDiscountPromotion là đối tượng KhuyenMaiHoaDon có giá trị giảm giá lớn nhất
 			    // Bạn có thể sử dụng nó ở đây
+				textField_5.setText(maxDiscountPromotion.getMaKM());
+				textField_8.setText(String.valueOf(maxDiscountPromotion.getGiamGiaHoaDon()));
 			}
 
-			textField_5.setText(maxDiscountPromotion.getMaKM());
-			textField_8.setText(String.valueOf(maxDiscountPromotion.getGiamGiaHoaDon()));
 			Date ngay=java.sql.Date.valueOf(currentDate);
 			KhachHang_Dao.getAllKhachHang();
 			KhachHang kh= KhachHang_Dao.getKhachHangTheoMa(maKh);
