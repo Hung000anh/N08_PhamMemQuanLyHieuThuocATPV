@@ -193,4 +193,14 @@ public class SanPham_Dao {
 		}
 		return n > 0;
 	}
+
+    public void goMaKhuyenMaiChoSanPham(String maSanPham) {
+        try (Connection con = Database.getInstance().getConnection();
+             PreparedStatement stmt = con.prepareStatement("UPDATE SanPham SET maKhuyenMai = NULL WHERE maSanPham = ?")) {
+            stmt.setString(1, maSanPham);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi sửa mã khuyến mãi cho sản phẩm: " + e.getMessage());
+        }
+    }
 }

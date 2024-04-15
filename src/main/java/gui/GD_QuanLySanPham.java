@@ -44,7 +44,7 @@ import entity.SanPham;
 public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseListener{
 
 	private static final long serialVersionUID = 1L;
-	private String col[] = { "STT", "Mã sản phẩm", "Tên sản phẩm", "Loại sản phẩm", "Đơn giá nhập", "Đơn giá bán", "Số lượng tồn", "Ngày sản xuất", "Ngày hết hạn", "Đơn vị tính", "Mã khuyến mãi", "Hình Ảnh"};
+	private String col[] = { "STT", "Mã sản phẩm", "Tên sản phẩm", "Loại sản phẩm", "Đơn giá nhập", "Đơn giá bán", "Số lượng tồn",  "Ngày hết hạn", "Ngày sản xuất", "Đơn vị tính", "Mã khuyến mãi", "Hình Ảnh"};
 	private DefaultTableModel model;
 	private JTable table;
 	private JScrollPane scroll;
@@ -373,6 +373,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		            return;
 		        } 
 		        // Kiểm tra định dạng ngày tháng 
+		        String ngayHH = txtNgayHetHan.getText();
 		        String ngaySX = textNgaySX.getText();
 		        
 		        if (!ngaySX.matches("\\d{2}/\\d{2}/\\d{4}")) {
@@ -383,14 +384,14 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		        sdf.setLenient(false); // Không cho phép ngày tháng năm không hợp lệ
 		        java.util.Date date1;
 		        try {
-		        	date1 = sdf.parse(ngaySX);
+		        	date1 = sdf.parse(ngayHH);
 		            // Nếu không có ngoại lệ ném ra, có nghĩa là ngày tháng năm hợp lệ
 		        } catch (ParseException ex) {
 		            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày tháng theo định dạng dd/MM/yyyy!");
 		            return; // Dừng thực thi nếu dữ liệu không hợp lệ
 		        }
 		        
-		        String ngayHH = txtNgayHetHan.getText();
+		        
 		        if (!ngayHH.matches("\\d{2}/\\d{2}/\\d{4}")) {
 		            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày tháng theo định dạng dd/MM/yyyy!");
 		            return; // Dừng thực thi nếu dữ liệu không hợp lệ
@@ -460,7 +461,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		        
 		        if(txtTimKiem.getText().isEmpty())
 		        {
-		        	JOptionPane.showMessageDialog(null, "Vui lòng nhập tìm kiếm sản phẩm");
+		        	//JOptionPane.showMessageDialog(null, "Vui lòng nhập tìm kiếm sản phẩm");
 		        	loadDataToTable();
 		        }
 		        else
@@ -584,10 +585,10 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
                 String donGiaNhap = table.getValueAt(row, 4).toString();
                 String donGiaBan = table.getValueAt(row, 5).toString();
                 String soLuongTon = table.getValueAt(row, 6).toString();
-                String ngaySX = table.getValueAt(row, 7).toString();
-                String ngayHH = table.getValueAt(row, 8).toString();
+                String ngaySX = table.getValueAt(row, 8).toString();
+                String ngayHH = table.getValueAt(row, 7).toString();
                 String donViTinh = table.getValueAt(row, 9).toString();
-                
+                String hinhAnh = table .getValueAt(row, 11).toString();
                 
                 // Hiển thị dữ liệu lên các JLabel tương ứng
                 txtMaSP.setText(maSP);
@@ -600,7 +601,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
                 txtNgayHetHan.setText(ngayHH);
                 loai1.setSelectedItem(donViTinh);
                 filePath = table.getValueAt(row, 11).toString();
-                txtAnh.setIcon(new ImageIcon(table.getValueAt(row, 11).toString()));
+                txtAnh.setIcon(new ImageIcon(hinhAnh));
                 // Bạn có thể làm tương tự cho các trường dữ liệu khác nếu cần
             }
         }
@@ -667,8 +668,8 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 	    	                sanPham.getDonGiaNhap(),
 	    	                sanPham.getDonGiaBan(),
 	    	                sanPham.getSoluongTon(),
-	    	                sanPham.getNgaySanXuat(),
 	    	                sanPham.getNgayHetHan(),
+	    	                sanPham.getNgaySanXuat(),
 	    	                sanPham.getDonViTinh(),
 	    	                maKhuyenMai,
 	    	                sanPham.getHinhAnhSanPham()
@@ -708,8 +709,8 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 	    	                sanPham.getDonGiaNhap(),
 	    	                sanPham.getDonGiaBan(),
 	    	                sanPham.getSoluongTon(),
-	    	                sanPham.getNgaySanXuat(),
 	    	                sanPham.getNgayHetHan(),
+	    	                sanPham.getNgaySanXuat(),
 	    	                sanPham.getDonViTinh(),
 	    	                maKhuyenMai,
 	    	                sanPham.getHinhAnhSanPham()
@@ -747,8 +748,8 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
     	                sanPham.getDonGiaNhap(),
     	                sanPham.getDonGiaBan(),
     	                sanPham.getSoluongTon(),
-    	                sanPham.getNgaySanXuat(),
     	                sanPham.getNgayHetHan(),
+    	                sanPham.getNgaySanXuat(),
     	                sanPham.getDonViTinh(),
     	                maKhuyenMai,
     	                sanPham.getHinhAnhSanPham()

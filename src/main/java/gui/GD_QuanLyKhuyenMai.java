@@ -345,7 +345,8 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
     }
     private void reloadDuLieuMau() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0); // Xóa hết các dòng trong bảng
+        while(model.getRowCount() > 0)
+        	model.setRowCount(0); // Xóa hết các dòng trong bảng
         addData(); // Thêm dữ liệu mẫu ban đầu vào bảng
     }
     private void timKiemKhuyenMai() {
@@ -372,13 +373,13 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
             String maKM1 = (String) model.getValueAt(i, 1);
             String tenKM1 = (String) model.getValueAt(i, 2);
             String loaiChuongTrinh = (String) model.getValueAt(i, 3);
-            java.sql.Date date = (java.sql.Date) model.getValueAt(i, 4);
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // Định dạng ngày theo ý muốn
-            String ngayBatDau = formatter.format(date); 
+//            java.sql.Date date = (java.sql.Date) model.getValueAt(i, 4);
+//            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // Định dạng ngày theo ý muốn
+            String ngayBatDau = (String) model.getValueAt(i, 3); 
             
-            java.sql.Date date2 = (java.sql.Date) model.getValueAt(i, 5);
+//            java.sql.Date date2 = (java.sql.Date) model.getValueAt(i, 5);
            
-            String ngayKetThuc = formatter.format(date2); 
+            String ngayKetThuc = (String) model.getValueAt(i, 5); 
             String trangThai1 = (String) model.getValueAt(i, 6);
 
             // Áp dụng các điều kiện lọc
@@ -411,7 +412,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         String TrangThai;
         String LoaiChuongTrinh;
         String giamGia;
-
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         int i = 0;
         for(KhuyenMaiSanPham km : data1)
         {
@@ -424,7 +425,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         	LoaiChuongTrinh = "Khuyến mãi theo sản phẩm";
         	giamGia = km.getGiamGiaSanPham()*100 + "%";
     
-    		Object[] rowData = { i, km.getMaKM(), km.getTenKM(),LoaiChuongTrinh, km.getNgayBatDau(), km.getNgayKetThuc(), TrangThai, giamGia};
+    		Object[] rowData = { i, km.getMaKM(), km.getTenKM(),LoaiChuongTrinh, dateFormat.format(km.getNgayBatDau()), dateFormat.format(km.getNgayKetThuc()), TrangThai, giamGia};
     		model.addRow(rowData);
         	i++;
         }
@@ -438,8 +439,9 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         	
         	LoaiChuongTrinh = "Khuyến mãi theo hóa đơn";
         	giamGia = km.getGiamGiaHoaDon()*100 + "%";
-    
-    		Object[] rowData = { i, km.getMaKM(), km.getTenKM(),LoaiChuongTrinh, km.getNgayBatDau(), km.getNgayKetThuc(), TrangThai, giamGia};
+        	
+			// Hiển thị ngày bắt đầu và kết thúc từ đối tượng KhuyenMaiHoaDon lên giao diện
+    		Object[] rowData = { i, km.getMaKM(), km.getTenKM(),LoaiChuongTrinh, dateFormat.format(km.getNgayBatDau()), dateFormat.format(km.getNgayKetThuc()), TrangThai, giamGia};
     		model.addRow(rowData);
         	i++;
         }
