@@ -71,4 +71,27 @@ public class ChiTietHoaDon_DAO {
             return false;
         }
     }
+
+	public static boolean deleteChiTiecHoaDon(String tenSP) {
+		Connection con = Database.getInstance().getConnection();
+		PreparedStatement psmt = null;
+
+		int n = 0;
+		try {
+			psmt = con.prepareStatement("DELETE FROM ChiTietHoaDon WHERE maSanPham=?;");
+			psmt.setString(1, tenSP);
+
+			n = psmt.executeUpdate();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				psmt.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+		}
+		return n > 0;
+	}
 }

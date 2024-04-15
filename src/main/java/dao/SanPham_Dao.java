@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 
+import connectDB.ConnectDB;
 import connectDB.Database;
 import entity.HoaDon;
 import entity.KhuyenMaiSanPham;
@@ -168,4 +169,29 @@ public class SanPham_Dao {
             return false; // Trả về false nếu có lỗi xảy ra trong quá trình xóa
         }
     }
+
+    public static boolean updateSoLuongTonTheoMa(String ma,int soLuongTon) {
+		Connection con = Database.getInstance().getConnection();
+		PreparedStatement psmt = null;
+		int n = 0;
+		try {
+			psmt = con.prepareStatement(
+					"UPDATE SanPham\r\n"
+					+ "SET soLuongTon=?\r\n"
+					+ "WHERE maSanPham=?;\r\n"
+					+ "");
+				psmt.setInt(1, soLuongTon);
+		        psmt.setString(2, ma);
+			n = psmt.executeUpdate();
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			try {
+				psmt.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+		}
+		return n > 0;
+	}
 }
