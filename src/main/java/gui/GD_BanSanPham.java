@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Year;
 import java.util.ArrayList;
@@ -29,16 +31,24 @@ import javax.swing.table.DefaultTableModel;
 
 import dao.ChiTietHoaDon_DAO;
 import dao.HoaDon_DAO;
+
+import dao.KhuyenMaiSanPham_Dao;
+
 import dao.KhachHang_Dao;
 import dao.KhuyenMaiHoaDon_Dao;
+
 import dao.NhanVien_Dao;
 import dao.SanPham_Dao;
+import entity.ChiTietHoaDon;
 import entity.HoaDon;
+
+import entity.KhuyenMaiSanPham;
+
 import entity.KhachHang;
 import entity.KhuyenMaiHoaDon;
+
 import entity.NhanVien;
 import entity.SanPham;
-import entity.ChiTietHoaDon;
 
 public class GD_BanSanPham extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
@@ -109,16 +119,17 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 	private JTextField textField_9;
 	private int q=0;
 	private JButton btnXoaSP;
+	private ChiTietHoaDon_DAO chiTiecHoaDon_dao=new ChiTietHoaDon_DAO();
+	private HoaDon_DAO hd_dao=new HoaDon_DAO();
 	private JComboBox<String> comBoBoxMaSP_1 ;
+	private KhachHang_Dao kh_dao=new KhachHang_Dao();
 	private String maKh="";
 	private JButton btnInHoaDon ;
-
-	private NhanVien currentNV;
 	/**
 	 * Create the panel.
+	 * @throws SQLException 
 	 */
-
-	public GD_BanSanPham() {
+	public GD_BanSanPham()   {
 		setBackground(new Color(246, 245, 255));
 		setLayout(null);
 		setSize(1140,865);
@@ -470,7 +481,12 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		btnXoaSP = new JButton("Xóa");
 		btnXoaSP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				xoa();
+				try {
+					xoa();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 			}
 		});
@@ -483,17 +499,21 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		comBoBoxMaSP_1.setBounds(225, 86, 340, 28);
 		pnNorth.add(comBoBoxMaSP_1);
 		comBoBoxMaSP_1.addActionListener(this);
-		updateComBoBoxMaSP();
+		try {
+			updateComBoBoxMaSP();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		updateComBoBoxMaKH();
 		updateHoaDon();
+		
 	}
-	
-	public void updateComBoBoxMaSP() {
-		SanPham_Dao dsSP = new SanPham_Dao();
-	
-		List<SanPham> list = dsSP.docTubang();
-		for (SanPham ds : list) {
-			comBoBoxMaSP.addItem(ds.getMaSP());
+	public void updateComBoBoxMaSP() throws SQLException {
+		KhuyenMaiSanPham_Dao.docTubang();
+		ArrayList<SanPham> list = SanPham_Dao.docTubang();
+		for (int i = 0; i < list.size(); i++) {
+			comBoBoxMaSP.addItem(list.get(i).getMaSP());
 		}
 	}
 	public void updateComBoBoxMaKH() {
@@ -506,9 +526,17 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 			
 		}
 	}
-	public void updateDuLieuSP() {
-		String masp=  comBoBoxMaSP.getSelectedItem().toString();
-		SanPham sp= SanPham_Dao.laySanPhamTheoMa(masp);
+	public void updateDuLieuSP() throws SQLException {
+		KhuyenMaiSanPham_Dao.docTubang();
+		SanPham_Dao.docTubang();
+		
+		Object obj = comBoBoxMaSP.getSelectedItem();
+		
+		if (obj == null) return;
+		
+		String masp = obj.toString();
+		
+		SanPham sp = SanPham_Dao.laySanPhamTheoMa(masp);
 		
 		txtMaSp.setText(masp);
 		
@@ -518,9 +546,24 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		txtSLTon.setText(String.valueOf(sp.getSoluongTon()));
 	
 		txtDonViTinh.setText(sp.getDonViTinh());
-		if (sp.getKhuyenMai() != null)
-			txtKhuyenMai.setText(sp.getKhuyenMai().getMaKM());
+		KhuyenMaiSanPham km = sp.getKhuyenMai();
+		txtKhuyenMai.setText(km == null? "" : km.getMaKM());
 		txtGia.setText(sp.getDonGiaBan().toString());
+	}
+
+	private String taoMaHoaDon() {
+		// HDddmmyyxxxxxxx
+        Date date = new Date(); 
+        DateFormat dateFormat = new SimpleDateFormat("ddMMyy");  
+        String strDate = dateFormat.format(date);
+        
+        int number = HoaDon_DAO.laySLHoaDonTheoNgay(strDate) + 1;
+        int desiredWidth = 7; // Total width including leading zeros
+
+        // Convert the integer to a formatted string
+        String formattedString = String.format("%0" + desiredWidth + "d", number);
+        
+		return "HD" + strDate + formattedString;
 	}
 	private String thuTuHoaDonTrongNgay() {
 		int sl = 0;
@@ -554,16 +597,18 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    String currentDate = sdf.format(new Date());
+
+
 	loadMa();
 	String code;
 	code = generateRandomCode();
 
+
 	textField_1.setText(currentDate);
-	NhanVien nv = null;
 	NhanVien_Dao.getAllNhanVien();
-	nv = NhanVien_Dao.getNhanVienTheoMa(DataManager.getUserName());
+	NhanVien nv = NhanVien_Dao.getNhanVienTheoMa(DataManager.getUserName());
 	
-	if (nv != null)
+	
 	textField_3.setText(nv.getMaNV());
 	textField_4.setText("Hóa Đơn Bán");
 	
@@ -581,37 +626,58 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 	KhuyenMaiHoaDon maxDiscountPromotion = null;
 
 	for (KhuyenMaiHoaDon ds : list) {
-	    if(tienHang >= ds.getGiaTriHoaDon() && ds.getGiamGiaHoaDon() > maxDiscount) {
-	        maxDiscount = ds.getGiamGiaHoaDon();
-	        maxDiscountPromotion = ds;
-	    }
-	}
-
-	if(maxDiscountPromotion != null) {
-		textField_5.setText(maxDiscountPromotion.getMaKM());
-		textField_8.setText(String.valueOf(maxDiscountPromotion.getGiamGiaHoaDon()));
+	    if(ds.getTrangThai().equals(true)) {
+	        if(tienHang >= ds.getGiaTriHoaDon() && ds.getGiamGiaHoaDon() > maxDiscount) {
+	            maxDiscount = ds.getGiamGiaHoaDon();
+	            maxDiscountPromotion = ds;
+	        }
+	    } 
 	}
 
 	
+	if(maxDiscountPromotion != null) {
+	    // maxDiscountPromotion là đối tượng KhuyenMaiHoaDon có giá trị giảm giá lớn nhất
+	    // Bạn có thể sử dụng nó ở đây
+		
+		textField_5.setText(maxDiscountPromotion.getMaKM());
+		textField_8.setText(String.valueOf(maxDiscountPromotion.getGiamGiaHoaDon()));
+	}
+	else {
+		
+		textField_5.setText("");
+		textField_8.setText(String.valueOf(0.0));
+	}
+	
 	Date ngay=java.sql.Date.valueOf(currentDate);
-	KhachHang_Dao.getAllKhachHang();
-	KhachHang kh=KhachHang_Dao.getKhachHangTheoMa(maKh);
-	HoaDon hd=new HoaDon(code,kh, nv, ngay, "Hóa Đơn Bán", "không có gì", maxDiscountPromotion);
-
+	KhachHang kh=kh_dao.getKhachHangTheoMa(maKh);
 }
 	public void updateTienHang() {
-		double tongTienHang = 0.0;
-		for (int i = 0; i < table.getRowCount(); i++) {
-		    double donGia = Double.parseDouble(table.getValueAt(i, 5).toString());
-		    tongTienHang += donGia;
-		}
-		textField_6.setText(String.valueOf(tongTienHang));
-		Double tienGiam= (textField_8.getText().isEmpty())? 0 : tongTienHang*Double.parseDouble(textField_8.getText());
-		textField_9.setText(String.valueOf(tienGiam));
-		Double tongTien=tongTienHang-tienGiam;
-		textField_7.setText(String.valueOf(tongTien));
+	    double tongTienHang = 0.0;
+	    for (int i = 0; i < table.getRowCount(); i++) {
+	        String donGiaStr = table.getValueAt(i, 5).toString();
+	        if (donGiaStr.matches("-?\\d+(\\.\\d+)?")) {  // kiểm tra xem chuỗi có phải là số không
+	            double donGia = Double.parseDouble(donGiaStr);
+	            tongTienHang += donGia;
+	        }
+	    }
+	    textField_6.setText(String.valueOf(tongTienHang));
+
+	    String tienGiamStr = textField_8.getText();
+	    if (tienGiamStr.matches("-?\\d+(\\.\\d+)?")) {  // kiểm tra xem chuỗi có phải là số không
+	    	Double tienGiam = tongTienHang * Double.parseDouble(tienGiamStr);
+	    	String tienGiamFormatted = String.format("%.2f", tienGiam);
+	    	textField_9.setText(tienGiamFormatted);
+
+	        Double tongTien = tongTienHang - tienGiam;
+	        textField_7.setText(String.valueOf(tongTien));
+	    } else {
+	        JOptionPane.showMessageDialog(this, "Giá trị trong textField_8 không phải là số hợp lệ");
+	    }
+
 	}
-	public void xoa() {    
+
+	public void xoa() throws SQLException {
+	    SanPham_Dao sp_dao=new SanPham_Dao();    
 	    if (table.getSelectedRow() == -1) {
 	        JOptionPane.showMessageDialog(null, "Bạn chưa chọn dòng để xóa!!");
 	    } else if (table.getSelectedRowCount() > 1) {
@@ -621,15 +687,58 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 	                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 	            int row = table.getSelectedRow();
 	            int s=Integer.parseInt(txtSLTon.getText())+ Integer.parseInt(model.getValueAt(row, 4).toString()); 
-	            SanPham_Dao.updateSoLuongTonTheoMa(model.getValueAt(row, 1).toString(), s);
+	            sp_dao.updateSoLuongTonTheoMa(model.getValueAt(row, 1).toString(), s);
 	            updateDuLieuSP();
 	            ChiTietHoaDon_DAO.deleteChiTiecHoaDon(model.getValueAt(row, 1).toString()) ;
 	            model.removeRow(row);
 	            JOptionPane.showMessageDialog(this, "Xóa thành công!!");
+	            KhuyenMaiHoaDon_Dao dsKMHD = new KhuyenMaiHoaDon_Dao();
+	        	String text = textField_6.getText();
+	        	double tienHang = 0.0;
+				for (int i = 0; i < table.getRowCount(); i++) {
+				    double donGia = Double.parseDouble(table.getValueAt(i, 5).toString());
+				    tienHang += donGia;
+				}
+	        	List<KhuyenMaiHoaDon> list = dsKMHD.docTubang();
 
+	        	// Khởi tạo giá trị khuyến mãi lớn nhất và khuyến mãi tương ứng
+	        	double maxDiscount = 0;
+	        	KhuyenMaiHoaDon maxDiscountPromotion = null;
+
+	        	for (KhuyenMaiHoaDon ds : list) {
+	        	    if(ds.getTrangThai().equals(true)) {
+	        	        if(tienHang >= ds.getGiaTriHoaDon() && ds.getGiamGiaHoaDon() > maxDiscount) {
+	        	            maxDiscount = ds.getGiamGiaHoaDon();
+	        	            maxDiscountPromotion = ds;
+	        	        }
+	        	    } 
+	        	}
+
+	        	
+	        	if(maxDiscountPromotion != null) {
+	        	    // maxDiscountPromotion là đối tượng KhuyenMaiHoaDon có giá trị giảm giá lớn nhất
+	        	    // Bạn có thể sử dụng nó ở đây
+	        		
+	        		textField_5.setText(maxDiscountPromotion.getMaKM());
+	        		textField_8.setText(String.valueOf(maxDiscountPromotion.getGiamGiaHoaDon()));
+	        	}
+	        	else {
+	        	
+	        		textField_5.setText("");
+	        		textField_8.setText(String.valueOf(0.0));
+	        	}
+	        	
+	            updateTienHang();
+	            q--;
 	            // Giảm giá trị của phần tử ở vị trí thứ 0 trong bảng
-	            int firstElementValue = Integer.parseInt(model.getValueAt(0, 0).toString());
-	            model.setValueAt(firstElementValue - 1, 0, 0);
+	            if (model.getRowCount() > 0) {
+	                int firstElementValue = Integer.parseInt(model.getValueAt(0, 0).toString());
+	                model.setValueAt(firstElementValue - 1, 0, 0);
+	              
+	            } else {
+	                model.setValueAt(0, 0, 0);
+	                q = 0;
+	            }
 	        }
 	    }
 	}
@@ -644,55 +753,80 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		// TODO Auto-generated method stub
 		Object o=e.getSource();
 		if(o.equals(comBoBoxMaSP)) {
-			updateDuLieuSP();
+			try {
+				updateDuLieuSP();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}else if(o.equals(btnThemSPVaoHD)) {
-
 				
 				q++;
 				String ma =comBoBoxMaSP.getSelectedItem().toString();
 				String ten=txtTen.getText();
 				String dvt=txtDonViTinh.getText();
-				int soLuong=Integer.parseInt(txtSoLuong.getText());
+				int soLuong=Integer.parseInt(txtSoLuong.getText());	
+				SanPham sp = SanPham_Dao.laySanPhamTheoMa(ma);
+				int soLuong11=Integer.parseInt(txtSoLuong.getText());
 				SanPham_Dao sp_dao=new SanPham_Dao();		
-				SanPham sp= SanPham_Dao.laySanPhamTheoMa(ma);
-				ChiTietHoaDon cthd=new ChiTietHoaDon(new HoaDon(textField.getText()), sp, soLuong);
+				SanPham sp1=sp_dao.laySanPhamTheoMa(ma);
+				ChiTietHoaDon cthd1=new ChiTietHoaDon(new HoaDon(textField.getText()), sp1, soLuong11);
 				
-				
-				
-				Object[] row = { q, ma,ten,dvt,soLuong,cthd.getThanhTien()};
+				if( Integer.parseInt(txtSLTon.getText())>=soLuong){
+				Object[] row = { q, ma,ten,dvt,soLuong11,cthd1.getThanhTien()};
 				model.addRow(row);
-				updateTienHang();
-
+				
 				KhuyenMaiHoaDon_Dao dsKMHD = new KhuyenMaiHoaDon_Dao();
 				String text = textField_6.getText();
-				Double tienHang = 0.0;
-				if(!text.isEmpty()) {
-				    tienHang = Double.parseDouble(text);
+				double tongTienHang = 0.0;
+				for (int i = 0; i < table.getRowCount(); i++) {
+				    double donGia = Double.parseDouble(table.getValueAt(i, 5).toString());
+				    tongTienHang += donGia;
 				}
 				List<KhuyenMaiHoaDon> list = dsKMHD.docTubang();
 
 				// Khởi tạo giá trị khuyến mãi lớn nhất và khuyến mãi tương ứng
-				double maxDiscount = 0;
+				double maxDiscount = 0.0;
 				KhuyenMaiHoaDon maxDiscountPromotion = null;
-
+			
 				for (KhuyenMaiHoaDon ds : list) {
-				    if(tienHang >= ds.getGiaTriHoaDon() && ds.getGiamGiaHoaDon() > maxDiscount) {
-				        maxDiscount = ds.getGiamGiaHoaDon();
-				        maxDiscountPromotion = ds;
-				    }
+				    if(ds.getTrangThai().equals(true)) {
+				        if(tongTienHang >= ds.getGiaTriHoaDon() && ds.getGiamGiaHoaDon() > maxDiscount) {
+				            maxDiscount = ds.getGiamGiaHoaDon();
+				            maxDiscountPromotion = ds;
+				        }
+				    } 
 				}
 
 				if(maxDiscountPromotion != null) {
 				    // maxDiscountPromotion là đối tượng KhuyenMaiHoaDon có giá trị giảm giá lớn nhất
 				    // Bạn có thể sử dụng nó ở đây
+				
 					textField_5.setText(maxDiscountPromotion.getMaKM());
 					textField_8.setText(String.valueOf(maxDiscountPromotion.getGiamGiaHoaDon()));
 				}
 
+				else {
+					textField_5.setText("");
+					textField_8.setText(String.valueOf(0.0));
+				}
+				
+				updateTienHang();
+				JOptionPane.showMessageDialog(this, textField_9.getText());
 				int s=Integer.parseInt(txtSLTon.getText())- Integer.parseInt(txtSoLuong.getText()); 
 				txtSoLuong.setText("");
-				SanPham_Dao.updateSoLuongTonTheoMa(ma, s);
-				updateDuLieuSP();
+				sp_dao.updateSoLuongTonTheoMa(ma, s);
+				
+
+				try {
+					updateDuLieuSP();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}}else {
+					JOptionPane.showMessageDialog(this, "Số lượng sản phẩm không đủ");
+				}
+				
 			
 		}else if(o.equals(comBoBoxMaSP_1)){
 			maKh=comBoBoxMaSP_1.getSelectedItem().toString();
@@ -704,9 +838,10 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 			code = textField.getText();
 
 			
-			NhanVien_Dao.getAllNhanVien();
-			NhanVien nv = NhanVien_Dao.getNhanVienTheoMa(DataManager.getUserName());
-			
+			NhanVien_Dao nv_dao=new NhanVien_Dao();
+			NhanVien nv = null;
+			nv = nv_dao.getNhanVienTheoMa(DataManager.getUserName());
+		
 			KhuyenMaiHoaDon_Dao dsKMHD = new KhuyenMaiHoaDon_Dao();
 			String text = textField_6.getText();
 			Double tienHang = 0.0;
@@ -714,51 +849,56 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 			    tienHang = Double.parseDouble(text);
 			}
 			List<KhuyenMaiHoaDon> list = dsKMHD.docTubang();
-
+			
+			Date ngay=java.sql.Date.valueOf(currentDate);
+			KhachHang kh=kh_dao.getKhachHangTheoMa(maKh);
 			// Khởi tạo giá trị khuyến mãi lớn nhất và khuyến mãi tương ứng
 			double maxDiscount = 0;
 			KhuyenMaiHoaDon maxDiscountPromotion = null;
 
 			for (KhuyenMaiHoaDon ds : list) {
-			    if(tienHang >= ds.getGiaTriHoaDon() && ds.getGiamGiaHoaDon() > maxDiscount) {
-			        maxDiscount = ds.getGiamGiaHoaDon();
-			        maxDiscountPromotion = ds;
-			    }
+			    if(ds.getTrangThai().equals(true)) {
+			        if(tienHang >= ds.getGiaTriHoaDon() && ds.getGiamGiaHoaDon() > maxDiscount) {
+			            maxDiscount = ds.getGiamGiaHoaDon();
+			            maxDiscountPromotion = ds;
+			        }
+			    } 
 			}
 
+			HoaDon hd;
 			if(maxDiscountPromotion != null) {
 			    // maxDiscountPromotion là đối tượng KhuyenMaiHoaDon có giá trị giảm giá lớn nhất
-			    // Bạn có thể sử dụng nó ở đây
-				textField_5.setText(maxDiscountPromotion.getMaKM());
-				textField_8.setText(String.valueOf(maxDiscountPromotion.getGiamGiaHoaDon()));
+			    // Bạn có thể sử dụng nó ở đây\
+				hd=new HoaDon(code,kh, nv, ngay, "Hóa Đơn Bán", "không có gì", null);
+			}else {
+				hd=new HoaDon(code,kh, nv, ngay, "Hóa Đơn Bán", "không có gì", maxDiscountPromotion);
 			}
-
-			Date ngay=java.sql.Date.valueOf(currentDate);
-			KhachHang_Dao.getAllKhachHang();
-			KhachHang kh= KhachHang_Dao.getKhachHangTheoMa(maKh);
 		
-			HoaDon hd=new HoaDon(code,kh, nv, ngay, "Hóa Đơn Bán", "không có gì", maxDiscountPromotion);
+		
 			if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn in hóa đơn không", "Thông báo",
 	                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-			if(HoaDon_DAO.them(hd)) {
-				JOptionPane.showMessageDialog(this, "In hóa đơn thành công");
-				SanPham_Dao sp_dao=new SanPham_Dao();		
-				HoaDon hD= HoaDon_DAO.layHoaDonTheoMa(code);
+			if(hd_dao.them(hd)) {
+				JOptionPane.showMessageDialog(this, "In hóa đơn thành công");	
 				// Giả sử 'table' là đối tượng JTable của bạn và 'model' là model của table
-				SanPham_Dao.docTubang();
 				for (int i = 0; i < table.getRowCount(); i++) {
 				    // Lấy dữ liệu từ mỗi cột của dòng hiện tại
+					SanPham_Dao.docTubang();
 				    SanPham sp = SanPham_Dao.laySanPhamTheoMa(model.getValueAt(i, 1).toString()) ; // Thay đổi chỉ số cột nếu cần
 				    int soLuong = Integer.parseInt(model.getValueAt(i, 4).toString()); // Thay đổi chỉ số cột nếu cần
 
-				    // Tạo đối tượng ChiTietHoaDon mới và thêm vào cơ sở dữ liệu
-				    ChiTietHoaDon cthd = new ChiTietHoaDon(hD, sp, soLuong);
+				    // Tạo đối tượng chiTiecHoaDon mới và thêm vào cơ sở dữ liệu
+				    ChiTietHoaDon cthd = new ChiTietHoaDon(hd, sp, soLuong);
 				    ChiTietHoaDon_DAO.them(cthd);
 				}
 
 				loadMa();
 				updateHoaDon();
-				updateDuLieuSP();
+				try {
+					updateDuLieuSP();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				clearTable();
 				q=0;
 			}
