@@ -16,10 +16,7 @@ public class SanPham implements Serializable{
 	private String DonViTinh;
 	private KhuyenMaiSanPham KhuyenMai;
 
-	public SanPham(String maSP) {
-		super();
-		this.maSP = maSP;
-	}
+
 	public SanPham(String maSP, String tenSP, String loai, java.util.Date date1, java.util.Date date2, Double donGiaNhap,
 			Double donGiaBan, int soluongTon, String hinhAnhSanPham, String donViTinh, KhuyenMaiSanPham khuyenMai) {
 		super();
@@ -34,6 +31,11 @@ public class SanPham implements Serializable{
 		this.hinhAnhSanPham = hinhAnhSanPham;
 		DonViTinh = donViTinh;
 		KhuyenMai = khuyenMai;
+	}
+
+	public SanPham(String maSP) {
+		super();
+		this.maSP = maSP;
 	}
 
 	public String getMaSP() {
