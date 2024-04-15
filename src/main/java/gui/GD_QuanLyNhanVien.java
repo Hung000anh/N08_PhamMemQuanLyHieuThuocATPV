@@ -485,6 +485,7 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener,MouseLis
 				nv_dao.deleteNhanVien(model.getValueAt(row, 1).toString());
 				model.removeRow(row);
 				JOptionPane.showMessageDialog(this, "Xóa thành công!!");
+				xoaTrang();
 			}
 		}
 	}
@@ -552,6 +553,7 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener,MouseLis
 					clearTable();
 					loadData();
 					JOptionPane.showMessageDialog(null, "Sữa thành công");
+					xoaTrang();
 					}
 				else
 					JOptionPane.showMessageDialog(this,"Sửa không thành công");

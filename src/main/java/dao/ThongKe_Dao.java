@@ -77,7 +77,7 @@ public class ThongKe_Dao {
 			Statement stm = con.createStatement();
 			ResultSet rs = stm.executeQuery(sql);
 			while (rs.next()) {
-				dssp.add(new SanPham(rs.getString(1), rs.getString(2), rs.getString(3), rs.getDate(4), rs.getDate(5), rs.getDouble(6), rs.getInt(8), rs.getDouble(7), rs.getString(9), rs.getString(10), new KhuyenMaiSanPham(rs.getString(11))));
+				dssp.add(new SanPham(rs.getString(1), rs.getString(2), rs.getString(3), rs.getDate(4), rs.getDate(5), rs.getDouble(6), rs.getDouble(8), rs.getInt(7), rs.getString(9), rs.getString(10), new KhuyenMaiSanPham(rs.getString(11))));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

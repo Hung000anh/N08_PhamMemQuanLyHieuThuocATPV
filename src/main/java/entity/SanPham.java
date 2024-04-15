@@ -15,6 +15,10 @@ public class SanPham implements Serializable{
 	private String hinhAnhSanPham;
 	private String DonViTinh;
 	private KhuyenMaiSanPham KhuyenMai;
+<<<<<<< HEAD
+=======
+
+>>>>>>> vantrung
 	public SanPham(String maSP) {
 		super();
 		this.maSP = maSP;
@@ -53,8 +57,14 @@ public class SanPham implements Serializable{
 	public void setLoai(String loai) {
 		this.loai = loai;
 	}
+<<<<<<< HEAD
 	public java.util.Date getNgayHetHan() {
 
+=======
+
+	
+	public Date getNgayHetHan() {
+>>>>>>> vantrung
 		return ngayHetHan;
 	}
 	public void setNgayHetHan(Date ngayHetHan) {
@@ -102,12 +112,20 @@ public class SanPham implements Serializable{
 	public void setKhuyenMai(KhuyenMaiSanPham khuyenMai) {
 		KhuyenMai = khuyenMai;
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> vantrung
 	@Override
 	public String toString() {
 		return "SanPham [maSP=" + maSP + ", tenSP=" + tenSP + ", loai=" + loai + ", ngayHetHan=" + ngayHetHan
 				+ ", ngaySanXuat=" + ngaySanXuat + ", donGiaNhap=" + donGiaNhap + ", soluongTon=" + soluongTon
 				+ ", donGiaBan=" + donGiaBan + ", hinhAnhSanPham=" + hinhAnhSanPham + ", DonViTinh=" + DonViTinh
 				+ ", KhuyenMai=" + KhuyenMai + "]";
+<<<<<<< HEAD
+=======
+
+>>>>>>> vantrung
 	}	
 
 }

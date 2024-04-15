@@ -18,6 +18,7 @@ import entity.SanPham;
 
 public class KhuyenMaiSanPham_Dao {
     private static ArrayList<KhuyenMaiSanPham> DanhSachKhuyenMaiSanPham = new ArrayList<KhuyenMaiSanPham>();
+	private static Connection con= Database.getInstance().getConnection();
 
     public KhuyenMaiSanPham_Dao() {
     	docTubang();
@@ -30,6 +31,7 @@ public class KhuyenMaiSanPham_Dao {
     	
         try {
             Connection con = Database.getInstance().getConnection();
+<<<<<<< HEAD
             
             java.util.Date ngayHienTai = new java.util.Date();
             
@@ -41,6 +43,9 @@ public class KhuyenMaiSanPham_Dao {
             updateActiveStatement.executeUpdate();
             updateActiveStatement.close();
             
+=======
+
+>>>>>>> vantrung
             String sql = "SELECT * FROM KhuyenMaiSanPham"; // Corrected table name
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);
@@ -58,6 +63,7 @@ public class KhuyenMaiSanPham_Dao {
             rs.close();
             statement.close();
         } catch (SQLException e) {
+<<<<<<< HEAD
             e.printStackTrace();
         }
         return DanhSachKhuyenMaiSanPham;
@@ -66,6 +72,62 @@ public class KhuyenMaiSanPham_Dao {
         try (Connection con = ConnectDB.getConnection();
                 PreparedStatement stmt = con.prepareStatement("INSERT INTO KhuyenMaiSanPham VALUES (?, ?, ?, ?, ?, ?, ?)")) {
             // Thiết lập các giá trị cho câu lệnh truy vấn
+=======
+
+
+
+            // Lấy ngày hiện tại
+            java.util.Date ngayHienTai = new java.util.Date();
+
+            // Cập nhật trạng thái của các bản ghi có ngày kết thúc < ngày hiện tại
+            String updateSql = "UPDATE KhuyenMaiSanPham SET TrangThai = 0 WHERE NgayKetThuc < ? AND TrangThai = 1"; // Trạng thái = 1 là true, 0 là false
+            try (PreparedStatement updateStatement = con.prepareStatement(updateSql)) {
+                updateStatement.setDate(1, new java.sql.Date(ngayHienTai.getTime()));
+                updateStatement.executeUpdate();
+            } catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+            // Lấy dữ liệu từ bảng KhuyenMaiSanPham
+            String selectSql = "SELECT * FROM KhuyenMaiSanPham";
+            try (PreparedStatement statement = con.prepareStatement(selectSql);
+                 ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    String maKM = rs.getString(1);
+                    String tenKM = rs.getString(2);
+                    Date ngayBatDau = rs.getDate(3);
+                    Date ngayKetThuc = rs.getDate(4);
+                    Boolean loaiChuongTrinh = rs.getBoolean(5);
+                    Boolean trangThai = rs.getBoolean(6);
+                    Double giamGiaSanPham = rs.getDouble(7);
+
+                    KhuyenMaiSanPham khuyenMaiSanPham = new KhuyenMaiSanPham(maKM, tenKM, ngayBatDau, ngayKetThuc, loaiChuongTrinh, trangThai, giamGiaSanPham);
+                    DanhSachKhuyenMaiSanPham.add(khuyenMaiSanPham);
+                }
+
+            rs.close();
+            statement.close();
+            } catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} }  
+        return DanhSachKhuyenMaiSanPham;
+
+    }
+
+
+
+    public boolean themKhuyenMaiSanPham(KhuyenMaiSanPham k) {
+         
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = Database.getInstance().getConnection();
+            String sql = "INSERT INTO KhuyenMaiSanPham VALUES (?, ?, ?, ?, ?, ?, ?)";
+            stmt = con.prepareStatement(sql);
+
+>>>>>>> vantrung
             stmt.setString(1, k.getMaKM());
             stmt.setString(2, k.getTenKM());
             stmt.setDate(3, new java.sql.Date(k.getNgayBatDau().getTime())); // Chuyển đổi từ java.util.Date sang java.sql.Date

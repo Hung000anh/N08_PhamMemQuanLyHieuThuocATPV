@@ -19,13 +19,18 @@ import entity.SanPham;
 public class SanPham_Dao {
     private static ArrayList<SanPham> DanhSachSanPham = new ArrayList<SanPham>();
     
-    public SanPham_Dao() {
-    	docTubang();
+    public SanPham_Dao()   {
+ 
     }
     
-    public static ArrayList<SanPham> docTubang() {
+    public static ArrayList<SanPham> docTubang()  {
     	DanhSachSanPham.clear();
+<<<<<<< HEAD
     	KhuyenMaiSanPham_Dao.docTubang();
+=======
+
+
+>>>>>>> vantrung
         try {
             Connection con = ConnectDB.getConnection();
             Statement statement = con.createStatement();
@@ -133,9 +138,13 @@ public class SanPham_Dao {
                 String hinhAnhSanPham = rs.getString(9);
                 String DonViTinh = rs.getString(10);
                 String idKhuyenMai = rs.getString(11);
-                KhuyenMaiSanPham khuyenMai = (idKhuyenMai != null)? KhuyenMaiSanPham_Dao.layKhuyenMaiSanPhamTheoMa(idKhuyenMai) : null;
+                KhuyenMaiSanPham khuyenMai = (idKhuyenMai != null)? new KhuyenMaiSanPham(idKhuyenMai) : null;
                 
+<<<<<<< HEAD
                 SanPham s = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, soluongTon, donGiaBan, hinhAnhSanPham, DonViTinh , khuyenMai);
+=======
+                SanPham s = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, donGiaBan, soluongTon, DonViTinh, hinhAnhSanPham, khuyenMai);
+>>>>>>> vantrung
                 DanhSachSanPham.add(s);
             }
             rs.close();
@@ -251,6 +260,7 @@ public class SanPham_Dao {
             return false; // Trả về false nếu có lỗi xảy ra trong quá trình xóa
         }
     }
+<<<<<<< HEAD
     public void goMaKhuyenMaiChoSanPham(String maSanPham) {
         try (Connection con = ConnectDB.getConnection();
              PreparedStatement stmt = con.prepareStatement("UPDATE SanPham SET maKhuyenMai = NULL WHERE maSanPham = ?")) {
@@ -264,6 +274,14 @@ public class SanPham_Dao {
     public static SanPham laySanPhamTheoMa(String maSP) {
     	KhuyenMaiSanPham_Dao DanhSachKhuyenMaiSanPham = new KhuyenMaiSanPham_Dao();
     	ArrayList<KhuyenMaiSanPham> DanhSachKhuyenMaiSP = DanhSachKhuyenMaiSanPham.docTubang();
+=======
+
+
+
+    public SanPham laySanPhamTheoMa1(String maSP)   {
+    	
+    	
+>>>>>>> vantrung
     	SanPham sp = null;
     	
         try {

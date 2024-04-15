@@ -1,17 +1,36 @@
 package entity;
 
 public class KhachHang {
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> vantrung
 	private String maKhachHang;
 	private String tenKhachHang;
 	private String soDienThoai;
 	private boolean gioiTinh;
 	private int tuoi;
 	private String hinhAnhKhachHang;
+<<<<<<< HEAD
 
+=======
+
+
+	public KhachHang() {
+		super();
+	}
+
+
+>>>>>>> vantrung
 	public KhachHang(String maKhachHang) {
 		super();
 		this.maKhachHang = maKhachHang;
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> vantrung
 
 	public KhachHang(String maKhachHang, String tenKhachHang, String soDienThoai, boolean gioiTinh, int tuoi,
 			String hinhAnhKhachHang) {
@@ -60,17 +79,27 @@ public class KhachHang {
 		return tuoi;
 	}
 
+<<<<<<< HEAD
 	public void setTuoi(int tuoi) {
 		this.tuoi = tuoi;
 	}
+=======
+>>>>>>> vantrung
 
 	public String getHinhAnhKhachHang() {
 		return hinhAnhKhachHang;
 	}
 
+
 	public void setHinhAnhKhachHang(String hinhAnhKhachHang) {
 		this.hinhAnhKhachHang = hinhAnhKhachHang;
 	}
+
+
+	public void setTuoi(int tuoi) {
+		this.tuoi = tuoi;
+	}
+
 
 	@Override
 	public String toString() {
@@ -78,4 +107,11 @@ public class KhachHang {
 				+ soDienThoai + ", gioiTinh=" + gioiTinh + ", tuoi=" + tuoi + ", hinhAnhKhachHang=" + hinhAnhKhachHang
 				+ "]";
 	}
+<<<<<<< HEAD
 }
+=======
+
+
+   
+}
+>>>>>>> vantrung

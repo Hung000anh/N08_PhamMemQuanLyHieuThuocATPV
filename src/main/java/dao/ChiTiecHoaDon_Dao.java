@@ -4,11 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import connectDB.ConnectDB;
+import entity.ChiTietHoaDon;
 import entity.NhanVien;
-import entity.chiTiecHoaDon;
 
 public class ChiTiecHoaDon_Dao {
-	public boolean addChiTiecHoaDon(chiTiecHoaDon cthd) {
+	public boolean addChiTiecHoaDon(ChiTietHoaDon cthd) {
 		try {
 			ConnectDB.getConnection();
 		} catch (Exception e) {
