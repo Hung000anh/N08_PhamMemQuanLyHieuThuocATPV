@@ -230,7 +230,7 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
                     } catch (ParseException ex) {
                         ex.printStackTrace();
                     }
-                    KhuyenMaiHoaDon khuyenMaiHoaDon = new KhuyenMaiHoaDon(maKM, tenKM, ngayBatDau1, ngayKetThuc1,  true, true, giaTriHoaDon, giamGiaHoaDon);            
+                    KhuyenMaiHoaDon khuyenMaiHoaDon = new KhuyenMaiHoaDon(maKM, tenKM, ngayBatDau1, ngayKetThuc1,  true, true, giaTriHoaDon, giamGiaHoaDon/100);            
                     // Gọi phương thức thêm khuyến mãi hóa đơn từ DAO
                     KhuyenMaiHoaDon_Dao khuyenMaiHoaDonDao = new KhuyenMaiHoaDon_Dao();
                     boolean result;
@@ -277,7 +277,7 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
                     Double giamGiaSanPham = Double.parseDouble(txtGiamGia.getText());
                     
                     // Tạo đối tượng KhuyenMaiSanPham
-                    KhuyenMaiSanPham khuyenMaiSanPham = new KhuyenMaiSanPham(maKM, tenKM, ngayBatDau1, ngayKetThuc1, true, true, giamGiaSanPham);
+                    KhuyenMaiSanPham khuyenMaiSanPham = new KhuyenMaiSanPham(maKM, tenKM, ngayBatDau1, ngayKetThuc1, true, true, giamGiaSanPham/100);
                     
                     // Gọi phương thức thêm khuyến mãi sản phẩm
                     KhuyenMaiSanPham_Dao khuyenMaiSanPhamDao = new KhuyenMaiSanPham_Dao();
@@ -501,7 +501,7 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
         scrollPane.setViewportView(table);
         table.setModel(new DefaultTableModel(
         	new Object[][] {
-        		{123, 123, 123, 123},
+        		
         	},
         	new String[] {
         		"STT", "M\u00E3 s\u1EA3n ph\u1EA9m", "T\u00EAn S\u1EA3n ph\u1EA9m", "Gi\u00E1 b\u00E1n"
