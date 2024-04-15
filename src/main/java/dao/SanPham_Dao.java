@@ -62,7 +62,7 @@ public class SanPham_Dao {
     		if (maSP.equals(sp.getMaSP()))
     			return sp;
     	}
-    	return new SanPham(maSP);
+    	return null;
     }
 
     public void ghiDeMaKhuyenMaiChoSanPham(String maSanPham, String maKhuyenMai) {
@@ -150,24 +150,6 @@ public class SanPham_Dao {
             return false; // Trả về false nếu có lỗi xảy ra trong quá trình xóa
         }
     }
-    
-    
-    
-    public boolean xoaSanPham(String ma) {
-        Connection con = null;
-        PreparedStatement stmt = null;
-        try {
-            con = Database.getInstance().getConnection();
-            String sql = "DELETE FROM SanPham WHERE maSanPham = ?";
-            stmt = con.prepareStatement(sql);
-            stmt.setString(1, ma);
-            int affectedRows = stmt.executeUpdate(); // Lấy số bản ghi bị ảnh hưởng bởi câu lệnh DELETE
-            return affectedRows > 0; // Trả về true nếu có bản ghi nào bị xóa, ngược lại trả về false
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi xóa sản phẩm: " + e.getMessage());
-            return false; // Trả về false nếu có lỗi xảy ra trong quá trình xóa
-        }
-    }
 
     public static boolean updateSoLuongTonTheoMa(String ma,int soLuongTon) {
 		Connection con = Database.getInstance().getConnection();
@@ -193,8 +175,25 @@ public class SanPham_Dao {
 		}
 		return n > 0;
 	}
+    
+    
+    public boolean xoaSanPham(String ma) {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+            con = Database.getInstance().getConnection();
+            String sql = "DELETE FROM SanPham WHERE maSanPham = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, ma);
+            int affectedRows = stmt.executeUpdate(); // Lấy số bản ghi bị ảnh hưởng bởi câu lệnh DELETE
+            return affectedRows > 0; // Trả về true nếu có bản ghi nào bị xóa, ngược lại trả về false
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi xóa sản phẩm: " + e.getMessage());
+            return false; // Trả về false nếu có lỗi xảy ra trong quá trình xóa
+        }
+    }
 
-    public void goMaKhuyenMaiChoSanPham(String maSanPham) {
+	public void goMaKhuyenMaiChoSanPham(String maSanPham) {
         try (Connection con = Database.getInstance().getConnection();
              PreparedStatement stmt = con.prepareStatement("UPDATE SanPham SET maKhuyenMai = NULL WHERE maSanPham = ?")) {
             stmt.setString(1, maSanPham);

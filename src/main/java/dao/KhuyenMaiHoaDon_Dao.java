@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 import connectDB.Database;
 import entity.KhuyenMaiHoaDon;
 
@@ -18,11 +19,31 @@ public class KhuyenMaiHoaDon_Dao {
     	DanhSachKhuyenMaiHoaDon.clear();
         try {
             Connection con = Database.getInstance().getConnection();
+            
+            
+            
+            // Cập nhật trạng thái của các bản ghi có ngày kết thúc < ngày hiện tại
+            java.util.Date ngayHienTai = new java.util.Date();
+            String updateActiveSql = "UPDATE KhuyenMaiHoaDon SET trangThai = 1 WHERE ngayBatDau <= ? AND ngayKetThuc >= ? "; 
+            PreparedStatement updateActiveStatement = con.prepareStatement(updateActiveSql);
+            updateActiveStatement.setDate(1, new java.sql.Date(ngayHienTai.getTime()));
+            updateActiveStatement.setDate(2, new java.sql.Date(ngayHienTai.getTime()));
+            updateActiveStatement.executeUpdate();
+            updateActiveStatement.close();
+            
+            // Cập nhật trạng thái của các bản ghi có ngày bắt đầu <= ngày hiện tại hoặc ngày kết thúc >= ngày hiện tại
+            String updateUnActiveSql = "UPDATE KhuyenMaiHoaDon SET trangThai = 0 WHERE ngayBatDau >= ? OR ngayKetThuc <= ?"; 
+            PreparedStatement updateUnActiveStatement = con.prepareStatement(updateUnActiveSql);
+            updateUnActiveStatement.setDate(1, new java.sql.Date(ngayHienTai.getTime()));
+            updateUnActiveStatement.setDate(2, new java.sql.Date(ngayHienTai.getTime()));
+            updateUnActiveStatement.executeUpdate();
+            updateUnActiveStatement.close();
+            
             String sql = "SELECT * FROM KhuyenMaiHoaDon"; // Corrected table name
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
-            	String maKM = rs.getString(1); 
+            	String maKM = rs.getString(1);  
             	String tenKM = rs.getString(2);
             	Date ngayBatDau = rs.getDate(3);
             	Date ngayKetThuc = rs.getDate(4);;
@@ -63,6 +84,7 @@ public class KhuyenMaiHoaDon_Dao {
             return false;
         }
     }
+    
     public static KhuyenMaiHoaDon timKhuyenMai(String maKM)
     {
     	for(KhuyenMaiHoaDon km : DanhSachKhuyenMaiHoaDon)
@@ -89,7 +111,6 @@ public class KhuyenMaiHoaDon_Dao {
             System.err.println("Lỗi khi xóa khuyến mãi: " + e.getMessage());
         }
     }
-
     public boolean suaKhuyenMai(KhuyenMaiHoaDon kmhd) {
         Connection con = null;
         PreparedStatement stmt = null;
@@ -97,7 +118,7 @@ public class KhuyenMaiHoaDon_Dao {
             con = Database.getInstance().getConnection();
             String sql = "UPDATE KhuyenMaiHoaDon SET tenKhuyenMai = ?, ngayBatDau = ?, ngayKetThuc = ?, loaiChuongTrinh = ?, trangThai = ?, giaTriHoaDon = ?, giamGiaHoaDon = ? WHERE maKhuyenMai = ?";
             stmt = con.prepareStatement(sql);
-
+            
             // Set values using getters of KhuyenMaiHoaDon object
             stmt.setString(1, kmhd.getTenKM());
             stmt.setDate(2, new java.sql.Date(kmhd.getNgayBatDau().getTime()));

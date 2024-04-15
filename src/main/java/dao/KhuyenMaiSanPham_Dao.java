@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import connectDB.Database;
 import entity.ChiTietHoaDon;
+import entity.KhuyenMaiHoaDon;
 import entity.KhuyenMaiSanPham;
 import entity.SanPham;
 
@@ -23,8 +24,20 @@ public class KhuyenMaiSanPham_Dao {
 
     public static ArrayList<KhuyenMaiSanPham> docTubang() {
     	DanhSachKhuyenMaiSanPham.clear();
+
         try {
             Connection con = Database.getInstance().getConnection();
+            
+            java.util.Date ngayHienTai = new java.util.Date();
+            
+            // Cập nhật trạng thái của các bản ghi có ngày bắt đầu <= ngày hiện tại và ngày kết thúc >= ngày hiện tại
+            String updateActiveSql = "UPDATE KhuyenMaiSanPham SET trangThai = 1 WHERE ngayBatDau <= ? AND ngayKetThuc >= ? AND trangThai = 0"; 
+            PreparedStatement updateActiveStatement = con.prepareStatement(updateActiveSql);
+            updateActiveStatement.setDate(1, new java.sql.Date(ngayHienTai.getTime()));
+            updateActiveStatement.setDate(2, new java.sql.Date(ngayHienTai.getTime()));
+            updateActiveStatement.executeUpdate();
+            updateActiveStatement.close();
+            
             String sql = "SELECT * FROM KhuyenMaiSanPham"; // Corrected table name
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);
@@ -36,10 +49,8 @@ public class KhuyenMaiSanPham_Dao {
             	Boolean loaiChuongTrinh = rs.getBoolean(5);
             	Boolean trangThai = rs.getBoolean(6);
             	Double giamGiaSanPham = rs.getDouble(7);
-                
             	KhuyenMaiSanPham khuyenMaiSanPham = new KhuyenMaiSanPham(maKM, tenKM, ngayBatDau, ngayKetThuc, loaiChuongTrinh, trangThai, giamGiaSanPham);
             	DanhSachKhuyenMaiSanPham.add(khuyenMaiSanPham);
-            	
             }
             rs.close();
             statement.close();
@@ -51,7 +62,6 @@ public class KhuyenMaiSanPham_Dao {
     public static boolean themKhuyenMaiSanPham(KhuyenMaiSanPham k) {
         try (Connection con = Database.getInstance().getConnection();
                 PreparedStatement stmt = con.prepareStatement("INSERT INTO KhuyenMaiSanPham VALUES (?, ?, ?, ?, ?, ?, ?)")) {
-            
             // Thiết lập các giá trị cho câu lệnh truy vấn
             stmt.setString(1, k.getMaKM());
             stmt.setString(2, k.getTenKM());
@@ -83,16 +93,22 @@ public class KhuyenMaiSanPham_Dao {
         PreparedStatement stmt = null;
         try {
             con = Database.getInstance().getConnection();
-            String sql = "DELETE FROM KhuyenMaiSanPham WHERE maKhuyenMai = ?";
-            stmt = con.prepareStatement(sql);
+            // Cập nhật mã khuyến mãi của các sản phẩm về null
+            String updateSql = "UPDATE SanPham SET maKhuyenMai = NULL WHERE maKhuyenMai = ?";
+            PreparedStatement updateStmt = con.prepareStatement(updateSql);
+            updateStmt.setString(1, ma);
+            updateStmt.executeUpdate();
+            updateStmt.close();
+            
+            // Xóa khuyến mãi từ bảng khuyến mãi sản phẩm
+            String deleteSql = "DELETE FROM KhuyenMaiSanPham WHERE maKhuyenMai = ?";
+            stmt = con.prepareStatement(deleteSql);
             stmt.setString(1, ma);
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Lỗi khi xóa khuyến mãi: " + e.getMessage());
-            e.printStackTrace();
         }
     }
-
     public boolean suaKhuyenMai(KhuyenMaiSanPham kmsp) {
         Connection con = null;
         PreparedStatement stmt = null;
@@ -115,4 +131,5 @@ public class KhuyenMaiSanPham_Dao {
         	return false;
         } 
     }
+    
 }
