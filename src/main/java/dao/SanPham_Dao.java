@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 
+import connectDB.ConnectDB;
 import connectDB.Database;
 import entity.HoaDon;
 import entity.KhuyenMaiSanPham;
@@ -17,15 +18,14 @@ import entity.SanPham;
 public class SanPham_Dao {
     private static ArrayList<SanPham> DanhSachSanPham = new ArrayList<SanPham>();
     
-    public SanPham_Dao() {
-    	docTubang();
+    public SanPham_Dao()   {
+ 
     }
     
-    public static ArrayList<SanPham> docTubang() {
+    public static ArrayList<SanPham> docTubang()  {
     	DanhSachSanPham.clear();
 
-    	KhuyenMaiSanPham_Dao.docTubang();
-    	
+
         try {
             Connection con = Database.getInstance().getConnection();
             String sql = "SELECT * FROM SanPham"; // Corrected table name
@@ -43,9 +43,9 @@ public class SanPham_Dao {
                 String hinhAnhSanPham = rs.getString(9);
                 String DonViTinh = rs.getString(10);
                 String idKhuyenMai = rs.getString(11);
-                KhuyenMaiSanPham khuyenMai = (idKhuyenMai != null)? KhuyenMaiSanPham_Dao.layKhuyenMaiSanPhamTheoMa(idKhuyenMai) : null;
+                KhuyenMaiSanPham khuyenMai = (idKhuyenMai != null)? new KhuyenMaiSanPham(idKhuyenMai) : null;
                 
-                SanPham s = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, soluongTon, donGiaBan, DonViTinh, hinhAnhSanPham, khuyenMai);
+                SanPham s = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, donGiaBan, soluongTon, DonViTinh, hinhAnhSanPham, khuyenMai);
                 DanhSachSanPham.add(s);
             }
             rs.close();
@@ -168,14 +168,12 @@ public class SanPham_Dao {
             return false; // Trả về false nếu có lỗi xảy ra trong quá trình xóa
         }
     }
-<<<<<<< HEAD
-}
-=======
 
 
-    public SanPham laySanPhamTheoMa(String maSP) {
-    	KhuyenMaiSanPham_Dao DanhSachKhuyenMaiSanPham = new KhuyenMaiSanPham_Dao();
-    	ArrayList<KhuyenMaiSanPham> DanhSachKhuyenMaiSP = DanhSachKhuyenMaiSanPham.docTubang();
+
+    public SanPham laySanPhamTheoMa1(String maSP)   {
+    	
+    	
     	SanPham sp = null;
     	
         try {
@@ -287,4 +285,4 @@ public class SanPham_Dao {
 	}
 
 }
->>>>>>> vantrung
+

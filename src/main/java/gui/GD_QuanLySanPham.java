@@ -289,7 +289,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		        Double dbGiaNhap = Double.parseDouble(giaNhap);
 		        int intSoLuongTon = Integer.parseInt(soLuongTon);
 		        Double dbGiaBan = dbGiaNhap + dbGiaNhap * 0.2;
-		        SanPham sanPham = new SanPham(txtMaSP.getText(), textTenSP.getText(), textLoaiSP.getText(), date1, date2, dbGiaNhap, intSoLuongTon, dbGiaBan, filePath, donviTinh, null);
+		        SanPham sanPham = new SanPham(txtMaSP.getText(), textTenSP.getText(), textLoaiSP.getText(), date1, date2, dbGiaNhap, dbGiaBan, intSoLuongTon, filePath, donviTinh, null);
 		        
 		        // Tiến hành thêm sản phẩm vào cơ sở dữ liệu
 		        SanPham_Dao spd = new SanPham_Dao();
@@ -417,7 +417,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		        Double dbGiaNhap = Double.parseDouble(giaNhap);
 		        int intSoLuongTon = Integer.parseInt(soLuongTon);
 		        Double dbGiaBan = dbGiaNhap + dbGiaNhap * 0.2;
-		        SanPham sanPham = new SanPham(txtMaSP.getText(), textTenSP.getText(), textLoaiSP.getText(), date1, date2, dbGiaNhap, intSoLuongTon, dbGiaBan , donviTinh, filePath , null);
+		        SanPham sanPham = new SanPham(txtMaSP.getText(), textTenSP.getText(), textLoaiSP.getText(), date1, date2, dbGiaNhap, dbGiaBan, intSoLuongTon , donviTinh, filePath , null);
 //		        System.out.println(sanPham.getHinhAnhSanPham());
 //		        System.out.println(filePath);
 		        // Tiến hành thêm sản phẩm vào cơ sở dữ liệu

@@ -33,7 +33,8 @@ public class HoaDon_DAO {
             while (rs.next()) {
             	String maHD = rs.getString(1); 
             	String maKhachHang = rs.getString(2);
-            	KhachHang khachHang = KhachHang_Dao.getKhachHangTheoMa(maKhachHang);
+            	KhachHang khachHang;
+				khachHang =new KhachHang(maKhachHang);
             	String maNV = rs.getString(3);
             	NhanVien nhanVien = NhanVien_Dao.getNhanVienTheoMa(maNV);
             	Date ngayXuat = rs.getDate(4);;
@@ -55,7 +56,7 @@ public class HoaDon_DAO {
         }
         return DanhSachHoaDon;
     }
-<<<<<<< HEAD
+
 
     // gọi docTuBang() trước
     public static HoaDon layHoaDonTheoMa(String maHD) {
@@ -101,42 +102,44 @@ public class HoaDon_DAO {
             e.printStackTrace();
             return false;
         }
-    }
+    
 }
-=======
+
     public boolean addHoaDon(HoaDon hd) {
-		try {
-			ConnectDB.getConnection();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		Connection con = ConnectDB.getConnection();
-		PreparedStatement psmt = null;
-		int n = 0;
-		try {
-			psmt = con.prepareStatement("insert into HoaDon values(?,?,?,?,?,?,?)");
-			psmt.setString(1, hd.getMaHD());
-			psmt.setString(2, hd.getKhachHang().getMaKhachHang());
-			psmt.setString(3, hd.getNhanVien().getMaNV());
-			psmt.setDate(4, (Date) hd.getNgayXuat());
-			psmt.setString(5, hd.getLoaiHD());
-			psmt.setString(6, hd.getGhiChu());
-			psmt.setString(7, hd.getKhuyenMai().getMaKM());
-			n = psmt.executeUpdate();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		} finally {
-			try {
-				psmt.close();
-			} catch (Exception e2) {
-				// TODO: handle exception
-				e2.printStackTrace();
-			}
-		}
-		return n > 0;
-	}
+        try {
+            ConnectDB.getConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement psmt = null;
+        int n = 0;
+        try {
+            psmt = con.prepareStatement("insert into HoaDon values(?,?,?,?,?,?,?)");
+            psmt.setString(1, hd.getMaHD());
+            psmt.setString(2, hd.getKhachHang().getMaKhachHang());
+            psmt.setString(3, hd.getNhanVien().getMaNV());
+            psmt.setDate(4, (Date) hd.getNgayXuat());
+            psmt.setString(5, hd.getLoaiHD());
+            psmt.setString(6, hd.getGhiChu());
+            if(hd.getKhuyenMai() != null) {
+                psmt.setString(7, hd.getKhuyenMai().getMaKM());
+            } else {
+                psmt.setNull(7, java.sql.Types.VARCHAR);
+            }
+            n = psmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                psmt.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return n > 0;
+    }
+
 
 	public boolean updateHoaDon(HoaDon hd) {
 		try {
@@ -196,7 +199,6 @@ public class HoaDon_DAO {
 				e.printStackTrace();
 			}
 			return hd;
-		}
-
+	 }
 }
->>>>>>> vantrung
+

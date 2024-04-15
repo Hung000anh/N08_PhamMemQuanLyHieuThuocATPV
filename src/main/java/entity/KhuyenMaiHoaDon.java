@@ -29,10 +29,7 @@ public class KhuyenMaiHoaDon {
 		this.giaTriHoaDon = giaTriHoaDon;
 		this.giamGiaHoaDon = giamGiaHoaDon;
 	}
-	public KhuyenMaiHoaDon(String maKM) {
-		// TODO Auto-generated constructor stub
-		this.maKM = maKM;
-	}
+
 	public String getMaKM() {
 		return maKM;
 	}

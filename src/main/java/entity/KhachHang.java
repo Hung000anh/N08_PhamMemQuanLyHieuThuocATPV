@@ -1,41 +1,26 @@
 package entity;
 
 public class KhachHang {
-<<<<<<< HEAD
-    private String maKhachHang;
-    private String tenKhachHang;
-    private String soDienThoai;
-    private boolean gioiTinh;
-    private int tuoi;
-    private String hinhAnhKhachHang;
-=======
+
+
 	private String maKhachHang;
 	private String tenKhachHang;
 	private String soDienThoai;
 	private boolean gioiTinh;
 	private int tuoi;
 	private String hinhAnhKhachHang;
->>>>>>> vantrung
+
 
 	public KhachHang() {
 		super();
 	}
 
-<<<<<<< HEAD
-    public KhachHang(String maKhachHang, String tenKhachHang, String soDienThoai, boolean gioiTinh, int tuoi, String hinhAnhKhachHang) {
-        this.maKhachHang = maKhachHang;
-        this.tenKhachHang = tenKhachHang;
-        this.soDienThoai = soDienThoai;
-        this.gioiTinh = gioiTinh;
-        this.tuoi = tuoi;
-        this.hinhAnhKhachHang = hinhAnhKhachHang;
-    }
-=======
+
 	public KhachHang(String maKhachHang) {
 		super();
 		this.maKhachHang = maKhachHang;
 	}
->>>>>>> vantrung
+
 
 	public KhachHang(String maKhachHang, String tenKhachHang, String soDienThoai, boolean gioiTinh, int tuoi,
 			String hinhAnhKhachHang) {
@@ -84,38 +69,21 @@ public class KhachHang {
 		return tuoi;
 	}
 
-<<<<<<< HEAD
-    public String getHinhAnhKhachHang() {
-    	return hinhAnhKhachHang;
-    }
-
-    public void setHinhAnhKhachHang(String hinhAnhKhachHang) {
-    	this.hinhAnhKhachHang = hinhAnhKhachHang;
-    }
-    
-    // Phương thức toString() để in thông tin KhachHang
-    @Override
-    public String toString() {
-        return "KhachHang{" +
-                "maKhachHang='" + maKhachHang + '\'' +
-                ", tenKhachHang='" + tenKhachHang + '\'' +
-                ", soDienThoai='" + soDienThoai + '\'' +
-                ", gioiTinh=" + gioiTinh +
-                ", tuoi=" + tuoi +
-                '}';
-    }
-=======
-	public void setTuoi(int tuoi) {
-		this.tuoi = tuoi;
-	}
 
 	public String getHinhAnhKhachHang() {
 		return hinhAnhKhachHang;
 	}
 
+
 	public void setHinhAnhKhachHang(String hinhAnhKhachHang) {
 		this.hinhAnhKhachHang = hinhAnhKhachHang;
 	}
+
+
+	public void setTuoi(int tuoi) {
+		this.tuoi = tuoi;
+	}
+
 
 	@Override
 	public String toString() {
@@ -123,5 +91,7 @@ public class KhachHang {
 				+ soDienThoai + ", gioiTinh=" + gioiTinh + ", tuoi=" + tuoi + ", hinhAnhKhachHang=" + hinhAnhKhachHang
 				+ "]";
 	}
->>>>>>> vantrung
+
+
+   
 }

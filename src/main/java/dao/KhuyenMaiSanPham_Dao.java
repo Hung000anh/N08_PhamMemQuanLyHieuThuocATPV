@@ -16,6 +16,7 @@ import entity.SanPham;
 
 public class KhuyenMaiSanPham_Dao {
     private static ArrayList<KhuyenMaiSanPham> DanhSachKhuyenMaiSanPham = new ArrayList<KhuyenMaiSanPham>();
+	private static Connection con= Database.getInstance().getConnection();
 
     public KhuyenMaiSanPham_Dao() {
     	docTubang();
@@ -25,7 +26,7 @@ public class KhuyenMaiSanPham_Dao {
     	DanhSachKhuyenMaiSanPham.clear();
         try {
             Connection con = Database.getInstance().getConnection();
-<<<<<<< HEAD
+
             String sql = "SELECT * FROM KhuyenMaiSanPham"; // Corrected table name
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);
@@ -45,7 +46,7 @@ public class KhuyenMaiSanPham_Dao {
             rs.close();
             statement.close();
         } catch (SQLException e) {
-=======
+
 
 
             // Lấy ngày hiện tại
@@ -56,7 +57,10 @@ public class KhuyenMaiSanPham_Dao {
             try (PreparedStatement updateStatement = con.prepareStatement(updateSql)) {
                 updateStatement.setDate(1, new java.sql.Date(ngayHienTai.getTime()));
                 updateStatement.executeUpdate();
-            }
+            } catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
             // Lấy dữ liệu từ bảng KhuyenMaiSanPham
             String selectSql = "SELECT * FROM KhuyenMaiSanPham";
@@ -77,21 +81,14 @@ public class KhuyenMaiSanPham_Dao {
 
             rs.close();
             statement.close();
-            } }catch (SQLException e) {
->>>>>>> vantrung
-            e.printStackTrace();
-        }  
+            } catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} }  
         return DanhSachKhuyenMaiSanPham;
-<<<<<<< HEAD
+
     }
-    public static boolean themKhuyenMaiSanPham(KhuyenMaiSanPham k) {
-        try (Connection con = Database.getInstance().getConnection();
-                PreparedStatement stmt = con.prepareStatement("INSERT INTO KhuyenMaiSanPham VALUES (?, ?, ?, ?, ?, ?, ?)")) {
-            
-            // Thiết lập các giá trị cho câu lệnh truy vấn
-=======
-        
-        }
+
 
 
     public boolean themKhuyenMaiSanPham(KhuyenMaiSanPham k) {
@@ -102,7 +99,7 @@ public class KhuyenMaiSanPham_Dao {
             con = Database.getInstance().getConnection();
             String sql = "INSERT INTO KhuyenMaiSanPham VALUES (?, ?, ?, ?, ?, ?, ?)";
             stmt = con.prepareStatement(sql);
->>>>>>> vantrung
+
             stmt.setString(1, k.getMaKM());
             stmt.setString(2, k.getTenKM());
             stmt.setDate(3, new java.sql.Date(k.getNgayBatDau().getTime())); // Chuyển đổi từ java.util.Date sang java.sql.Date
