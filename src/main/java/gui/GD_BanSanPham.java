@@ -840,7 +840,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 			
 			NhanVien_Dao nv_dao=new NhanVien_Dao();
 			NhanVien nv = null;
-			nv = nv_dao.getNhanVienTheoMa(DataManager.getUserName());
+			nv = NhanVien_Dao.getNhanVienTheoMa(DataManager.getUserName());
 		
 			KhuyenMaiHoaDon_Dao dsKMHD = new KhuyenMaiHoaDon_Dao();
 			String text = textField_6.getText();

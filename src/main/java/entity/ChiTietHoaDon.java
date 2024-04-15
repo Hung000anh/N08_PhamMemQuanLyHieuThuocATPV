@@ -26,7 +26,19 @@ public class ChiTietHoaDon {
     }
 
     public double getThanhTien() {
-        return sanPham.getDonGiaBan() * soLuong;
+        double thanhtien = sanPham.getDonGiaBan() * soLuong;
+        double giamgiahoadon = 0;
+        double giamgiasanpham = 0;
+        
+        KhuyenMaiHoaDon kmhd = hoaDon.getKhuyenMai();
+        KhuyenMaiSanPham kmsp = sanPham.getKhuyenMai();
+        
+        if (kmhd != null && kmhd.getGiamGiaHoaDon() != null)
+        	giamgiahoadon = thanhtien*kmhd.getGiamGiaHoaDon();
+        if (kmsp != null && kmsp.getGiamGiaSanPham() != null)
+        	giamgiasanpham = thanhtien*kmsp.getGiamGiaSanPham();
+        
+        return thanhtien - giamgiahoadon - giamgiasanpham;
     }
 
     // Setters
