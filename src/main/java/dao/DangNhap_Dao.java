@@ -140,10 +140,10 @@ public class DangNhap_Dao {
 	}
 	//thêm tk và  mk cho nv mới
 	public boolean Them_taiKhoan_matKhau(TaiKhoan tk) {
-		Connection con = Database.getInstance().getConnection();
 		PreparedStatement psmt = null;
 		int n = 0;
 		try {
+		Connection con = Database.getInstance().getConnection();
 			psmt = con.prepareStatement("insert into TaiKhoan values(?,?,?,?)");
 			psmt.setString(1, tk.getMaTaiKhoan());
 			psmt.setString(2, tk.getMatKhau());

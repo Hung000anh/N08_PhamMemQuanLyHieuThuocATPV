@@ -73,11 +73,11 @@ public class ChiTietHoaDon_DAO {
     }
 
 	public static boolean deleteChiTiecHoaDon(String tenSP) {
-		Connection con = Database.getInstance().getConnection();
-		PreparedStatement psmt = null;
 
 		int n = 0;
+			PreparedStatement psmt = null;
 		try {
+			Connection con = Database.getInstance().getConnection();
 			psmt = con.prepareStatement("DELETE FROM ChiTietHoaDon WHERE maSanPham=?;");
 			psmt.setString(1, tenSP);
 
