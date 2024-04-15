@@ -50,16 +50,22 @@ public class GD_ThongKe extends JPanel implements ActionListener {
 		lblTitle.setFont(new Font("Arial", Font.BOLD, 25));
 		lblTitle.setBounds(350, 10, 500, 40);
 		pnNorth.add(lblTitle);
-
-		JButton btnUser = new JButton();
+		btnUser = new JButton();
+		btnUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Dialog_User user=new Dialog_User();
+				user.setVisible(true);
+			}
+		});
+		btnUser.setBackground(Color.decode("#B5E6FB"));
 		btnUser.setBorderPainted(false);
-		btnUser.setBackground(new Color(181, 230, 251));
-		btnUser.setBounds(1085, 7, 45, 45);
+		btnUser.setIcon(new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png"));
+		btnUser.setBounds(1092, 5, 45, 45);
 		ImageIcon iconProfile = new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png");
 		iconProfile = new ImageIcon(iconProfile.getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH));
 		btnUser.setIcon(iconProfile);
 		pnNorth.add(btnUser);
-
+		
 		btnTKSP = new JButton("Thống kê sản phẩm");
 		btnTKSP.setFont(new Font("Arial", Font.BOLD, 16));
 		btnTKSP.setBorderPainted(false);

@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -50,6 +51,7 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 	private ArrayList<HoaDon> list;
 	private JButton btnTim;
 	private JTextArea textGhiChu;
+	private JButton btnUser;
 
 	/**
 	 * Create the panel.
@@ -70,7 +72,21 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		lblNewLabel.setBounds(0, 0, 1140, 60);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel);
-		
+		btnUser = new JButton();
+		btnUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Dialog_User user=new Dialog_User();
+				user.setVisible(true);
+			}
+		});
+		btnUser.setBackground(Color.decode("#B5E6FB"));
+		btnUser.setBorderPainted(false);
+		btnUser.setIcon(new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png"));
+		btnUser.setBounds(1092, 5, 45, 45);
+		ImageIcon iconProfile = new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png");
+		iconProfile = new ImageIcon(iconProfile.getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH));
+		btnUser.setIcon(iconProfile);
+		panel.add(btnUser);
 		// ----- Thông tin hóa đơn ----- //
 		JPanel tt_Hoadon = new JPanel();
 		tt_Hoadon.setBackground(SystemColor.window);

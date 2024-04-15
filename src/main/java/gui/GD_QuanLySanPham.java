@@ -61,6 +61,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 	private JLabel txtAnh;
 	private JComboBox comboBox;
 	private String filePath;
+	private JButton btnUser;
 
 
 	public GD_QuanLySanPham() {
@@ -79,7 +80,21 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		lblNewLabel.setBounds(0, 0, 1140, 60);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel);
-		
+		btnUser = new JButton();
+		btnUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Dialog_User user=new Dialog_User();
+				user.setVisible(true);
+			}
+		});
+		btnUser.setBackground(Color.decode("#B5E6FB"));
+		btnUser.setBorderPainted(false);
+		btnUser.setIcon(new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png"));
+		btnUser.setBounds(1092, 5, 45, 45);
+		ImageIcon iconProfile = new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png");
+		iconProfile = new ImageIcon(iconProfile.getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH));
+		btnUser.setIcon(iconProfile);
+		panel.add(btnUser);
 		JPanel tt_KhachHang = new JPanel();
 		tt_KhachHang.setBackground(SystemColor.window);
 		tt_KhachHang.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2),
