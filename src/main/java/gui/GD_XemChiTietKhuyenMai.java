@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
@@ -323,13 +324,17 @@ public class GD_XemChiTietKhuyenMai extends JFrame implements ItemListener, Mous
 
         KhuyenMaiSanPham_Dao kmspdao = new KhuyenMaiSanPham_Dao();
         ArrayList<KhuyenMaiSanPham> ds = kmspdao.docTubang();
-        for (KhuyenMaiSanPham sp : ds) {
-            if (sp.getMaKM().equals(txtMaKhuyenMai.getText())) {
+        for (KhuyenMaiSanPham kmsp : ds) {
+            if (kmsp.getMaKM().equals(txtMaKhuyenMai.getText())) {
                 // Hiển thị thông tin chi tiết của khuyến mãi trong giao diện
-                txtTenKhuyenMai.setText(sp.getTenKM());
-                txtTuNgay.setText(sp.getNgayBatDau().toString());
-                txtDenNgay.setText(sp.getNgayBatDau().toString());
-                txtGiamGia.setText(sp.getGiamGiaSanPham().toString());
+                txtTenKhuyenMai.setText(kmsp.getTenKM());
+                txtTuNgay.setText(kmsp.getNgayBatDau().toString());
+                txtTenKhuyenMai.setText(kmsp.getTenKM());
+    			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    			// Hiển thị ngày bắt đầu và kết thúc từ đối tượng KhuyenMaiHoaDon lên giao diện
+    			txtTuNgay.setText(dateFormat.format(kmsp.getNgayBatDau()));
+    			txtDenNgay.setText(dateFormat.format(kmsp.getNgayKetThuc()));
+    			txtGiamGia.setText(String.valueOf(kmsp.getGiamGiaSanPham()*100));
                 SanPham_Dao spd = new SanPham_Dao();
                 ArrayList<SanPham> dssp = spd.docTubang();
                 //DefaultTableModel model1 = (DefaultTableModel) table.getModel();
@@ -345,8 +350,6 @@ public class GD_XemChiTietKhuyenMai extends JFrame implements ItemListener, Mous
                 return;
             }
         }
-        // Nếu không tìm thấy khuyến mãi, bạn có thể thông báo cho người dùng hoặc thực hiện các xử lý khác tùy ý
-        //JOptionPane.showMessageDialog(null, "Không tìm thấy khuyến mãi có mã: " + txtMaKhuyenMai.getText());
     }
 
     
@@ -358,10 +361,12 @@ public class GD_XemChiTietKhuyenMai extends JFrame implements ItemListener, Mous
     	{
     		if (kmhd.getMaKM().equals(txtMaKhuyenMai.getText())) {
     			txtTenKhuyenMai.setText(kmhd.getTenKM());
-                txtTuNgay.setText(kmhd.getNgayBatDau().toString());
-                txtDenNgay.setText(kmhd.getNgayBatDau().toString());
+    			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    			// Hiển thị ngày bắt đầu và kết thúc từ đối tượng KhuyenMaiHoaDon lên giao diện
+    			txtTuNgay.setText(dateFormat.format(kmhd.getNgayBatDau()));
+    			txtDenNgay.setText(dateFormat.format(kmhd.getNgayKetThuc()));
                 txtGiaTriHD.setText(kmhd.getGiaTriHoaDon().toString());
-                txtGiamGiaHD.setText(kmhd.getGiamGiaHoaDon().toString());
+                txtGiamGiaHD.setText(String.valueOf(kmhd.getGiamGiaHoaDon()*100));
     		}
     	}
     }
