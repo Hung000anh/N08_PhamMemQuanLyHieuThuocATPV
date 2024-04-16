@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -33,7 +35,7 @@ import entity.HoaDon;
 
 import javax.swing.JTextArea;
 
-public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
+public class GD_QuanLyHoaDon extends JPanel implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField textMaNV;
@@ -248,6 +250,7 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		add(scroll);
 		
 		docVaoTable();
+		table.addMouseListener(this);
 	}
 
 	public void docVaoTable() {
@@ -319,4 +322,57 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 			}
 		}
 	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		int row = table.getSelectedRow();
+		if (row != -1) {
+			String ma = table.getValueAt(row, 1).toString();
+
+			currentHoaDon = HoaDon_DAO.layHoaDonTheoMa(ma);
+			textMaHD.setText(currentHoaDon.getMaHD());
+			textMaKH.setText(currentHoaDon.getKhachHang().getMaKhachHang());
+			textKhuyenMai.setText(currentHoaDon.getKhuyenMai().getMaKM());
+			textMaNV.setText(currentHoaDon.getNhanVien().getMaNV());
+			textLoai.setText(currentHoaDon.getLoaiHD());
+			textNgayXuatHD.setText(currentHoaDon.getNgayXuat().toString());
+			textGhiChu.setText(currentHoaDon.getGhiChu());
+			
+			double tien = 0;
+			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(currentHoaDon.getMaHD());
+			for (ChiTietHoaDon _e : cthd_list) {
+				tien += _e.getThanhTien();
+			}
+			
+			textTongTien.setText(String.valueOf(tien));
+		} else {
+			// Xử lý trường hợp không có hàng nào được chọn
+		}
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
