@@ -15,6 +15,8 @@ import javax.swing.table.DefaultTableModel;
 
 import dao.ChiTietHoaDon_DAO;
 import dao.HoaDon_DAO;
+import dao.KhuyenMaiHoaDon_Dao;
+import dao.KhuyenMaiSanPham_Dao;
 import dao.SanPham_Dao;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
@@ -573,6 +575,8 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		Object o = e.getSource();
 		if (o == btnNewButton) {
 			String ma = txtNhpMCn.getText();
+			KhuyenMaiSanPham_Dao.docTubang();
+			KhuyenMaiHoaDon_Dao.docTubang();
 			HoaDon_DAO.docTubang();
 			SanPham_Dao.docTubang();
 			ChiTietHoaDon_DAO.docTubang();
