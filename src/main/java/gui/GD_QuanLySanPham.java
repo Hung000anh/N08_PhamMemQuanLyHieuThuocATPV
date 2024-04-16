@@ -479,19 +479,23 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		        	//JOptionPane.showMessageDialog(null, "Vui lòng nhập tìm kiếm sản phẩm");
 		        	loadDataToTable();
 		        }
-		        else
-		        {
-		        	if (searchBy.equals("Tìm theo mã")) {
-			        	timKiemTheoMaSP(searchKeyword);
-			        } else if (searchBy.equals("Tìm theo tên")) {
-			        	timKiemTheoTenSP(searchKeyword);
-			        } else if (searchBy.equals("Tìm theo số điện thoại")) {
-			        	timKiemTheoSoLuongTon(searchKeyword);
-			        }
+		        else {
+		            if (searchBy.equals("Tìm theo mã")) {
+		                timKiemTheoMaSP(searchKeyword);
+		            } else if (searchBy.equals("Tìm theo tên")) {
+		                timKiemTheoTenSP(searchKeyword);
+		            } else if (searchBy.equals("Tìm theo số lượng tồn")) {
+		                    int soLuongTon = Integer.parseInt(searchKeyword);
+		                    if (soLuongTon > 0) {
+		                        timKiemTheoSoLuongTon(searchKeyword);
+		                    } else {
+		                    	JOptionPane.showMessageDialog(null, "Vui lòng số lượng tồn là một số nguyên dương");
+		    		            return; // Dừng thực thi nếu dữ liệu không hợp lệ
+		                    }
+		            
+		            }	
 		        }
-		        
-		        loadDataToTable();
-		    }
+		   }
 		});
 
 		
@@ -529,7 +533,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		
 		comboBox = new JComboBox();
 		comboBox.setFont(new Font("Arial", Font.BOLD, 16));
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Tìm theo mã", "Tìm theo tên", "Tìm theo số điện thoại"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Tìm theo mã", "Tìm theo tên", "Tìm theo số lượng tồn"}));
 		comboBox.setBounds(880, 40, 210, 35);
 		chucNang.add(comboBox);
 		
@@ -746,15 +750,12 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
         	{
         		if(sanPham.getSoluongTon() == Integer.parseInt(tuKhoa))
         		{
-
         		String maKhuyenMai;
         		if (sanPham.getKhuyenMai() != null) {
     	            maKhuyenMai = sanPham.getKhuyenMai().getMaKM();
     	        } else {
     	            maKhuyenMai = "NULL";
     	        }
-    	        
-    	        
     	        model.addRow(new Object[]{
     	                stt++,
     	                sanPham.getMaSP(),
@@ -769,7 +770,6 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
     	                maKhuyenMai,
     	                sanPham.getHinhAnhSanPham()
     	        });
-    	        
         		}
         	}
         	

@@ -627,7 +627,7 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 			txtGioiTinh_1.setText(hd.getKhachHang().isGioiTinh()? "Nam" : "Nữ");
 			txtSDT_1.setText(hd.getKhachHang().getSoDienThoai());
 			txtNgayTra.setText(getDate().toString());
-			txtThanhTien.setText("0");
+			txtTienTra.setText("0");
 			
 
 			HoaDonTra = new HoaDon();

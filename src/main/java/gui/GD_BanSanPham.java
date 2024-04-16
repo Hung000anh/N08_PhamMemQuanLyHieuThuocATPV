@@ -56,7 +56,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 	Font font2 = new Font("Arial", Font.BOLD, 18); // thuộc tính
 	Font font3 = new Font("Arial", Font.PLAIN, 18); // jtexfield
 
-	private String col[] = { "STT", "Mã sản phẩm ", "Tên sản phẩm", "Đơn vị tính", "số lượng", "Đơn giá"};
+	private String col[] = {  "Mã sản phẩm ", "Tên sản phẩm", "Đơn vị tính", "số lượng", "Đơn giá"};
 	private JLabel lblTitle;
 	private JPanel pnNorth;
 
@@ -125,6 +125,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 	private KhachHang_Dao kh_dao=new KhachHang_Dao();
 	private String maKh="";
 	private JButton btnInHoaDon ;
+	private JLabel anhSP ;
 	/**
 	 * Create the panel.
 	 * @throws SQLException 
@@ -212,7 +213,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		JLabel lblAnh = new JLabel("Ảnh");
 		pnTTSP.add(lblAnh);
 		lblAnh.setFont(font2);
-		lblAnh.setBounds(58, 91, w + 20, h);
+		lblAnh.setBounds(58, 91, 74, 28);
 
 	
 
@@ -303,6 +304,10 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		txtGia.setEditable(false);
 		txtGia.setBounds(150, 440, 200, h);
 		txtGia.setFont(font3);
+		
+		anhSP= new JLabel("");
+		anhSP.setBounds(168, 46, 182, 100);
+		pnTTSP.add(anhSP);
 		
 		JLabel lblSoLuong = new JLabel("Nhập số lượng:");
 		lblSoLuong.setBounds(7, 530, 150, 100);
@@ -535,9 +540,10 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		if (obj == null) return;
 		
 		String masp = obj.toString();
-		
+		SanPham_Dao.docTubang();
 		SanPham sp = SanPham_Dao.laySanPhamTheoMa(masp);
-		
+	
+		anhSP.setIcon(new ImageIcon(sp.getHinhAnhSanPham()));
 		txtMaSp.setText(masp);
 		
 		txtTen.setText(sp.getTenSP());
@@ -546,6 +552,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		txtSLTon.setText(String.valueOf(sp.getSoluongTon()));
 	
 		txtDonViTinh.setText(sp.getDonViTinh());
+		
 		KhuyenMaiSanPham km = sp.getKhuyenMai();
 		txtKhuyenMai.setText(km == null? "" : km.getMaKM());
 		txtGia.setText(sp.getDonGiaBan().toString());
@@ -654,7 +661,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 	public void updateTienHang() {
 	    double tongTienHang = 0.0;
 	    for (int i = 0; i < table.getRowCount(); i++) {
-	        String donGiaStr = table.getValueAt(i, 5).toString();
+	        String donGiaStr = table.getValueAt(i, 4).toString();
 	        if (donGiaStr.matches("-?\\d+(\\.\\d+)?")) {  // kiểm tra xem chuỗi có phải là số không
 	            double donGia = Double.parseDouble(donGiaStr);
 	            tongTienHang += donGia;
@@ -683,20 +690,20 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 	    } else if (table.getSelectedRowCount() > 1) {
 	        JOptionPane.showMessageDialog(null, "Chỉ được chọn 1 nhân viên để xóa!!");
 	    } else {
-	        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa nhân viên này không?", "Thông báo",
+	        if (JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa sản phẩm này không?", "Thông báo",
 	                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 	            int row = table.getSelectedRow();
-	            int s=Integer.parseInt(txtSLTon.getText())+ Integer.parseInt(model.getValueAt(row, 4).toString()); 
-	            sp_dao.updateSoLuongTonTheoMa(model.getValueAt(row, 1).toString(), s);
+	            int s=Integer.parseInt(txtSLTon.getText())+ Integer.parseInt(model.getValueAt(row, 3).toString()); 
+	            sp_dao.updateSoLuongTonTheoMa(model.getValueAt(row, 0).toString(), s);
 	            updateDuLieuSP();
-	            ChiTietHoaDon_DAO.deleteChiTiecHoaDon(model.getValueAt(row, 1).toString()) ;
+	            ChiTietHoaDon_DAO.deleteChiTiecHoaDon(model.getValueAt(row, 0).toString()) ;
 	            model.removeRow(row);
 	            JOptionPane.showMessageDialog(this, "Xóa thành công!!");
 	            KhuyenMaiHoaDon_Dao dsKMHD = new KhuyenMaiHoaDon_Dao();
 	        	String text = textField_6.getText();
 	        	double tienHang = 0.0;
 				for (int i = 0; i < table.getRowCount(); i++) {
-				    double donGia = Double.parseDouble(table.getValueAt(i, 5).toString());
+				    double donGia = Double.parseDouble(table.getValueAt(i, 4).toString());
 				    tienHang += donGia;
 				}
 	        	List<KhuyenMaiHoaDon> list = dsKMHD.docTubang();
@@ -731,14 +738,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 	            updateTienHang();
 	            q--;
 	            // Giảm giá trị của phần tử ở vị trí thứ 0 trong bảng
-	            if (model.getRowCount() > 0) {
-	                int firstElementValue = Integer.parseInt(model.getValueAt(0, 0).toString());
-	                model.setValueAt(firstElementValue - 1, 0, 0);
-	              
-	            } else {
-	                model.setValueAt(0, 0, 0);
-	                q = 0;
-	            }
+	           
 	        }
 	    }
 	}
@@ -760,7 +760,8 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 				e1.printStackTrace();
 			}
 		}else if(o.equals(btnThemSPVaoHD)) {
-				
+
+				SanPham_Dao.docTubang();
 				q++;
 				String ma =comBoBoxMaSP.getSelectedItem().toString();
 				String ten=txtTen.getText();
@@ -773,14 +774,14 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 				ChiTietHoaDon cthd1=new ChiTietHoaDon(new HoaDon(textField.getText()), sp1, soLuong11);
 				
 				if( Integer.parseInt(txtSLTon.getText())>=soLuong){
-				Object[] row = { q, ma,ten,dvt,soLuong11,cthd1.getThanhTien()};
+				Object[] row = { ma,ten,dvt,soLuong11,cthd1.getThanhTien()};
 				model.addRow(row);
 				
 				KhuyenMaiHoaDon_Dao dsKMHD = new KhuyenMaiHoaDon_Dao();
 				String text = textField_6.getText();
 				double tongTienHang = 0.0;
 				for (int i = 0; i < table.getRowCount(); i++) {
-				    double donGia = Double.parseDouble(table.getValueAt(i, 5).toString());
+				    double donGia = Double.parseDouble(table.getValueAt(i, 4).toString());
 				    tongTienHang += donGia;
 				}
 				List<KhuyenMaiHoaDon> list = dsKMHD.docTubang();
@@ -812,11 +813,11 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 				}
 				
 				updateTienHang();
-				JOptionPane.showMessageDialog(this, textField_9.getText());
+				
 				int s=Integer.parseInt(txtSLTon.getText())- Integer.parseInt(txtSoLuong.getText()); 
 				txtSoLuong.setText("");
 				sp_dao.updateSoLuongTonTheoMa(ma, s);
-				
+				txtSLTon.setText(String.valueOf(s));
 
 				try {
 					updateDuLieuSP();
@@ -840,7 +841,7 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 			
 			NhanVien_Dao nv_dao=new NhanVien_Dao();
 			NhanVien nv = null;
-			nv = NhanVien_Dao.getNhanVienTheoMa(DataManager.getUserName());
+			nv = nv_dao.getNhanVienTheoMa(DataManager.getUserName());
 		
 			KhuyenMaiHoaDon_Dao dsKMHD = new KhuyenMaiHoaDon_Dao();
 			String text = textField_6.getText();
@@ -883,8 +884,8 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 				for (int i = 0; i < table.getRowCount(); i++) {
 				    // Lấy dữ liệu từ mỗi cột của dòng hiện tại
 					SanPham_Dao.docTubang();
-				    SanPham sp = SanPham_Dao.laySanPhamTheoMa(model.getValueAt(i, 1).toString()) ; // Thay đổi chỉ số cột nếu cần
-				    int soLuong = Integer.parseInt(model.getValueAt(i, 4).toString()); // Thay đổi chỉ số cột nếu cần
+				    SanPham sp = SanPham_Dao.laySanPhamTheoMa(model.getValueAt(i, 0).toString()) ; // Thay đổi chỉ số cột nếu cần
+				    int soLuong = Integer.parseInt(model.getValueAt(i, 3).toString()); // Thay đổi chỉ số cột nếu cần
 
 				    // Tạo đối tượng chiTiecHoaDon mới và thêm vào cơ sở dữ liệu
 				    ChiTietHoaDon cthd = new ChiTietHoaDon(hd, sp, soLuong);

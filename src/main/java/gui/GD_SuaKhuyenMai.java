@@ -248,10 +248,10 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
                     
                     
                     if(result) {
-                        JOptionPane.showMessageDialog(null, "Thêm khuyến mãi hóa đơn thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Sửa khuyến mãi hóa đơn thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                         dispose();
                     } else {
-                        JOptionPane.showMessageDialog(null, "Thêm khuyến mãi hóa đơn thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Sửa khuyến mãi hóa đơn thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     }
 
                 }
@@ -295,10 +295,10 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
                   
                     
                     if(result) {
-                       JOptionPane.showMessageDialog(null, "Thêm khuyến mãi sản phẩm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                       JOptionPane.showMessageDialog(null, "Sửa khuyến mãi sản phẩm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
                     } else {
-                        JOptionPane.showMessageDialog(null, "Thêm khuyến mãi sản phẩm thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Sửa khuyến mãi sản phẩm thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     }
                     
                     
