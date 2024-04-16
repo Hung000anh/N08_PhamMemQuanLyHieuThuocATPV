@@ -433,7 +433,7 @@ public class GD_QuanLyNhanVien extends JPanel implements ActionListener,MouseLis
 		String ma = textMaNV.getText();
 		String hoTen = textTenKH.getText();
 		String sDT = textSDT.getText();
-		if (!((hoTen.length() > 0) && hoTen.matches("([A-Z][a-z]+\\s?)+"))) {
+		if (!((hoTen.length() > 0) && hoTen.matches("([A-Z][a-z]+\\s)*[A-Z][a-z]+"))) {
 			JOptionPane.showMessageDialog(this,
 					"Không được rỗng và Tên phải in hoa chữ cái đầu");
 		}

@@ -540,8 +540,8 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 		if (obj == null) return;
 		
 		String masp = obj.toString();
-		SanPham_Dao.docTubang();
-		SanPham sp = SanPham_Dao.laySanPhamTheoMa(masp);
+		
+		SanPham sp = SanPham_Dao.getSPTheoMa(masp);
 	
 		anhSP.setIcon(new ImageIcon(sp.getHinhAnhSanPham()));
 		txtMaSp.setText(masp);
@@ -760,17 +760,16 @@ public class GD_BanSanPham extends JPanel implements ActionListener{
 				e1.printStackTrace();
 			}
 		}else if(o.equals(btnThemSPVaoHD)) {
-
-				SanPham_Dao.docTubang();
+				
 				q++;
 				String ma =comBoBoxMaSP.getSelectedItem().toString();
 				String ten=txtTen.getText();
 				String dvt=txtDonViTinh.getText();
 				int soLuong=Integer.parseInt(txtSoLuong.getText());	
-				SanPham sp = SanPham_Dao.laySanPhamTheoMa(ma);
+				SanPham sp = SanPham_Dao.getSPTheoMa(ma);
 				int soLuong11=Integer.parseInt(txtSoLuong.getText());
 				SanPham_Dao sp_dao=new SanPham_Dao();		
-				SanPham sp1=sp_dao.laySanPhamTheoMa(ma);
+				SanPham sp1=sp_dao.getSanPhamTheoMa(ma);
 				ChiTietHoaDon cthd1=new ChiTietHoaDon(new HoaDon(textField.getText()), sp1, soLuong11);
 				
 				if( Integer.parseInt(txtSLTon.getText())>=soLuong){
