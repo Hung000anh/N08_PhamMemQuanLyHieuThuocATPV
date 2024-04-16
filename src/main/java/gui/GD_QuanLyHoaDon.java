@@ -13,6 +13,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -48,10 +49,12 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 	private JTextField textTongTien;
 	private JTextField textTuKhoa;
 
+	private HoaDon currentHoaDon = null;
 	private ArrayList<HoaDon> list;
 	private JButton btnTim;
 	private JTextArea textGhiChu;
 	private JButton btnUser;
+	private JButton btnXemChiTiet;
 
 	/**
 	 * Create the panel.
@@ -217,12 +220,13 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		traCuu.add(btnTim);
 		btnTim.addActionListener(this);
 		
-		JButton btnXemChiTiet = new JButton("Chi Tiết Hóa Đơn");
+		btnXemChiTiet = new JButton("Chi Tiết Hóa Đơn");
 		btnXemChiTiet.setFont(new Font("Arial", Font.BOLD, 16));
 		btnXemChiTiet.setBorderPainted(false);
 		btnXemChiTiet.setBackground(new Color(38, 191, 191));
 		btnXemChiTiet.setBounds(30, 226, 200, 40);
 		traCuu.add(btnXemChiTiet);
+		btnXemChiTiet.addActionListener(this);
 		
 		// ----- Table ----- //
 		JLabel danhSach = new JLabel("Danh sách hóa đơn");
@@ -282,28 +286,37 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 			HoaDon_DAO.docTubang();
 
 			String tukhoa = textTuKhoa.getText().trim();
-			HoaDon hd = HoaDon_DAO.layHoaDonTheoMa(tukhoa);
+			currentHoaDon = HoaDon_DAO.layHoaDonTheoMa(tukhoa);
 
-			if (hd == null) {
+			if (currentHoaDon == null) {
 				JOptionPane.showMessageDialog(this, "Không tìm thấy!");
 				return;
 			}
 			
-			textMaHD.setText(hd.getMaHD());
-			textMaKH.setText(hd.getKhachHang().getMaKhachHang());
-			textKhuyenMai.setText(hd.getKhuyenMai().getMaKM());
-			textMaNV.setText(hd.getNhanVien().getMaNV());
-			textLoai.setText(hd.getLoaiHD());
-			textNgayXuatHD.setText(hd.getNgayXuat().toString());
-			textGhiChu.setText(hd.getGhiChu());
+			textMaHD.setText(currentHoaDon.getMaHD());
+			textMaKH.setText(currentHoaDon.getKhachHang().getMaKhachHang());
+			textKhuyenMai.setText(currentHoaDon.getKhuyenMai().getMaKM());
+			textMaNV.setText(currentHoaDon.getNhanVien().getMaNV());
+			textLoai.setText(currentHoaDon.getLoaiHD());
+			textNgayXuatHD.setText(currentHoaDon.getNgayXuat().toString());
+			textGhiChu.setText(currentHoaDon.getGhiChu());
 			
 			double tien = 0;
-			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(hd.getMaHD());
+			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(currentHoaDon.getMaHD());
 			for (ChiTietHoaDon _e : cthd_list) {
 				tien += _e.getThanhTien();
 			}
 			
 			textTongTien.setText(String.valueOf(tien));
+		}
+		if (o == btnXemChiTiet) {
+			try {
+				Dialog_ChiTietHoaDon dialog = new Dialog_ChiTietHoaDon(currentHoaDon);
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 }
