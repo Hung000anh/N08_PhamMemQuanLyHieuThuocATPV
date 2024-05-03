@@ -276,16 +276,7 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
                     } else {
                         JOptionPane.showMessageDialog(null, "Thêm khuyến mãi sản phẩm thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     }
-                    
-                    
                     SanPham_Dao sanPhamDao = new SanPham_Dao();
-                    //sanPhamDao.docTubang();
-                    DefaultTableModel model2 = (DefaultTableModel) table.getModel();
-	                 int rowCount2 = model2.getRowCount();
-	                 for (int i = 0; i < rowCount2; i++) {
-	                	 String maSanPham = model2.getValueAt(i, 1).toString();
-	                	 sanPhamDao.goMaKhuyenMaiChoSanPham(maSanPham, maKM);
-	                 } 
                     
                     DefaultTableModel model = (DefaultTableModel) table_1.getModel();
                     int rowCount = model.getRowCount();
