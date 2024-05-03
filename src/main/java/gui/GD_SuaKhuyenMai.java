@@ -312,14 +312,6 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
 	                     sanPhamDao.ghiDeMaKhuyenMaiChoSanPham(maSanPham, maKM); // Thêm sản phẩm vào cơ sở dữ liệu
 	                 }
 	
-	                 // Xóa mã khuyến mãi cho các sản phẩm trong bảng table
-	                 DefaultTableModel model2 = (DefaultTableModel) table.getModel();
-	                 int rowCount2 = model2.getRowCount();
-	                 for (int i = 0; i < rowCount2; i++) {
-	                     String maSanPham = model2.getValueAt(i, 1).toString();
-	                     sanPhamDao.goMaKhuyenMaiChoSanPham(maSanPham);
-	                 }
-
                      dispose();
                 } 
             }
@@ -627,10 +619,11 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
     
     public void dayDulieuTimKiemKMSP(String str) {
         // Xóa dữ liệu cũ khỏi bảng table
-        DefaultTableModel model1 = (DefaultTableModel) table.getModel();
-        DefaultTableModel model = (DefaultTableModel) table_1.getModel();
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        DefaultTableModel model1 = (DefaultTableModel) table_1.getModel();
         model.setRowCount(0);
-
+        model1.setRowCount(0);
+        
         KhuyenMaiSanPham_Dao kmspdao = new KhuyenMaiSanPham_Dao();
         ArrayList<KhuyenMaiSanPham> ds = kmspdao.docTubang();
         for (KhuyenMaiSanPham kmsp : ds) {
@@ -652,17 +645,26 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
                 int stt2 = 0;
                 for (SanPham sp1 : dssp) {
                 	
-                	if(sp1.getKhuyenMai() != null && sp1.getKhuyenMai().getMaKM().equals(txtMaKhuyenMai.getText()))
+                	if(sp1.getKhuyenMai() != null)
                 	{
-                	//System.out.println(sp1.getMaSP() + "MKM: " + sp1.getKhuyenMai().getMaKM());
-                		Object row[] = {stt1, sp1.getMaSP(), sp1.getTenSP(), sp1.getDonGiaBan()};
-                        model.addRow(row);
-                        stt1++;
+                		if(sp1.getKhuyenMai().getMaKM().equals(txtMaKhuyenMai.getText()))
+                    	{
+                    	//System.out.println(sp1.getMaSP() + "MKM: " + sp1.getKhuyenMai().getMaKM());
+                    		Object row[] = {stt1, sp1.getMaSP(), sp1.getTenSP(), sp1.getDonGiaBan()};
+                            model1.addRow(row);
+                            stt1++;
+                    	}
+                		else
+                		{
+                			Object row[] = {stt1, sp1.getMaSP(), sp1.getTenSP(), sp1.getDonGiaBan()};
+                            model.addRow(row);
+                            stt2++;
+                		}
                 	}
                 	else
                 	{
                 		Object row[] = {stt2, sp1.getMaSP(), sp1.getTenSP(), sp1.getDonGiaBan()};
-                		model1.addRow(row);
+                		model.addRow(row);
                 		stt2++;
                 	}
                 }

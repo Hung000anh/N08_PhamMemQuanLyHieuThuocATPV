@@ -280,6 +280,13 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
                     
                     SanPham_Dao sanPhamDao = new SanPham_Dao();
                     //sanPhamDao.docTubang();
+                    DefaultTableModel model2 = (DefaultTableModel) table.getModel();
+	                 int rowCount2 = model2.getRowCount();
+	                 for (int i = 0; i < rowCount2; i++) {
+	                	 String maSanPham = model2.getValueAt(i, 1).toString();
+	                	 sanPhamDao.goMaKhuyenMaiChoSanPham(maSanPham, maKM);
+	                 } 
+                    
                     DefaultTableModel model = (DefaultTableModel) table_1.getModel();
                     int rowCount = model.getRowCount();
                     // Duyệt qua từng hàng trong bảng
@@ -427,7 +434,7 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
         	new Object[][] {
         	},
         	new String[] {
-        		"STT", "M\u00E3 s\u1EA3n ph\u1EA9m", "T\u00EAn S\u1EA3n ph\u1EA9m", "Gi\u00E1 b\u00E1n","Mã khuyến mãi"
+        		"STT", "M\u00E3 s\u1EA3n ph\u1EA9m", "T\u00EAn S\u1EA3n ph\u1EA9m", "Gi\u00E1 b\u00E1n"
         	}
         ));
         JScrollPane scrollPane_1 = new JScrollPane();
@@ -631,18 +638,11 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
 	    ArrayList<SanPham> danhSachSanPham = sanPhamDao.docTubang();
 	    int stt = 1;
 	    for (SanPham sanPham : danhSachSanPham) {
-	    	String maKhuyenMai;
-	        if (sanPham.getKhuyenMai() != null) {
-	            maKhuyenMai = sanPham.getKhuyenMai().getMaKM();
-	        } else {
-	            maKhuyenMai = "NULL";
-	        }
 	        model.addRow(new Object[]{
 	                stt++,
 	                sanPham.getMaSP(),
 	                sanPham.getTenSP(),
 	                sanPham.getDonGiaBan(),
-	                maKhuyenMai
 	        });
 	    }
 	}

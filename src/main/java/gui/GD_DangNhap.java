@@ -37,7 +37,7 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 	private GD_TrangChu gD_TrangChu;
 	private JButton btnQuenMK ;
 	/**
-	 * Launch the application.
+	 * Launch the application.connectDBconnectDB
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
