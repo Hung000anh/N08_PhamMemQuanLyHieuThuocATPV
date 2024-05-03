@@ -159,23 +159,16 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         chucNang.setLayout(null);
 
         btnThem = new JButton("Thêm khuyến mãi");
-        btnThem.setBounds(40, 38, 200, 40);
+        btnThem.setBounds(40, 38, 230, 40);
         btnThem.setToolTipText("thêm thông tin\r\n khách hàng");
         btnThem.setFont(new Font("Arial", Font.BOLD, 16));
         btnThem.setBackground(Color.decode("#4db05e"));
         btnThem.setBorderPainted(false);
         chucNang.add(btnThem);
 
-        btnXoa = new JButton("Xóa khuyến mãi");
-        btnXoa.setBounds(250, 38, 200, 40);
-        btnXoa.setToolTipText("");
-        btnXoa.setFont(new Font("Arial", Font.BOLD, 16));
-        btnXoa.setBorderPainted(false);
-        btnXoa.setBackground(Color.decode("#ee1919"));
-        chucNang.add(btnXoa);
 
         btnSua = new JButton("Sửa khuyến mãi");
-        btnSua.setBounds(460, 38, 200, 40);
+        btnSua.setBounds(300, 38, 230, 40);
         btnSua.setToolTipText("thêm thông tin\r\n khách hàng");
         btnSua.setFont(new Font("Arial", Font.BOLD, 16));
         btnSua.setBorderPainted(false);
@@ -183,7 +176,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         chucNang.add(btnSua);
 
         btnTim = new JButton("Tìm kiếm");
-        btnTim.setBounds(670, 38, 200, 40);
+        btnTim.setBounds(560, 38, 230, 40);
         btnTim.setToolTipText("");
         btnTim.setFont(new Font("Arial", Font.BOLD, 16));
         btnTim.setBorderPainted(false);
@@ -191,7 +184,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         chucNang.add(btnTim);
 
         btnXemChiTiet = new JButton("Xem chi tiết");
-        btnXemChiTiet.setBounds(880, 38, 200, 40);
+        btnXemChiTiet.setBounds(820, 38, 230, 40);
         btnXemChiTiet.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             }
@@ -235,7 +228,6 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         model = new DefaultTableModel(col, 0);
         
         btnThem.addActionListener(this);
-        btnXoa.addActionListener(this);
         btnSua.addActionListener(this);
         btnTim.addActionListener(this);
         btnXemChiTiet.addActionListener(this);
@@ -284,7 +276,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
             });
             themKhuyenMai.setVisible(true);
         }
-        if (o.equals(btnSua)) {
+        else if (o.equals(btnSua)) {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) { // Check if any row is selected
                 // Get data from the selected row
@@ -307,7 +299,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         }
 
 
-        if (o.equals(btnXemChiTiet)) {
+        else if (o.equals(btnXemChiTiet)) {
         	int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) { // Check if any row is selected
                 // Get data from the selected row
@@ -323,32 +315,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
             }
             reloadDuLieuMau();
         }
-        if (o.equals(btnXoa)) {
-        	KhuyenMaiSanPham_Dao ds1 = new KhuyenMaiSanPham_Dao();
-            KhuyenMaiHoaDon_Dao ds2 = new KhuyenMaiHoaDon_Dao();
-        	
-            int selectedRow = table.getSelectedRow();
-            if (selectedRow != -1) { // Check if any row is selected
-                int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa hàng này không?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                	if(table.getValueAt(selectedRow, 3).toString().equals("Khuyến mãi theo hóa đơn"))
-                	{
-                		ds2.xoaKhuyenMai(table.getValueAt(selectedRow, 1).toString());             
-                	}
-                	else if (table.getValueAt(selectedRow, 3).toString().equals("Khuyến mãi theo sản phẩm"))
-                	{
-                		ds1.xoaKhuyenMai(table.getValueAt(selectedRow, 1).toString());
-                	}
-                	JOptionPane.showMessageDialog(this, "Xóa khuyến mãi thành công!");
-                    DefaultTableModel model = (DefaultTableModel) table.getModel();
-                    model.removeRow(selectedRow);    
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xóa!");
-            }
-            //reloadDuLieuMau();
-        }
-        if (o.equals(btnTim)) {
+        else if (o.equals(btnTim)) {
         	//lấy lại dữ liệu cữ
         	reloadDuLieuMau();
             // Lấy giá trị từ các ô nhập liệu
