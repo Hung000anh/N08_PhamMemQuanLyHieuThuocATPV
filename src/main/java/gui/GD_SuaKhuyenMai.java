@@ -303,7 +303,14 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
                     
                     
                     SanPham_Dao sanPhamDao = new SanPham_Dao();
-
+                    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	                 int rowCount = model.getRowCount();
+	                 for (int i = 0; i < rowCount; i++) {
+	                     String maSanPham = model.getValueAt(i, 1).toString(); // Lấy mã sản phẩm từ cột thứ 2
+	                     sanPhamDao.goMaKhuyenMaiChoSanPham(maSanPham, maKM); // Thêm sản phẩm vào cơ sở dữ liệu
+	                 }
+                    
+                    
 	                 // Ghi đè mã khuyến mãi cho các sản phẩm trong bảng table_1
 	                 DefaultTableModel model1 = (DefaultTableModel) table_1.getModel();
 	                 int rowCount1 = model1.getRowCount();
