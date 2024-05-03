@@ -17,7 +17,7 @@ import javax.swing.border.LineBorder;
 
 public class GD_TrangChu extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	public JButton btnBanThuoc;
+	private JButton btnBanThuoc;
 	private JButton btnTraThuoc;
 	private JButton btnKhuyenMai;
 	public JButton btnNhanVien;
@@ -279,6 +279,7 @@ public class GD_TrangChu extends JFrame implements ActionListener {
 			setVisibleFalse();
 			resetBtnBackground();
 			panel.add(hoaDon).setVisible(true);
+			hoaDon.docVaoTable();
 			btnHoaDon.setBackground(Color.LIGHT_GRAY);
 		} else if (o == btnKhuyenMai) {
 			setVisibleFalse();

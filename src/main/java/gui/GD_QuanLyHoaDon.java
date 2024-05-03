@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -50,6 +51,7 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 	private ArrayList<HoaDon> list;
 	private JButton btnTim;
 	private JTextArea textGhiChu;
+	private JButton btnUser;
 
 	/**
 	 * Create the panel.
@@ -70,7 +72,21 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		lblNewLabel.setBounds(0, 0, 1140, 60);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel);
-		
+		btnUser = new JButton();
+		btnUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Dialog_User user=new Dialog_User();
+				user.setVisible(true);
+			}
+		});
+		btnUser.setBackground(Color.decode("#B5E6FB"));
+		btnUser.setBorderPainted(false);
+		btnUser.setIcon(new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png"));
+		btnUser.setBounds(1092, 5, 45, 45);
+		ImageIcon iconProfile = new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png");
+		iconProfile = new ImageIcon(iconProfile.getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH));
+		btnUser.setIcon(iconProfile);
+		panel.add(btnUser);
 		// ----- Thông tin hóa đơn ----- //
 		JPanel tt_Hoadon = new JPanel();
 		tt_Hoadon.setBackground(SystemColor.window);
@@ -227,10 +243,15 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		scroll.setBounds(10, 440, 1120, 405);
 		add(scroll);
 		
+		docVaoTable();
+	}
+
+	public void docVaoTable() {
 		list = HoaDon_DAO.docTubang();
 		SanPham_Dao.docTubang();
 		ChiTietHoaDon_DAO.docTubang();
 
+		model.getDataVector().removeAllElements();
 		for (int i = 0; i < list.size(); i++) {
 			HoaDon hd = list.get(i);
 			// "STT", "Mã hóa đơn", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"
@@ -243,10 +264,10 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 			model.addRow(new Object[] {
 					i+1,
 					hd.getMaHD(),
-					hd.getKhachHang().getMaKhachHang(),
+					(hd.getKhachHang() == null)? "" : hd.getKhachHang().getMaKhachHang(),
 					hd.getMaHD(),
 					hd.getNgayXuat(),
-					hd.getKhuyenMai().getMaKM(),
+					(hd.getKhuyenMai() == null)? "" : hd.getKhuyenMai().getMaKM(),
 					tien,
 					hd.getGhiChu()
 			});

@@ -61,6 +61,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 	private JLabel txtAnh;
 	private JComboBox comboBox;
 	private String filePath;
+	private JButton btnUser;
 
 
 	public GD_QuanLySanPham() {
@@ -79,7 +80,21 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		lblNewLabel.setBounds(0, 0, 1140, 60);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel);
-		
+		btnUser = new JButton();
+		btnUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Dialog_User user=new Dialog_User();
+				user.setVisible(true);
+			}
+		});
+		btnUser.setBackground(Color.decode("#B5E6FB"));
+		btnUser.setBorderPainted(false);
+		btnUser.setIcon(new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png"));
+		btnUser.setBounds(1092, 5, 45, 45);
+		ImageIcon iconProfile = new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png");
+		iconProfile = new ImageIcon(iconProfile.getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH));
+		btnUser.setIcon(iconProfile);
+		panel.add(btnUser);
 		JPanel tt_KhachHang = new JPanel();
 		tt_KhachHang.setBackground(SystemColor.window);
 		tt_KhachHang.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2),
@@ -245,7 +260,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		        
 		        // Kiểm tra định dạng ngày tháng 
 		        String ngaySX = textNgaySX.getText();
-		        String ngayHH = txtNgayHetHan.getText();
+		        
 		        if (!ngaySX.matches("\\d{2}/\\d{2}/\\d{4}")) {
 		            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày tháng theo định dạng dd/MM/yyyy!");
 		            return; // Dừng thực thi nếu dữ liệu không hợp lệ
@@ -255,14 +270,14 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		        sdf.setLenient(false); // Không cho phép ngày tháng năm không hợp lệ
 		        java.util.Date date1;
 		        try {
-		        	date1 = sdf.parse(ngayHH);
+		        	date1 = sdf.parse(ngaySX);
 		            // Nếu không có ngoại lệ ném ra, có nghĩa là ngày tháng năm hợp lệ
 		        } catch (ParseException ex) {
 		            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày tháng theo định dạng dd/MM/yyyy!");
 		            return; // Dừng thực thi nếu dữ liệu không hợp lệ
 		        }
 		        
-		        
+		        String ngayHH = txtNgayHetHan.getText();
 		        if (!ngayHH.matches("\\d{2}/\\d{2}/\\d{4}")) {
 		            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày tháng theo định dạng dd/MM/yyyy!");
 		            return; // Dừng thực thi nếu dữ liệu không hợp lệ
@@ -464,19 +479,23 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		        	//JOptionPane.showMessageDialog(null, "Vui lòng nhập tìm kiếm sản phẩm");
 		        	loadDataToTable();
 		        }
-		        else
-		        {
-		        	if (searchBy.equals("Tìm theo mã")) {
-			        	timKiemTheoMaSP(searchKeyword);
-			        } else if (searchBy.equals("Tìm theo tên")) {
-			        	timKiemTheoTenSP(searchKeyword);
-			        } else if (searchBy.equals("Tìm theo số điện thoại")) {
-			        	timKiemTheoSoLuongTon(searchKeyword);
-			        }
+		        else {
+		            if (searchBy.equals("Tìm theo mã")) {
+		                timKiemTheoMaSP(searchKeyword);
+		            } else if (searchBy.equals("Tìm theo tên")) {
+		                timKiemTheoTenSP(searchKeyword);
+		            } else if (searchBy.equals("Tìm theo số lượng tồn")) {
+		                    int soLuongTon = Integer.parseInt(searchKeyword);
+		                    if (soLuongTon > 0) {
+		                        timKiemTheoSoLuongTon(searchKeyword);
+		                    } else {
+		                    	JOptionPane.showMessageDialog(null, "Vui lòng số lượng tồn là một số nguyên dương");
+		    		            return; // Dừng thực thi nếu dữ liệu không hợp lệ
+		                    }
+		            
+		            }	
 		        }
-		        
-		        loadDataToTable();
-		    }
+		   }
 		});
 
 		
@@ -514,7 +533,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		
 		comboBox = new JComboBox();
 		comboBox.setFont(new Font("Arial", Font.BOLD, 16));
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Tìm theo mã", "Tìm theo tên", "Tìm theo số điện thoại"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Tìm theo mã", "Tìm theo tên", "Tìm theo số lượng tồn"}));
 		comboBox.setBounds(880, 40, 210, 35);
 		chucNang.add(comboBox);
 		
@@ -731,15 +750,12 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
         	{
         		if(sanPham.getSoluongTon() == Integer.parseInt(tuKhoa))
         		{
-
         		String maKhuyenMai;
         		if (sanPham.getKhuyenMai() != null) {
     	            maKhuyenMai = sanPham.getKhuyenMai().getMaKM();
     	        } else {
     	            maKhuyenMai = "NULL";
     	        }
-    	        
-    	        
     	        model.addRow(new Object[]{
     	                stt++,
     	                sanPham.getMaSP(),
@@ -754,7 +770,6 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
     	                maKhuyenMai,
     	                sanPham.getHinhAnhSanPham()
     	        });
-    	        
         		}
         	}
         	

@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import connectDB.ConnectDB;
 import connectDB.Database;
 import entity.ChiTietHoaDon;
 import entity.KhuyenMaiHoaDon;
@@ -25,9 +24,7 @@ public class KhuyenMaiSanPham_Dao {
 
     public static ArrayList<KhuyenMaiSanPham> docTubang() {
     	DanhSachKhuyenMaiSanPham.clear();
-    	
-    	
-    	
+
         try {
             Connection con = Database.getInstance().getConnection();
             
@@ -63,7 +60,7 @@ public class KhuyenMaiSanPham_Dao {
         return DanhSachKhuyenMaiSanPham;
     }
     public static boolean themKhuyenMaiSanPham(KhuyenMaiSanPham k) {
-        try (Connection con = ConnectDB.getConnection();
+        try (Connection con = Database.getInstance().getConnection();
                 PreparedStatement stmt = con.prepareStatement("INSERT INTO KhuyenMaiSanPham VALUES (?, ?, ?, ?, ?, ?, ?)")) {
             // Thiết lập các giá trị cho câu lệnh truy vấn
             stmt.setString(1, k.getMaKM());
@@ -95,7 +92,7 @@ public class KhuyenMaiSanPham_Dao {
         Connection con = null;
         PreparedStatement stmt = null;
         try {
-            con = ConnectDB.getConnection();
+            con = Database.getInstance().getConnection();
             // Cập nhật mã khuyến mãi của các sản phẩm về null
             String updateSql = "UPDATE SanPham SET maKhuyenMai = NULL WHERE maKhuyenMai = ?";
             PreparedStatement updateStmt = con.prepareStatement(updateSql);
@@ -116,7 +113,7 @@ public class KhuyenMaiSanPham_Dao {
         Connection con = null;
         PreparedStatement stmt = null;
         try {
-            con = ConnectDB.getConnection();
+            con = Database.getInstance().getConnection();
             String sql = "UPDATE KhuyenMaiSanPham SET tenKhuyenMai = ?, ngayBatDau = ?, ngayKetThuc = ?, loaiChuongTrinh = ?, trangThai = ?, giamGiaSP = ? WHERE maKhuyenMai = ?";
             stmt = con.prepareStatement(sql);
             // Set values using getters of KhuyenMaiHoaDon object

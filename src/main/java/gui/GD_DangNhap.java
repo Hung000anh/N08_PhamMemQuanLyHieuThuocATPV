@@ -29,8 +29,8 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 	
 
 	JFrame frame;
-	private JTextField textMK;
-	private JTextField textTenDangNhap;
+	private PlaceholderTextField textMK;
+	private PlaceholderTextField textTenDangNhap;
 	private JButton btnDangNhap ;
 	private DangNhap_Dao dangNhap_dao;
 	private String username;
@@ -75,7 +75,8 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 30));
 		frame.getContentPane().add(lblNewLabel);
 		
-		textMK = new JTextField("Mật khẩu");
+		textMK = new PlaceholderTextField();
+		textMK.setPlaceholder("Mật khẩu");
 		textMK.setBounds(265, 420, 591, 32);
 		frame.getContentPane().add(textMK);
 		textMK.setColumns(10);
@@ -87,7 +88,8 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 		btnDangNhap.setFont(new Font("Tahoma", Font.BOLD, 20));
 		frame.getContentPane().add(btnDangNhap);
 		
-		textTenDangNhap = new JTextField("Tên đăng nhập");
+		textTenDangNhap = new PlaceholderTextField();
+		textTenDangNhap.setPlaceholder("Tên đăng nhập");
 		textTenDangNhap.setBounds(265, 351, 591, 32);
 		frame.getContentPane().add(textTenDangNhap);
 		textTenDangNhap.setColumns(10);

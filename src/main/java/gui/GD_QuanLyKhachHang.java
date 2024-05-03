@@ -32,7 +32,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-import dao.*;
+import dao.KhachHang_Dao;
 import entity.KhachHang;
 
 public class GD_QuanLyKhachHang extends JPanel implements ActionListener, MouseListener {
@@ -248,7 +248,7 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener, MouseL
 		rdoNam.addActionListener(this);
 		rdoNu.addActionListener(this);
 		table.addMouseListener(this);
-
+		loadMa();
 		loadData();
 	}
 
