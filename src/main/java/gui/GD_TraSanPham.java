@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -121,6 +122,9 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 
 	private ArrayList<ChiTietHoaDon> list = new ArrayList<ChiTietHoaDon>();
 
+
+	private JButton btnUser;
+
 	public GD_TraSanPham() {
 		setBackground(new Color(246, 245, 255));
 		setLayout(null);
@@ -146,7 +150,21 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		panel.setBackground(null);
 		add(panel);
 		panel.setLayout(null);
-
+		btnUser = new JButton();
+		btnUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Dialog_User user=new Dialog_User();
+				user.setVisible(true);
+			}
+		});
+		btnUser.setBackground(Color.decode("#B5E6FB"));
+		btnUser.setBorderPainted(false);
+		btnUser.setIcon(new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png"));
+		btnUser.setBounds(1092, 5, 45, 45);
+		ImageIcon iconProfile = new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png");
+		iconProfile = new ImageIcon(iconProfile.getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH));
+		btnUser.setIcon(iconProfile);
+		pnNorth.add(btnUser);
 		// Đặt kích thước và tọa độ cho lblTitle
 		int labelWidth = 500; // Thay đổi kích thước theo ý muốn
 		int labelHeight = 40; // Thay đổi kích thước theo ý muốn

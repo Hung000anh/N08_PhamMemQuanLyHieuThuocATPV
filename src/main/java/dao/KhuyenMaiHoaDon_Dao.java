@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import connectDB.ConnectDB;
 import connectDB.Database;
 import entity.KhuyenMaiHoaDon;
 
@@ -19,16 +18,26 @@ public class KhuyenMaiHoaDon_Dao {
     public static ArrayList<KhuyenMaiHoaDon> docTubang() {
     	DanhSachKhuyenMaiHoaDon.clear();
         try {
-            Connection con = ConnectDB.getConnection();
+            Connection con = Database.getInstance().getConnection();
+            
+            
             
             // Cập nhật trạng thái của các bản ghi có ngày kết thúc < ngày hiện tại
             java.util.Date ngayHienTai = new java.util.Date();
-            String updateSql = "UPDATE KhuyenMaiHoaDon SET TrangThai = 0 WHERE NgayKetThuc < ? OR NgayBatDau > ?";
-            PreparedStatement updateStatement = con.prepareStatement(updateSql);
-            updateStatement.setDate(1, new java.sql.Date(ngayHienTai.getTime())); // Ngày kết thúc < ngày hiện tại
-            updateStatement.setDate(2, new java.sql.Date(ngayHienTai.getTime())); // Ngày bắt đầu > ngày hiện tại
-            updateStatement.executeUpdate();
-            updateStatement.close();
+            String updateActiveSql = "UPDATE KhuyenMaiHoaDon SET trangThai = 1 WHERE ngayBatDau <= ? AND ngayKetThuc >= ? "; 
+            PreparedStatement updateActiveStatement = con.prepareStatement(updateActiveSql);
+            updateActiveStatement.setDate(1, new java.sql.Date(ngayHienTai.getTime()));
+            updateActiveStatement.setDate(2, new java.sql.Date(ngayHienTai.getTime()));
+            updateActiveStatement.executeUpdate();
+            updateActiveStatement.close();
+            
+            // Cập nhật trạng thái của các bản ghi có ngày bắt đầu <= ngày hiện tại hoặc ngày kết thúc >= ngày hiện tại
+            String updateUnActiveSql = "UPDATE KhuyenMaiHoaDon SET trangThai = 0 WHERE ngayBatDau >= ? OR ngayKetThuc <= ?"; 
+            PreparedStatement updateUnActiveStatement = con.prepareStatement(updateUnActiveSql);
+            updateUnActiveStatement.setDate(1, new java.sql.Date(ngayHienTai.getTime()));
+            updateUnActiveStatement.setDate(2, new java.sql.Date(ngayHienTai.getTime()));
+            updateUnActiveStatement.executeUpdate();
+            updateUnActiveStatement.close();
             
             String sql = "SELECT * FROM KhuyenMaiHoaDon"; // Corrected table name
             Statement statement = con.createStatement();
@@ -55,7 +64,7 @@ public class KhuyenMaiHoaDon_Dao {
         return DanhSachKhuyenMaiHoaDon;
     }
     public static boolean themKhuyenMaiHoaDon(KhuyenMaiHoaDon k) {
-        try (Connection con = ConnectDB.getConnection();
+        try (Connection con = Database.getInstance().getConnection();
                 PreparedStatement stmt = con.prepareStatement("INSERT INTO KhuyenMaiHoaDon VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
             
             // Thiết lập các giá trị cho câu lệnh truy vấn
@@ -75,6 +84,7 @@ public class KhuyenMaiHoaDon_Dao {
             return false;
         }
     }
+    
     public static KhuyenMaiHoaDon timKhuyenMai(String maKM)
     {
     	for(KhuyenMaiHoaDon km : DanhSachKhuyenMaiHoaDon)
@@ -91,7 +101,7 @@ public class KhuyenMaiHoaDon_Dao {
         Connection con = null;
         PreparedStatement stmt = null;
         try {
-            con = ConnectDB.getConnection();
+            con = Database.getInstance().getConnection();
             String sql = "DELETE FROM KhuyenMaiHoaDon WHERE maKhuyenMai = ?";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, ma);
@@ -105,7 +115,7 @@ public class KhuyenMaiHoaDon_Dao {
         Connection con = null;
         PreparedStatement stmt = null;
         try {
-            con = ConnectDB.getConnection();
+            con = Database.getInstance().getConnection();
             String sql = "UPDATE KhuyenMaiHoaDon SET tenKhuyenMai = ?, ngayBatDau = ?, ngayKetThuc = ?, loaiChuongTrinh = ?, trangThai = ?, giaTriHoaDon = ?, giamGiaHoaDon = ? WHERE maKhuyenMai = ?";
             stmt = con.prepareStatement(sql);
             
@@ -125,5 +135,4 @@ public class KhuyenMaiHoaDon_Dao {
         	return false;
         } 
     }
-    
 }

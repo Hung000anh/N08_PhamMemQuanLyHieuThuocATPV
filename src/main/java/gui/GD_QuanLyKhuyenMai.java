@@ -17,6 +17,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -272,10 +274,15 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         Object o = e.getSource();
         if (o.equals(btnThem)) {
             // Open the new interface here
-            GD_ThemKhuyenMai themKhuyenMai = new GD_ThemKhuyenMai(); // Assuming GD_ThemKhuyenMai is the name of your new interface class
+            GD_ThemKhuyenMai themKhuyenMai = new GD_ThemKhuyenMai();
+            themKhuyenMai.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    // Được gọi khi cửa sổ đóng lại
+                    reloadDuLieuMau();
+                }
+            });
             themKhuyenMai.setVisible(true);
-            
-            reloadDuLieuMau();
         }
         if (o.equals(btnSua)) {
             int selectedRow = table.getSelectedRow();
@@ -285,14 +292,20 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
                 String loaiKM = table.getValueAt(selectedRow, 3).toString(); // Assume Loại chương trình is at column index 3
 
                 // Open the edit interface and pass the data
-                GD_SuaKhuyenMai suaKhuyenMai = new GD_SuaKhuyenMai(maKM, loaiKM); // Assuming GD_SuaKhuyenMai is the name of your edit interface class
+                GD_SuaKhuyenMai suaKhuyenMai = new GD_SuaKhuyenMai(maKM, loaiKM);
+                suaKhuyenMai.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        // Được gọi khi cửa sổ đóng lại
+                        reloadDuLieuMau();
+                    }
+                });
                 suaKhuyenMai.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần sửa!");
             }
-            
-            reloadDuLieuMau();
         }
+
 
         if (o.equals(btnXemChiTiet)) {
         	int selectedRow = table.getSelectedRow();

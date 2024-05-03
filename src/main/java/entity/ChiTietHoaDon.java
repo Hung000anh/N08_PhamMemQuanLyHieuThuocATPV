@@ -26,7 +26,10 @@ public class ChiTietHoaDon {
     }
 
     public double getThanhTien() {
-        return sanPham.getDonGiaBan() * soLuong;
+    	if(sanPham==null)
+    		return 0.0;
+    	else {
+    		return sanPham.getDonGiaBan() * soLuong;}
     }
 
     // Setters

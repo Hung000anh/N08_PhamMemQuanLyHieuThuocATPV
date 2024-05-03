@@ -15,22 +15,19 @@ public class SanPham implements Serializable{
 	private String hinhAnhSanPham;
 	private String DonViTinh;
 	private KhuyenMaiSanPham KhuyenMai;
-<<<<<<< HEAD
-=======
-
->>>>>>> vantrung
+	
 	public SanPham(String maSP) {
 		super();
 		this.maSP = maSP;
 	}
-	public SanPham(String maSP, String tenSP, String loai, java.util.Date date1, java.util.Date date2, Double donGiaNhap,
-			 int soluongTon, Double donGiaBan,String hinhAnhSanPham, String donViTinh, KhuyenMaiSanPham khuyenMai) {
+	public SanPham(String maSP, String tenSP, String loai, Date ngayHetHan, Date ngaySanXuat, Double donGiaNhap,
+			int soluongTon, Double donGiaBan, String hinhAnhSanPham, String donViTinh, KhuyenMaiSanPham khuyenMai) {
 		super();
 		this.maSP = maSP;
 		this.tenSP = tenSP;
 		this.loai = loai;
-		this.ngayHetHan = date1;
-		this.ngaySanXuat = date2;
+		this.ngayHetHan = ngayHetHan;
+		this.ngaySanXuat = ngaySanXuat;
 		this.donGiaNhap = donGiaNhap;
 		this.soluongTon = soluongTon;
 		this.donGiaBan = donGiaBan;
@@ -57,14 +54,7 @@ public class SanPham implements Serializable{
 	public void setLoai(String loai) {
 		this.loai = loai;
 	}
-<<<<<<< HEAD
-	public java.util.Date getNgayHetHan() {
-
-=======
-
-	
 	public Date getNgayHetHan() {
->>>>>>> vantrung
 		return ngayHetHan;
 	}
 	public void setNgayHetHan(Date ngayHetHan) {
@@ -112,20 +102,12 @@ public class SanPham implements Serializable{
 	public void setKhuyenMai(KhuyenMaiSanPham khuyenMai) {
 		KhuyenMai = khuyenMai;
 	}
-<<<<<<< HEAD
-=======
 
->>>>>>> vantrung
 	@Override
 	public String toString() {
 		return "SanPham [maSP=" + maSP + ", tenSP=" + tenSP + ", loai=" + loai + ", ngayHetHan=" + ngayHetHan
 				+ ", ngaySanXuat=" + ngaySanXuat + ", donGiaNhap=" + donGiaNhap + ", soluongTon=" + soluongTon
 				+ ", donGiaBan=" + donGiaBan + ", hinhAnhSanPham=" + hinhAnhSanPham + ", DonViTinh=" + DonViTinh
 				+ ", KhuyenMai=" + KhuyenMai + "]";
-<<<<<<< HEAD
-=======
-
->>>>>>> vantrung
 	}	
-
 }

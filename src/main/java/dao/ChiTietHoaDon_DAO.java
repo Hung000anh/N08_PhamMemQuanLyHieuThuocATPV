@@ -28,8 +28,8 @@ public class ChiTietHoaDon_DAO {
             	String maHD = rs.getString(1);
                 String maSP = rs.getString(2);
                 int SoLuong = rs.getInt(3);
-                HoaDon hd = HoaDon_DAO.layHoaDonTheoMa(maHD);
-                SanPham s = SanPham_Dao.laySanPhamTheoMa(maSP);
+                HoaDon hd = new HoaDon(maHD);
+                SanPham s = SanPham_Dao.getSPTheoMa(maSP);
                 list.add(new ChiTietHoaDon(
                 		hd,
                 		s,
@@ -71,4 +71,27 @@ public class ChiTietHoaDon_DAO {
             return false;
         }
     }
+
+	public static boolean deleteChiTiecHoaDon(String tenSP) {
+
+		int n = 0;
+			PreparedStatement psmt = null;
+		try {
+			Connection con = Database.getInstance().getConnection();
+			psmt = con.prepareStatement("DELETE FROM ChiTietHoaDon WHERE maSanPham=?;");
+			psmt.setString(1, tenSP);
+
+			n = psmt.executeUpdate();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				psmt.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+		}
+		return n > 0;
+	}
 }
