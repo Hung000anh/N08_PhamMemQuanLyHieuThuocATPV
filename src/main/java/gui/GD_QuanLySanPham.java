@@ -243,7 +243,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		JButton btnThem = new JButton("Thêm");
 		btnThem.setToolTipText("thêm thông tin\r\n khách hàng");
 		btnThem.setFont(new Font("Arial", Font.BOLD, 16));
-		btnThem.setBounds(30, 38, 100, 40);
+		btnThem.setBounds(30, 38, 120, 40);
 		btnThem.setBackground(Color.decode("#4db05e"));
 		btnThem.setBorderPainted(false);
 		chucNang.add(btnThem);
@@ -331,46 +331,13 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		    }
 		});
 		
-		JButton btnXoa = new JButton("Xóa");
-		btnXoa.setToolTipText("");
-		btnXoa.setFont(new Font("Arial", Font.BOLD, 16));
-		btnXoa.setBorderPainted(false);
-		btnXoa.setBackground(Color.decode("#ee1919"));
-		btnXoa.setBounds(140, 38, 100, 40);
-		chucNang.add(btnXoa);
-		// Thêm ActionListener cho nút "Xóa"
-		btnXoa.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        // Thực hiện các hoạt động xóa ở đây
-		        // Ví dụ: hiển thị hộp thoại xác nhận trước khi xóa
-		        int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-		        
-		        // Nếu người dùng chọn "Yes"
-		        if (choice == JOptionPane.YES_OPTION) {
-		            // Thực hiện xóa (gọi phương thức xóa dữ liệu)
-		            // Ví dụ: xóa sản phẩm có mã sản phẩm là "maSP"
-		        	SanPham_Dao spd = new SanPham_Dao();
-		            boolean result = spd.xoaSanPham(txtMaSP.getText()); // Thay "maSP" bằng mã sản phẩm thực tế
-		            if (result) {
-		                // Xóa thành công, thực hiện các hành động cập nhật UI hoặc hiển thị thông báo
-		                JOptionPane.showMessageDialog(null, "Xóa thành công!");
-		            } else {
-		                // Xóa không thành công, hiển thị thông báo lỗi
-		                JOptionPane.showMessageDialog(null, "Xóa không thành công!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-		            }
-		        }
-		        loadDataToTable();
-		    }
-		    
-		});
 		
 		JButton btnSua = new JButton("Sửa");
 		btnSua.setToolTipText("thêm thông tin\r\n khách hàng");
 		btnSua.setFont(new Font("Arial", Font.BOLD, 16));
 		btnSua.setBorderPainted(false);
 		btnSua.setBackground(Color.decode("#26bfbf"));
-		btnSua.setBounds(250, 38, 100, 40);
+		btnSua.setBounds(170, 38, 120, 40);
 		chucNang.add(btnSua);
 		btnSua.addActionListener(new ActionListener() {
 		    @Override
@@ -466,7 +433,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		btnTim.setFont(new Font("Arial", Font.BOLD, 16));
 		btnTim.setBorderPainted(false);
 		btnTim.setBackground(Color.decode("#4a83d7"));
-		btnTim.setBounds(360, 38, 100, 40);
+		btnTim.setBounds(310, 38, 120, 40);
 		chucNang.add(btnTim); 
 		btnTim.addActionListener(new ActionListener() {
 		    @Override
@@ -504,7 +471,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		btnXoaRong .setFont(new Font("Arial", Font.BOLD, 16));
 		btnXoaRong .setBorderPainted(false);
 		btnXoaRong .setBackground(Color.decode("#4a83d7"));
-		btnXoaRong .setBounds(470, 38, 120, 40);
+		btnXoaRong .setBounds(450, 38, 120, 40);
 		chucNang.add(btnXoaRong ); 
 		btnXoaRong.addActionListener(new ActionListener() {
 	        @Override
