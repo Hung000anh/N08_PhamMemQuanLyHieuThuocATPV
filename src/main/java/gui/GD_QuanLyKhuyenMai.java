@@ -19,8 +19,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseListener {
 
@@ -313,7 +317,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
             } else {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xem chi tiết!");
             }
-            reloadDuLieuMau();
+            //reloadDuLieuMau();
         }
         else if (o.equals(btnTim)) {
         	//lấy lại dữ liệu cữ
@@ -336,6 +340,23 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         String tuNgay = txtTuNgay.getText();
         String denNgay = txtDenNgay.getText();
 
+        LocalDate startDate = null;
+        LocalDate endDate = null;
+
+        // Kiểm tra định dạng ngày tháng và xử lý lỗi
+        try {
+            if (!tuNgay.equals("")) {
+                startDate = LocalDate.parse(tuNgay, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            }
+            if (!denNgay.equals("")) {
+                endDate = LocalDate.parse(denNgay, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Sai định dạng ngày tháng", "Lỗi Nhập liệu", JOptionPane.ERROR_MESSAGE);
+            return; // Exit the function if parsing fails
+        }
+
+
         // Xác định giá trị của trạng thái từ các radio button
         String trangThai = "";
         if (rdbtnKichhoat.isSelected()) {
@@ -349,35 +370,39 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         int rowCount = model.getRowCount();
 
         for (int i = rowCount - 1; i >= 0; i--) {
-            
             String maKM1 = (String) model.getValueAt(i, 1);
             String tenKM1 = (String) model.getValueAt(i, 2);
             String loaiChuongTrinh = (String) model.getValueAt(i, 3);
-//            java.sql.Date date = (java.sql.Date) model.getValueAt(i, 4);
-//            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // Định dạng ngày theo ý muốn
-            String ngayBatDau = (String) model.getValueAt(i, 3); 
-            
-//            java.sql.Date date2 = (java.sql.Date) model.getValueAt(i, 5);
-           
-            String ngayKetThuc = (String) model.getValueAt(i, 5); 
+            String ngayBatDau = (String) model.getValueAt(i, 4);
+            String ngayKetThuc = (String) model.getValueAt(i, 5);
             String trangThai1 = (String) model.getValueAt(i, 6);
 
             // Áp dụng các điều kiện lọc
             boolean tenKMMatch = tenKM.isEmpty() || tenKM1.contains(tenKM);
             boolean maKMMatch = maKM.isEmpty() || maKM1.contains(maKM);
             boolean loaiChuongTrinhMatch = txtLoai.getSelectedItem().equals("Tất cả") || loaiChuongTrinh.equals(txtLoai.getSelectedItem());
-            boolean ngayBatDauMatch = tuNgay.isEmpty() || ngayBatDau.equals(tuNgay);
-            boolean ngayKetThucMatch = denNgay.isEmpty() || ngayKetThuc.equals(denNgay);
             boolean trangThaiMatch = (rdbtnTatCa.isSelected() || (rdbtnKichhoat.isSelected() && trangThai1.equals("Kích hoạt")) || (rdbtnKhongHoatDong.isSelected() && trangThai1.equals("Không hoạt động")));
 
+            LocalDate dataStartDate = LocalDate.parse(ngayBatDau, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            LocalDate dataEndDate = LocalDate.parse(ngayKetThuc, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+            // Điều kiện lọc ngày tháng (bao gồm cả trường hợp ngày trống)
+            boolean dateMatch = true; // Assume a match initially
+            if (startDate != null) {
+                dateMatch = dateMatch && !startDate.minusDays(1).isAfter(dataStartDate);
+            }
+            if (endDate != null) {
+                dateMatch = dateMatch && !endDate.plusDays(1).isBefore(dataEndDate);
+            }
+
             // Kiểm tra xem hàng có đáp ứng điều kiện lọc không, nếu không thì loại bỏ hàng đó khỏi bảng
-            if (!(tenKMMatch && maKMMatch && loaiChuongTrinhMatch && ngayBatDauMatch && ngayKetThucMatch && trangThaiMatch)) {
+            if (!(tenKMMatch && maKMMatch && loaiChuongTrinhMatch && trangThaiMatch && dateMatch)) {
                 model.removeRow(i);
             }
         }
     }
 
-
+ 
     
     private void addData() {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -427,4 +452,5 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
         }
 
     }
+    
 }
