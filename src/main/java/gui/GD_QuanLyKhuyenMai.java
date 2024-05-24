@@ -212,24 +212,24 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
 		
 		panel_1.add(danhSach);
         
-        
-        JScrollPane scrollPane = new JScrollPane();
+//        table = new JTable();
+//        table.setModel(new DefaultTableModel(
+//        	new Object[][] {
+//        	
+//        	},
+//        	new String[] {
+//        		"STT", "M\u00E3 Khuy\u1EBFn m\u00E3i", "T\u00EAn khuy\u1EBFn m\u00E3i", "Lo\u1EA1i ch\u01B0\u01A1ng tr\u00ECnh", "Ng\u00E0y b\u1EAFt \u0111\u1EA7u", "Ng\u00E0y k\u1EBFt th\u00FAc" ,"tr\u1EA1ng th\u00E1i", "Giảm giá"
+//        	}
+//        ));
+//        addData();
+//        scrollPane.setViewportView(table);
+//        model = new DefaultTableModel(col, 0);
+        String[] headers = {"STT", "M\u00E3 Khuy\u1EBFn m\u00E3i", "T\u00EAn khuy\u1EBFn m\u00E3i", "Lo\u1EA1i ch\u01B0\u01A1ng tr\u00ECnh", "Ng\u00E0y b\u1EAFt \u0111\u1EA7u", "Ng\u00E0y k\u1EBFt th\u00FAc" ,"tr\u1EA1ng th\u00E1i", "Giảm giá"};
+        model = new DefaultTableModel(headers, 0);
+        JScrollPane scrollPane = new JScrollPane(table = new JTable(model));
         scrollPane.setBounds(0, 50, 1120, 410);
         panel_1.add(scrollPane);
-        
-       
-        table = new JTable();
-        table.setModel(new DefaultTableModel(
-        	new Object[][] {
-        	
-        	},
-        	new String[] {
-        		"STT", "M\u00E3 Khuy\u1EBFn m\u00E3i", "T\u00EAn khuy\u1EBFn m\u00E3i", "Lo\u1EA1i ch\u01B0\u01A1ng tr\u00ECnh", "Ng\u00E0y b\u1EAFt \u0111\u1EA7u", "Ng\u00E0y k\u1EBFt th\u00FAc" ,"tr\u1EA1ng th\u00E1i", "Giảm giá"
-        	}
-        ));
         addData();
-        scrollPane.setViewportView(table);
-        model = new DefaultTableModel(col, 0);
         
         btnThem.addActionListener(this);
         btnSua.addActionListener(this);
@@ -365,7 +365,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
             trangThai = "Không hoạt động";
         }
 
-        // Lọc dữ liệu từ bảng dựa trên các điều kiện đã xác định
+        // Lọc dữ liệu từ bảng dựa trên các điều kiện đã xác định 
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         int rowCount = model.getRowCount();
 
