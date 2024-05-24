@@ -25,7 +25,7 @@ public class KhuyenMaiSanPham implements Serializable{
 		this.maKM = maKM;
 		this.tenKM = tenKM;
 		this.ngayBatDau = ngayBatDau;
-		this.ngayKetThuc = ngayKetThuc;
+		this.ngayKetThuc = ngayKetThuc; 
 		this.loaiChuongTrinh = loaiChuongTrinh;
 		this.trangThai = trangThai;
 		this.giamGiaSanPham = giamGiaSanPham;

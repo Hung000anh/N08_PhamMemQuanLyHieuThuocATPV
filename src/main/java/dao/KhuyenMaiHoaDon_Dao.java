@@ -23,7 +23,7 @@ public class KhuyenMaiHoaDon_Dao {
             
             
             // Cập nhật trạng thái của các bản ghi có ngày kết thúc < ngày hiện tại
-            java.util.Date ngayHienTai = new java.util.Date();
+            java.util.Date ngayHienTai = new java.util.Date(); 
             String updateActiveSql = "UPDATE KhuyenMaiHoaDon SET trangThai = 1 WHERE ngayBatDau <= ? AND ngayKetThuc >= ? "; 
             PreparedStatement updateActiveStatement = con.prepareStatement(updateActiveSql);
             updateActiveStatement.setDate(1, new java.sql.Date(ngayHienTai.getTime()));
