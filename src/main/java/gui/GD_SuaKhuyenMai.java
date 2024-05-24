@@ -68,7 +68,7 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
 
         JLabel lblTnKhuynMi = new JLabel("Tên khuyến mãi:");
         lblTnKhuynMi.setHorizontalAlignment(SwingConstants.RIGHT);
-        lblTnKhuynMi.setFont(new Font("Arial", Font.BOLD, 16));
+        lblTnKhuynMi.setFont(new Font("Arial", Font.BOLD, 16)); 
         lblTnKhuynMi.setBounds(30, 92, 150, 30);
         tt_TimKiem.add(lblTnKhuynMi);
 
