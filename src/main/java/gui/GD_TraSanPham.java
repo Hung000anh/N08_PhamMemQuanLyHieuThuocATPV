@@ -33,13 +33,16 @@ import javax.swing.border.LineBorder;
 import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;  
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 
-public class GD_TraSanPham extends JPanel implements ActionListener {
+public class GD_TraSanPham extends JPanel implements ActionListener,  MouseListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -205,6 +208,7 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		panel_1.add(panel_2);
 		panel_2.setLayout(null);
 		table = new JTable(model);
+		table.addMouseListener(this);
 		JScrollPane scrollpane = new JScrollPane(table);
 		scrollpane.setBounds(0, 0, 521, 176);
 		panel_2.add(scrollpane);
@@ -368,6 +372,7 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		model_1 = new DefaultTableModel(cols, 0);
 		table_1 = new JTable(model_1);
 		JScrollPane scrollpane_1 = new JScrollPane(table_1);
+		table_1.addMouseListener(this);
 		scrollpane_1.setBounds(0, 0, 521, 176);
 		panel_2_1.add(scrollpane_1);
 		
@@ -567,6 +572,12 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 		}
 		txtTienTra.setText(String.valueOf(tien));
 	}
+
+	public long countDaysFromToday(Date date) {
+        // Tính khoảng cách giữa hai ngày
+        long diffInMillies = Math.abs((new Date()).getTime() - date.getTime());
+        return TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -589,6 +600,11 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 			}
 			
 			currentHoaDon = hd;
+			
+			if (countDaysFromToday(hd.getNgayXuat()) > 7) {
+				JOptionPane.showMessageDialog(this, "Ngày xuất của hóa đơn đã mua quá 7 ngày trước");
+				return;
+			}
 
 			for (int i = 0; i < lst.size(); i++) {
 				ChiTietHoaDon cthd = lst.get(i);
@@ -748,6 +764,45 @@ public class GD_TraSanPham extends JPanel implements ActionListener {
 
 			JOptionPane.showMessageDialog(this, "Đã lưu hóa đơn trả hàng");
 		}
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		Object o = e.getSource();
+		if (o == table || o == table_1) {
+			int row = ((JTable)o).getSelectedRow();
+			if (row >= 0) {
+				String maSP = ((JTable)o).getValueAt(row, 0).toString();
+				String sl = ((JTable)o).getValueAt(row, 2).toString();
+				txtNhpMSn.setText(maSP);
+				txtNhpSLng.setText(sl);
+			}
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 }
