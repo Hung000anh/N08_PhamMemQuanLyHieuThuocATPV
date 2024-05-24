@@ -29,8 +29,8 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 	
 
 	JFrame frame;
-	private JTextField textMK;
-	private JTextField textTenDangNhap;
+	private PlaceholderTextField textMK;
+	private PlaceholderTextField textTenDangNhap;
 	private JButton btnDangNhap ;
 	private DangNhap_Dao dangNhap_dao;
 	private String username;
@@ -57,7 +57,7 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 	 */
 	public GD_DangNhap() {
 		initialize();
-		 gD_TrangChu=new GD_TrangChu();
+		
 	}
 
 	/**
@@ -69,13 +69,14 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 		frame.setBounds(100, 100, 1092, 721);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
+
 		JLabel lblNewLabel = new JLabel("Hiệu thuốc ATPV");
 		lblNewLabel.setBounds(449, 225, 313, 38);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 30));
 		frame.getContentPane().add(lblNewLabel);
 		
-		textMK = new JTextField("Mật khẩu");
+		textMK = new PlaceholderTextField("trung");
+		textMK.setPlaceholder("Mật khẩu");
 		textMK.setBounds(265, 420, 591, 32);
 		frame.getContentPane().add(textMK);
 		textMK.setColumns(10);
@@ -87,7 +88,8 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 		btnDangNhap.setFont(new Font("Tahoma", Font.BOLD, 20));
 		frame.getContentPane().add(btnDangNhap);
 		
-		textTenDangNhap = new JTextField("Tên đăng nhập");
+		textTenDangNhap = new PlaceholderTextField("QL241001");
+		textTenDangNhap.setPlaceholder("Tên đăng nhập");
 		textTenDangNhap.setBounds(265, 351, 591, 32);
 		frame.getContentPane().add(textTenDangNhap);
 		textTenDangNhap.setColumns(10);
@@ -131,14 +133,14 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 		btnDangNhap.addActionListener(this);
 		btnQuenMK.addActionListener(this);
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		  DataManager.setUserName(textTenDangNhap.getText());
 	      Object o = e.getSource();
 	      if (o.equals(btnDangNhap)) {
-	    	 
+	 		 gD_TrangChu=new GD_TrangChu();
 	           username = textTenDangNhap.getText();
 	           DataManager.setUserName(username);
 	          String mkstr = textMK.getText();
@@ -152,7 +154,7 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 					} else if (roleName.equals("Nhân viên")) {
 						DataManager.setRole("NV");
 						DataManager.setRolePassword("NVpassword");
-					   
+						
 					   
 					    gD_TrangChu.btnNhanVien.setEnabled(false);
 					   

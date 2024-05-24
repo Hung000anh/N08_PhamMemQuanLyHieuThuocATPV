@@ -3,13 +3,21 @@ package gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -18,9 +26,16 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
+import dao.ChiTietHoaDon_DAO;
+import dao.HoaDon_DAO;
+import dao.SanPham_Dao;
+import entity.ChiTietHoaDon;
+import entity.HoaDon;
+
 import javax.swing.JTextArea;
 
-public class GD_QuanLyHoaDon extends JPanel {
+public class GD_QuanLyHoaDon extends JPanel implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField textMaNV;
@@ -30,11 +45,18 @@ public class GD_QuanLyHoaDon extends JPanel {
 	private JTextField textNgayXuatHD;
 	private DefaultTableModel model;
 	private JTable table;
-	private String col[] = { "STT", "Mã hóa đơn", "Mã sản phẩm", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"};
+	private String col[] = { "STT", "Mã hóa đơn", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"};
 	private JScrollPane scroll;
 	private JTextField textKhuyenMai;
 	private JTextField textTongTien;
-	private JTextField textField_3;
+	private JTextField textTuKhoa;
+
+	private HoaDon currentHoaDon = null;
+	private ArrayList<HoaDon> list;
+	private JButton btnTim;
+	private JTextArea textGhiChu;
+	private JButton btnUser;
+	private JButton btnXemChiTiet;
 
 	/**
 	 * Create the panel.
@@ -55,7 +77,21 @@ public class GD_QuanLyHoaDon extends JPanel {
 		lblNewLabel.setBounds(0, 0, 1140, 60);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel);
-		
+		btnUser = new JButton();
+		btnUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Dialog_User user=new Dialog_User();
+				user.setVisible(true);
+			}
+		});
+		btnUser.setBackground(Color.decode("#B5E6FB"));
+		btnUser.setBorderPainted(false);
+		btnUser.setIcon(new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png"));
+		btnUser.setBounds(1092, 5, 45, 45);
+		ImageIcon iconProfile = new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png");
+		iconProfile = new ImageIcon(iconProfile.getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH));
+		btnUser.setIcon(iconProfile);
+		panel.add(btnUser);
 		// ----- Thông tin hóa đơn ----- //
 		JPanel tt_Hoadon = new JPanel();
 		tt_Hoadon.setBackground(SystemColor.window);
@@ -146,7 +182,7 @@ public class GD_QuanLyHoaDon extends JPanel {
 		ghiChu.setBounds(468, 138, 120, 30);
 		tt_Hoadon.add(ghiChu);
 		
-		JTextArea textGhiChu = new JTextArea();
+		textGhiChu = new JTextArea();
 		textGhiChu.setEnabled(false);
 		textGhiChu.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 		textGhiChu.setBounds(605, 144, 220, 122);
@@ -172,25 +208,27 @@ public class GD_QuanLyHoaDon extends JPanel {
 		tuKhoa.setBounds(10, 91, 240, 30);
 		traCuu.add(tuKhoa);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(30, 131, 200, 35);
-		traCuu.add(textField_3);
+		textTuKhoa = new JTextField();
+		textTuKhoa.setColumns(10);
+		textTuKhoa.setBounds(30, 131, 200, 35);
+		traCuu.add(textTuKhoa);
 		
-		JButton btnTim = new JButton("Tìm");
+		btnTim = new JButton("Tìm");
 		btnTim.setToolTipText("");
 		btnTim.setFont(new Font("Arial", Font.BOLD, 16));
 		btnTim.setBorderPainted(false);
 		btnTim.setBackground(new Color(74, 131, 215));
 		btnTim.setBounds(30, 176, 200, 40);
 		traCuu.add(btnTim);
+		btnTim.addActionListener(this);
 		
-		JButton btnXemChiTiet = new JButton("Chi Tiết Hóa Đơn");
+		btnXemChiTiet = new JButton("Chi Tiết Hóa Đơn");
 		btnXemChiTiet.setFont(new Font("Arial", Font.BOLD, 16));
 		btnXemChiTiet.setBorderPainted(false);
 		btnXemChiTiet.setBackground(new Color(38, 191, 191));
 		btnXemChiTiet.setBounds(30, 226, 200, 40);
 		traCuu.add(btnXemChiTiet);
+		btnXemChiTiet.addActionListener(this);
 		
 		// ----- Table ----- //
 		JLabel danhSach = new JLabel("Danh sách hóa đơn");
@@ -210,5 +248,131 @@ public class GD_QuanLyHoaDon extends JPanel {
 		scroll.setViewportBorder(new LineBorder(new Color(0, 0, 0)));
 		scroll.setBounds(10, 440, 1120, 405);
 		add(scroll);
+		
+		docVaoTable();
+		table.addMouseListener(this);
 	}
+
+	public void docVaoTable() {
+		list = HoaDon_DAO.docTubang();
+		SanPham_Dao.docTubang();
+		ChiTietHoaDon_DAO.docTubang();
+
+		model.getDataVector().removeAllElements();
+		for (int i = 0; i < list.size(); i++) {
+			HoaDon hd = list.get(i);
+			// "STT", "Mã hóa đơn", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"
+
+			double tien = 0;
+			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(hd.getMaHD());
+			for (ChiTietHoaDon e : cthd_list) {
+				tien += e.getThanhTien();
+			}
+			model.addRow(new Object[] {
+					i+1,
+					hd.getMaHD(),
+					(hd.getKhachHang() == null)? "" : hd.getKhachHang().getMaKhachHang(),
+					hd.getMaHD(),
+					hd.getNgayXuat(),
+					(hd.getKhuyenMai() == null)? "" : hd.getKhuyenMai().getMaKM(),
+					tien,
+					hd.getGhiChu()
+			});
+		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object o = e.getSource();
+		if (o == btnTim) {
+			HoaDon_DAO.docTubang();
+
+			String tukhoa = textTuKhoa.getText().trim();
+			currentHoaDon = HoaDon_DAO.layHoaDonTheoMa(tukhoa);
+
+			if (currentHoaDon == null) {
+				JOptionPane.showMessageDialog(this, "Không tìm thấy!");
+				return;
+			}
+			
+			textMaHD.setText(currentHoaDon.getMaHD());
+			textMaKH.setText(currentHoaDon.getKhachHang().getMaKhachHang());
+			textKhuyenMai.setText(currentHoaDon.getKhuyenMai().getMaKM());
+			textMaNV.setText(currentHoaDon.getNhanVien().getMaNV());
+			textLoai.setText(currentHoaDon.getLoaiHD());
+			textNgayXuatHD.setText(currentHoaDon.getNgayXuat().toString());
+			textGhiChu.setText(currentHoaDon.getGhiChu());
+			
+			double tien = 0;
+			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(currentHoaDon.getMaHD());
+			for (ChiTietHoaDon _e : cthd_list) {
+				tien += _e.getThanhTien();
+			}
+			
+			textTongTien.setText(String.valueOf(tien));
+		}
+		if (o == btnXemChiTiet) {
+			try {
+				Dialog_ChiTietHoaDon dialog = new Dialog_ChiTietHoaDon(currentHoaDon);
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		int row = table.getSelectedRow();
+		if (row != -1) {
+			String ma = table.getValueAt(row, 1).toString();
+
+			currentHoaDon = HoaDon_DAO.layHoaDonTheoMa(ma);
+			textMaHD.setText(currentHoaDon.getMaHD());
+			textMaKH.setText(currentHoaDon.getKhachHang().getMaKhachHang());
+			textKhuyenMai.setText(currentHoaDon.getKhuyenMai().getMaKM());
+			textMaNV.setText(currentHoaDon.getNhanVien().getMaNV());
+			textLoai.setText(currentHoaDon.getLoaiHD());
+			textNgayXuatHD.setText(currentHoaDon.getNgayXuat().toString());
+			textGhiChu.setText(currentHoaDon.getGhiChu());
+			
+			double tien = 0;
+			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(currentHoaDon.getMaHD());
+			for (ChiTietHoaDon _e : cthd_list) {
+				tien += _e.getThanhTien();
+			}
+			
+			textTongTien.setText(String.valueOf(tien));
+		} else {
+			// Xử lý trường hợp không có hàng nào được chọn
+		}
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -230,7 +230,7 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
                     } catch (ParseException ex) {
                         ex.printStackTrace();
                     }
-                    KhuyenMaiHoaDon khuyenMaiHoaDon = new KhuyenMaiHoaDon(maKM, tenKM, ngayBatDau1, ngayKetThuc1,  true, true, giaTriHoaDon, giamGiaHoaDon);            
+                    KhuyenMaiHoaDon khuyenMaiHoaDon = new KhuyenMaiHoaDon(maKM, tenKM, ngayBatDau1, ngayKetThuc1,  true, true, giaTriHoaDon, giamGiaHoaDon/100);            
                     // Gọi phương thức thêm khuyến mãi hóa đơn từ DAO
                     KhuyenMaiHoaDon_Dao khuyenMaiHoaDonDao = new KhuyenMaiHoaDon_Dao();
                     boolean result;
@@ -634,7 +634,7 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
         KhuyenMaiSanPham_Dao kmspdao = new KhuyenMaiSanPham_Dao();
         ArrayList<KhuyenMaiSanPham> ds = kmspdao.docTubang();
         for (KhuyenMaiSanPham kmsp : ds) {
-            //if (kmsp.getMaKM().equals(txtMaKhuyenMai.getText())) {
+            if (kmsp.getMaKM().equals(txtMaKhuyenMai.getText())) {
                 // Hiển thị thông tin chi tiết của khuyến mãi trong giao diện
                 txtTenKhuyenMai.setText(kmsp.getTenKM());
                 txtTuNgay.setText(kmsp.getNgayBatDau().toString());
@@ -677,7 +677,7 @@ public class GD_SuaKhuyenMai extends JFrame implements ItemListener, MouseListen
                 }
                 // Sau khi tìm thấy và hiển thị thông tin, bạn có thể thoát vòng lặp
                 return;
-            
+            }
         }
     }
 
