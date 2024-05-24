@@ -13,7 +13,6 @@ import java.util.Calendar;
 import connectDB.Database;
 import entity.HoaDon;
 import entity.KhuyenMaiSanPham;
-import entity.NhanVien;
 import entity.SanPham;
 
 public class SanPham_Dao {
@@ -251,58 +250,45 @@ public class SanPham_Dao {
             return false; // Trả về false nếu có lỗi xảy ra trong quá trình xóa
         }
     }
-    public void goMaKhuyenMaiChoSanPham(String maSanPham, String maKhuyenMai) {
+    public void goMaKhuyenMaiChoSanPham(String maSanPham) {
         try (Connection con = Database.getInstance().getConnection();
-             PreparedStatement stmt = con.prepareStatement("UPDATE SanPham SET maKhuyenMai = NULL WHERE maSanPham = ? AND maKhuyenMai = ?")) {
+             PreparedStatement stmt = con.prepareStatement("UPDATE SanPham SET maKhuyenMai = NULL WHERE maSanPham = ?")) {
             stmt.setString(1, maSanPham);
-            stmt.setString(2, maKhuyenMai);
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Lỗi khi sửa mã khuyến mãi cho sản phẩm: " + e.getMessage());
         }
     }
-    public static SanPham getSPTheoMa(String maSP) {
-		SanPham sp = null;
-		Connection con = Database.getInstance().getConnection();
-		try {
-			String sql = "select * from SanPham where maSanPham = '" + maSP + "'";
-			Statement stm = con.createStatement();
-			ResultSet rs = stm.executeQuery(sql);
-			while (rs.next()) {
-				 
-				sp=new SanPham(rs.getString(1), rs.getString(2), rs.getString(3), rs.getDate(4), rs.getDate(5), rs.getDouble(6), rs.getInt(7), rs.getDouble(8), rs.getString(9), rs.getString(10),new KhuyenMaiSanPham(rs.getString(11)));
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		return sp;
-	}
-    public static SanPham laySanPhamTheoM(String maSP) {
-        KhuyenMaiSanPham_Dao DanhSachKhuyenMaiSanPham = new KhuyenMaiSanPham_Dao();
-        ArrayList<KhuyenMaiSanPham> DanhSachKhuyenMaiSP = DanhSachKhuyenMaiSanPham.docTubang();
-        SanPham sp = null;
 
+    public static SanPham laySanPhamTheoMa(String maSP) {
+    	KhuyenMaiSanPham_Dao DanhSachKhuyenMaiSanPham = new KhuyenMaiSanPham_Dao();
+    	ArrayList<KhuyenMaiSanPham> DanhSachKhuyenMaiSP = DanhSachKhuyenMaiSanPham.docTubang();
+    	SanPham sp = null;
+    	
         try {
             Connection con = Database.getInstance().getConnection();
-            String sql = "SELECT * FROM SanPham WHERE maSanPham = ?"; // Corrected SQL query
-            PreparedStatement statement = con.prepareStatement(sql);
-            statement.setString(1, maSP); // Set the parameter
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) { // Only need to read one row
+            String sql = "SELECT * FROM SanPham"; // Corrected table name
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
                 String tenSP = rs.getString(2);
                 String loai = rs.getString(3);
-                Date ngayHetHan = rs.getDate(4);
-                Date ngaySanXuat = rs.getDate(5);
-                Double donGiaNhap = rs.getDouble(6);
-                int soluongTon = rs.getInt(7);
-                Double donGiaBan = (double) rs.getFloat(8);
+                Date ngayHetHan = rs.getDate(4); // Corrected method for Date type
+                Date ngaySanXuat = rs.getDate(5); // Corrected method for Date type
+                Double donGiaNhap = rs.getDouble(6); // Corrected method for Double type
+                int soluongTon = rs.getInt(7); // Corrected method for Integer type
+                Double donGiaBan = (double) rs.getFloat(8); // Corrected method for Double type
                 String hinhAnhSanPham = rs.getString(9);
                 String DonViTinh = rs.getString(10);
-
+                
                 KhuyenMaiSanPham khuyenMai = new KhuyenMaiSanPham(rs.getString(11));
+           
+                
+                
+                sp = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, soluongTon, donGiaBan,  DonViTinh, hinhAnhSanPham, khuyenMai);
+                SanPham s = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, soluongTon, donGiaBan, hinhAnhSanPham, DonViTinh,  khuyenMai);
+                DanhSachSanPham.add(s);
 
-                sp = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, soluongTon, donGiaBan, DonViTinh, hinhAnhSanPham, khuyenMai);
             }
             rs.close();
             statement.close();
@@ -311,7 +297,6 @@ public class SanPham_Dao {
         }
         return sp;
     }
-
 
     public ArrayList<SanPham> laySanPhamTheoMaHD(String MaHD) {
     	ArrayList<SanPham> list = new ArrayList<SanPham>();
@@ -324,7 +309,7 @@ public class SanPham_Dao {
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 String maSP = rs.getString(2);
-                SanPham s = getSPTheoMa(maSP);
+                SanPham s = laySanPhamTheoMa(maSP);
                 list.add(s);
             }
             rs.close();

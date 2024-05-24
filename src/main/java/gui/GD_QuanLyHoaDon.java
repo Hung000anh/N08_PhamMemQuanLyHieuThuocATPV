@@ -3,18 +3,13 @@ package gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -23,16 +18,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-
-import dao.ChiTietHoaDon_DAO;
-import dao.HoaDon_DAO;
-import dao.SanPham_Dao;
-import entity.ChiTietHoaDon;
-import entity.HoaDon;
-
 import javax.swing.JTextArea;
 
-public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
+public class GD_QuanLyHoaDon extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField textMaNV;
@@ -42,16 +30,11 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 	private JTextField textNgayXuatHD;
 	private DefaultTableModel model;
 	private JTable table;
-	private String col[] = { "STT", "Mã hóa đơn", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"};
+	private String col[] = { "STT", "Mã hóa đơn", "Mã sản phẩm", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"};
 	private JScrollPane scroll;
 	private JTextField textKhuyenMai;
 	private JTextField textTongTien;
-	private JTextField textTuKhoa;
-
-	private ArrayList<HoaDon> list;
-	private JButton btnTim;
-	private JTextArea textGhiChu;
-	private JButton btnUser;
+	private JTextField textField_3;
 
 	/**
 	 * Create the panel.
@@ -72,21 +55,7 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		lblNewLabel.setBounds(0, 0, 1140, 60);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel);
-		btnUser = new JButton();
-		btnUser.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Dialog_User user=new Dialog_User();
-				user.setVisible(true);
-			}
-		});
-		btnUser.setBackground(Color.decode("#B5E6FB"));
-		btnUser.setBorderPainted(false);
-		btnUser.setIcon(new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png"));
-		btnUser.setBounds(1092, 5, 45, 45);
-		ImageIcon iconProfile = new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png");
-		iconProfile = new ImageIcon(iconProfile.getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH));
-		btnUser.setIcon(iconProfile);
-		panel.add(btnUser);
+		
 		// ----- Thông tin hóa đơn ----- //
 		JPanel tt_Hoadon = new JPanel();
 		tt_Hoadon.setBackground(SystemColor.window);
@@ -177,7 +146,7 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		ghiChu.setBounds(468, 138, 120, 30);
 		tt_Hoadon.add(ghiChu);
 		
-		textGhiChu = new JTextArea();
+		JTextArea textGhiChu = new JTextArea();
 		textGhiChu.setEnabled(false);
 		textGhiChu.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 		textGhiChu.setBounds(605, 144, 220, 122);
@@ -203,19 +172,18 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		tuKhoa.setBounds(10, 91, 240, 30);
 		traCuu.add(tuKhoa);
 		
-		textTuKhoa = new JTextField();
-		textTuKhoa.setColumns(10);
-		textTuKhoa.setBounds(30, 131, 200, 35);
-		traCuu.add(textTuKhoa);
+		textField_3 = new JTextField();
+		textField_3.setColumns(10);
+		textField_3.setBounds(30, 131, 200, 35);
+		traCuu.add(textField_3);
 		
-		btnTim = new JButton("Tìm");
+		JButton btnTim = new JButton("Tìm");
 		btnTim.setToolTipText("");
 		btnTim.setFont(new Font("Arial", Font.BOLD, 16));
 		btnTim.setBorderPainted(false);
 		btnTim.setBackground(new Color(74, 131, 215));
 		btnTim.setBounds(30, 176, 200, 40);
 		traCuu.add(btnTim);
-		btnTim.addActionListener(this);
 		
 		JButton btnXemChiTiet = new JButton("Chi Tiết Hóa Đơn");
 		btnXemChiTiet.setFont(new Font("Arial", Font.BOLD, 16));
@@ -242,68 +210,5 @@ public class GD_QuanLyHoaDon extends JPanel implements ActionListener {
 		scroll.setViewportBorder(new LineBorder(new Color(0, 0, 0)));
 		scroll.setBounds(10, 440, 1120, 405);
 		add(scroll);
-		
-		docVaoTable();
-	}
-
-	public void docVaoTable() {
-		list = HoaDon_DAO.docTubang();
-		SanPham_Dao.docTubang();
-		ChiTietHoaDon_DAO.docTubang();
-
-		model.getDataVector().removeAllElements();
-		for (int i = 0; i < list.size(); i++) {
-			HoaDon hd = list.get(i);
-			// "STT", "Mã hóa đơn", "Mã khách hàng", "Loại hóa đơn", "Ngày xuất HD", "Khuyến mãi", "Tổng tiền", "Ghi chú"
-
-			double tien = 0;
-			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(hd.getMaHD());
-			for (ChiTietHoaDon e : cthd_list) {
-				tien += e.getThanhTien();
-			}
-			model.addRow(new Object[] {
-					i+1,
-					hd.getMaHD(),
-					(hd.getKhachHang() == null)? "" : hd.getKhachHang().getMaKhachHang(),
-					hd.getMaHD(),
-					hd.getNgayXuat(),
-					(hd.getKhuyenMai() == null)? "" : hd.getKhuyenMai().getMaKM(),
-					tien,
-					hd.getGhiChu()
-			});
-		}
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		Object o = e.getSource();
-		if (o == btnTim) {
-			HoaDon_DAO.docTubang();
-
-			String tukhoa = textTuKhoa.getText().trim();
-			HoaDon hd = HoaDon_DAO.layHoaDonTheoMa(tukhoa);
-
-			if (hd == null) {
-				JOptionPane.showMessageDialog(this, "Không tìm thấy!");
-				return;
-			}
-			
-			textMaHD.setText(hd.getMaHD());
-			textMaKH.setText(hd.getKhachHang().getMaKhachHang());
-			textKhuyenMai.setText(hd.getKhuyenMai().getMaKM());
-			textMaNV.setText(hd.getNhanVien().getMaNV());
-			textLoai.setText(hd.getLoaiHD());
-			textNgayXuatHD.setText(hd.getNgayXuat().toString());
-			textGhiChu.setText(hd.getGhiChu());
-			
-			double tien = 0;
-			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(hd.getMaHD());
-			for (ChiTietHoaDon _e : cthd_list) {
-				tien += _e.getThanhTien();
-			}
-			
-			textTongTien.setText(String.valueOf(tien));
-		}
 	}
 }

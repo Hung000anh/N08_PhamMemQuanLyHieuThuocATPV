@@ -11,7 +11,7 @@ public class Database {
 
     private static Database instance;
 
-    private static Connection connection;
+    private Connection connection;
 
     private Database() {
         try {
@@ -29,14 +29,7 @@ public class Database {
         return instance;
     }
 
-    public static Connection getConnection() {
-        try {
-        	//if (connection != null) connection.close();
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.err.println("Failed to establish database connection.");
-        }
+    public Connection getConnection() {
         return connection;
     }
 }

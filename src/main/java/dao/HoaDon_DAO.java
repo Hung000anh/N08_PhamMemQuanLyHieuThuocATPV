@@ -91,7 +91,7 @@ public class HoaDon_DAO {
             if (k.getKhuyenMai() == null)
             		stmt.setNull(7,  Types.VARCHAR);
             else
-            		stmt.setString(7, k.getKhuyenMai().getMaKM());
+            		stmt.setString(7, k.getKhuyenMai().getMaKhuyenMai());
 
             int n = stmt.executeUpdate();
             return n > 0;

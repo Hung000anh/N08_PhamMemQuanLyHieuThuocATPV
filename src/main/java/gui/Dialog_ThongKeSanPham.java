@@ -12,7 +12,6 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -36,7 +35,6 @@ public class Dialog_ThongKeSanPham extends JPanel implements ActionListener{
 	private JScrollPane scroll;
 	private ThongKe_Dao tk_dao = new ThongKe_Dao();
 	private JComboBox comboBoxLoaiTk;
-	private JButton btnKQ;
 	/**
 	 * Create the panel.
 	 */
@@ -60,7 +58,7 @@ public class Dialog_ThongKeSanPham extends JPanel implements ActionListener{
 		comboBoxLoaiTk.setBounds(150, 11, 190, 30);
 		panel.add(comboBoxLoaiTk);
 		
-		btnKQ = new JButton("Xem kết quả");
+		JButton btnKQ = new JButton("Xem kết quả");
 		btnKQ.setBackground(SystemColor.textHighlight);
 		btnKQ.setFont(new Font("Arial", Font.BOLD, 16));
 		btnKQ.setBounds(10, 125, 330, 50);
@@ -86,60 +84,21 @@ public class Dialog_ThongKeSanPham extends JPanel implements ActionListener{
 		}
 	}
 	
-	public void get_5_SP_BanChayNhat() {
+	public void get_5_SP() {
 		int i = 0;
-		int[] sl = tk_dao.laySlBanRa("DESC");
-		for (SanPham sp : tk_dao.top_5_SP("DESC")) {
-			Object[] row = { i+1, sp.getMaSP(), sp.getTenSP(), sp.getDonGiaNhap(), sp.getDonGiaBan(), sp.getSoluongTon(), sp.getNgaySanXuat(), sp.getNgayHetHan(), sl[i]};
-			model.addRow(row);
+		for (SanPham sp : tk_dao.top_5_SpBanChay()) {
 			i++;
+			Object[] row = { i, sp.getMaSP(), sp.getTenSP(), sp.getDonGiaNhap(), sp.getDonGiaBan(), sp.getSoluongTon(), sp.getNgaySanXuat(), sp.getNgayHetHan(), sp.getDonViTinh()};
+			model.addRow(row);
 		}
 	}
-	
-	public void get_5_SP_BanChamNhat() {
-		int i = 0;
-		int[] sl = tk_dao.laySlBanRa("");
-		for (SanPham sp : tk_dao.top_5_SP("")) {
-			Object[] row = { i+1, sp.getMaSP(), sp.getTenSP(), sp.getDonGiaNhap(), sp.getDonGiaBan(), sp.getSoluongTon(), sp.getNgaySanXuat(), sp.getNgayHetHan(), sl[i]};
-			model.addRow(row);
-			i++;
-		}
-	}
-	
-	public void get_SpBanChayNhat() {
-		SanPham sp = tk_dao.getSanPham("DESC");
-		int[] sl = tk_dao.laySlBanRa("DESC");
-		Object[] row = { 1, sp.getMaSP(), sp.getTenSP(), sp.getDonGiaNhap(), sp.getDonGiaBan(), sp.getSoluongTon(), sp.getNgaySanXuat(), sp.getNgayHetHan(), sl[0]};
-		model.addRow(row);
-	}
-	
-	public void get_SpBanChamNhat() {
-		SanPham sp = tk_dao.getSanPham("");
-		int[] sl = tk_dao.laySlBanRa("");
-		Object[] row = { 1, sp.getMaSP(), sp.getTenSP(), sp.getDonGiaNhap(), sp.getDonGiaBan(), sp.getSoluongTon(), sp.getNgaySanXuat(), sp.getNgayHetHan(), sl[0]};
-		model.addRow(row);
-	}
-
-
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object obj = e.getSource();
-		if (obj == btnKQ && comboBoxLoaiTk.getSelectedItem().equals("Top 5 sản phẩm bán chạy nhất")) {
+		if (obj == "btnKQ" && comboBoxLoaiTk.getSelectedItem().equals("Top 5 sản phẩm bán chạy nhất")) {
 			clearTable();
-			get_5_SP_BanChayNhat();
-		}
-		else if (obj == btnKQ && comboBoxLoaiTk.getSelectedItem().equals("Top 5 sản phẩm bán ít nhất")) {
-			clearTable();
-			get_5_SP_BanChamNhat();
-		}
-		else if (obj == btnKQ && comboBoxLoaiTk.getSelectedItem().equals("Sản phẩm bán ít nhất")) {
-			clearTable();
-			get_SpBanChamNhat();
-		}
-		else if (obj == btnKQ && comboBoxLoaiTk.getSelectedItem().equals("Sản phẩm bán chạy nhất")) {
-			clearTable();
-			get_SpBanChayNhat();
+			get_5_SP();
 		}
 	}
 }

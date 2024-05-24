@@ -4,17 +4,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-
 import javax.swing.table.DefaultTableModel;
-
-import dao.KhuyenMaiHoaDon_Dao;
-import dao.KhuyenMaiSanPham_Dao;
-import dao.SanPham_Dao;
-import entity.KhuyenMaiHoaDon;
-import entity.KhuyenMaiSanPham;
-import entity.SanPham;
 
 public class GD_XemChiTietKhuyenMai extends JFrame implements ItemListener, MouseListener{
     private static final long serialVersionUID = 1L;
@@ -33,8 +23,6 @@ public class GD_XemChiTietKhuyenMai extends JFrame implements ItemListener, Mous
     private JTextField txtGiaKhuyenMai;
     private String maKM;
 	private String loaiKM;
-	private JTextField txtGiaTriHD;
-	private JTextField txtGiamGiaHD;
 
 
     public GD_XemChiTietKhuyenMai(String maKM, String loaiKM) {
@@ -198,7 +186,7 @@ public class GD_XemChiTietKhuyenMai extends JFrame implements ItemListener, Mous
             lblGiaTriHD.setBounds(19, 31, 263, 30);
             panel.add(lblGiaTriHD);
 
-            txtGiaTriHD = new JTextField();
+            JTextField txtGiaTriHD = new JTextField();
             txtGiaTriHD.setEditable(false);
             txtGiaTriHD.setBounds(302, 34, 166, 30);
             panel.add(txtGiaTriHD);
@@ -214,7 +202,7 @@ public class GD_XemChiTietKhuyenMai extends JFrame implements ItemListener, Mous
             lblGiamGiaHD.setBounds(19, 77, 263, 30);
             panel.add(lblGiamGiaHD);
 
-            txtGiamGiaHD = new JTextField();
+            JTextField txtGiamGiaHD = new JTextField();
             txtGiamGiaHD.setEditable(false);
             txtGiamGiaHD.setBounds(302, 80, 166, 30);
             panel.add(txtGiamGiaHD); 
@@ -228,10 +216,8 @@ public class GD_XemChiTietKhuyenMai extends JFrame implements ItemListener, Mous
                     "Khuyến mãi theo hóa đơn", TitledBorder.LEFT, TitledBorder.CENTER, new Font("Arial", Font.BOLD, 20),
                     Color.DARK_GRAY);
             panel.setBorder(border);
-            dayDulieuTimKiemKMHD(name);
+            
             return panel;
-            
-            
     }
     private JPanel createPanel2(String name, Color color) {
         JPanel panel = new JPanel();
@@ -264,23 +250,23 @@ public class GD_XemChiTietKhuyenMai extends JFrame implements ItemListener, Mous
 
         
         // Create a table with appropriate columns
-        String[] columns = {"Mã SP", "Tên SP", "Loại SP", "Ngày hết hạn", "Ngày sản xuất", "Số lượng tồn", "Đơn Giá bán"};
+        String[] columns = {"Mã SP", "Mã SP", "Tên SP", "Loại SP", "Ngày Hết Hạn", "Ngày Sản Xuất", "Số Lượng Tồn", "Đơn Giá Khuyến Mãi"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
-        table = new JTable(model); // Khởi tạo biến table ở mức lớp
+        JTable table = new JTable(model);
+        
         // Create a scroll pane for the table
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(10, 60, 986, 426);
         panel.add(scrollPane);
-
-        // Additional components can be added here if needed
-        dayDulieuTimKiemKMSP();
         
-        // Additional components can be added here if needed 
-        dayDulieuTimKiemKMSP();
+        // Additional components can be added here if needed
+        
         return panel;
     }
 
     
+    
+
 
 
 
@@ -317,57 +303,4 @@ public class GD_XemChiTietKhuyenMai extends JFrame implements ItemListener, Mous
 		// TODO Auto-generated method stub
 		
 	}
-	public void dayDulieuTimKiemKMSP() {
-        // Xóa dữ liệu cũ khỏi bảng table
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0);
-
-        KhuyenMaiSanPham_Dao kmspdao = new KhuyenMaiSanPham_Dao();
-        ArrayList<KhuyenMaiSanPham> ds = kmspdao.docTubang();
-        for (KhuyenMaiSanPham kmsp : ds) {
-            if (kmsp.getMaKM().equals(txtMaKhuyenMai.getText())) {
-                // Hiển thị thông tin chi tiết của khuyến mãi trong giao diện
-                txtTenKhuyenMai.setText(kmsp.getTenKM());
-                txtTuNgay.setText(kmsp.getNgayBatDau().toString());
-                txtTenKhuyenMai.setText(kmsp.getTenKM());
-    			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    			// Hiển thị ngày bắt đầu và kết thúc từ đối tượng KhuyenMaiHoaDon lên giao diện
-    			txtTuNgay.setText(dateFormat.format(kmsp.getNgayBatDau()));
-    			txtDenNgay.setText(dateFormat.format(kmsp.getNgayKetThuc()));
-    			txtGiamGia.setText(String.valueOf(kmsp.getGiamGiaSanPham()*100));
-                SanPham_Dao spd = new SanPham_Dao();
-                ArrayList<SanPham> dssp = spd.docTubang();
-                //DefaultTableModel model1 = (DefaultTableModel) table.getModel();
-                for (SanPham sp1 : dssp) {
-                	if(sp1.getKhuyenMai() != null && sp1.getKhuyenMai().getMaKM().equals(txtMaKhuyenMai.getText()))
-                	{
-                	//System.out.println(sp1.getMaSP() + "MKM: " + sp1.getKhuyenMai().getMaKM());
-                		Object row[] = {sp1.getMaSP(), sp1.getTenSP(), sp1.getLoai(), sp1.getNgayHetHan(), sp1.getNgaySanXuat(), sp1.getSoluongTon(), sp1.getDonGiaBan()};
-                        model.addRow(row);
-                	}       	
-                }
-                // Sau khi tìm thấy và hiển thị thông tin, bạn có thể thoát vòng lặp
-                return;
-            }
-        }
-    }
-
-    
-    public void dayDulieuTimKiemKMHD(String str)
-    {
-    	KhuyenMaiHoaDon_Dao kmhddao = new KhuyenMaiHoaDon_Dao();
-    	ArrayList<KhuyenMaiHoaDon> ds = kmhddao.docTubang();
-    	for(KhuyenMaiHoaDon kmhd :  ds)
-    	{
-    		if (kmhd.getMaKM().equals(txtMaKhuyenMai.getText())) {
-    			txtTenKhuyenMai.setText(kmhd.getTenKM());
-    			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    			// Hiển thị ngày bắt đầu và kết thúc từ đối tượng KhuyenMaiHoaDon lên giao diện
-    			txtTuNgay.setText(dateFormat.format(kmhd.getNgayBatDau()));
-    			txtDenNgay.setText(dateFormat.format(kmhd.getNgayKetThuc()));
-                txtGiaTriHD.setText(kmhd.getGiaTriHoaDon().toString());
-                txtGiamGiaHD.setText(String.valueOf(kmhd.getGiamGiaHoaDon()*100));
-    		}
-    	}
-    }
 }

@@ -64,6 +64,7 @@ public class Dialog_User extends JFrame implements ActionListener{
 		public Dialog_User() {
 			setBackground(Color.decode("#94D4FF"));
 			getContentPane().setLayout(null);
+			
 			JLabel lb = new JLabel("Tên nhân viên:");
 			lb.setFont(new Font("Arial", Font.BOLD, 15));
 			lb.setBounds(10, 187, 120, 20);
