@@ -279,6 +279,7 @@ public class GD_TrangChu extends JFrame implements ActionListener {
 			setVisibleFalse();
 			resetBtnBackground();
 			panel.add(hoaDon).setVisible(true);
+			hoaDon.docVaoTable();
 			btnHoaDon.setBackground(Color.LIGHT_GRAY);
 		} else if (o == btnKhuyenMai) {
 			setVisibleFalse();

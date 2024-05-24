@@ -4,13 +4,26 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JLabel;
+
+import dao.ChiTietHoaDon_DAO;
+import dao.HoaDon_DAO;
+import dao.SanPham_Dao;
+import entity.ChiTietHoaDon;
+import entity.HoaDon;
+import entity.SanPham;
+
 import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Window;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -20,62 +33,174 @@ import javax.swing.border.LineBorder;
 import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;  
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 
-public class GD_TraSanPham extends JPanel {
+public class GD_TraSanPham extends JPanel implements ActionListener,  MouseListener {
 
 	private static final long serialVersionUID = 1L;
 
 
-	private JPanel contentPane;
 	private JTextField txtNhpMCn;
 	private JTable table;
 	private JTable table_1;
-	private JTextField txtNhpLDo;
-	private JTextField txtNhpMSn;
-	private JTextField txtNhpSLng;
+	private PlaceholderTextField txtNhpLDo;
+	private PlaceholderTextField txtNhpMSn;
+	private PlaceholderTextField txtNhpSLng;
+
+	private HoaDon currentHoaDon = null;
+	private HoaDon HoaDonTra = null;
+
+
+	private myJButton btnNewButton;
+
+
+	private DefaultTableModel model;
+
+
+	private JTextField txtHoaDon_1;
+
+
+	private JTextField txtMaNV_1;
+
+
+	private JTextField txtMaKH_1;
+
+
+	private JTextField txtHoTen_1;
+
+
+	private JTextField txtGioiTinh_1;
+
+
+	private JTextField txtSDT_1;
+
+
+	private JTextField txtNgayTra;
+
+
+	private JTextField txtTienTra;
+
+
+	private JTextField txtHoaDon;
+
+
+	private JTextField txtMaNV;
+
+
+	private JTextField txtMaKM;
+
+
+	private JTextField txtMaKH;
+
+
+	private JTextField txtHoTen;
+
+
+	private JTextField txtGioiTinh;
+
+
+	private JTextField txtSDT;
+
+
+	private JTextField txtNgayMua;
+
+
+	private JTextField txtThanhTien;
+
+
+	private DefaultTableModel model_1;
+
+
+	private myJButton btnThm;
+
+
+	private myJButton btnNewButton_1;
+
+	private ArrayList<ChiTietHoaDon> list = new ArrayList<ChiTietHoaDon>();
+
+
+	private JButton btnUser;
 
 	public GD_TraSanPham() {
 		setBackground(new Color(246, 245, 255));
 		setLayout(null);
 		setSize(1140, 865);
+
+
+		JPanel pnNorth = new JPanel();
+		pnNorth.setLayout(null);
+		pnNorth.setBounds(0, 0, 1200, 60);
+		pnNorth.setBackground(new Color(187, 231, 252));
+		add(pnNorth);
+		myJLabel lblTitle = new myJLabel("TRẢ SẢN PHẨM");
+		pnNorth.add(lblTitle);
+
+		// căn giữa title
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setVerticalAlignment(SwingConstants.CENTER);
+
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 10, 1106, 85);
+		panel.setBounds(10, 60, 1106, 85);
 		panel.setBorder(BorderFactory.createTitledBorder("Thông tin tìm kiếm"));
 		panel.setBackground(null);
 		add(panel);
 		panel.setLayout(null);
+		btnUser = new JButton();
+		btnUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Dialog_User user=new Dialog_User();
+				user.setVisible(true);
+			}
+		});
+		btnUser.setBackground(Color.decode("#B5E6FB"));
+		btnUser.setBorderPainted(false);
+		btnUser.setIcon(new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png"));
+		btnUser.setBounds(1092, 5, 45, 45);
+		ImageIcon iconProfile = new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png");
+		iconProfile = new ImageIcon(iconProfile.getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH));
+		btnUser.setIcon(iconProfile);
+		pnNorth.add(btnUser);
+		// Đặt kích thước và tọa độ cho lblTitle
+		int labelWidth = 500; // Thay đổi kích thước theo ý muốn
+		int labelHeight = 40; // Thay đổi kích thước theo ý muốn
+		int labelX = (pnNorth.getWidth() - labelWidth) / 2; // Căn giữa theo chiều ngang
+		int labelY = (pnNorth.getHeight() - labelHeight) / 2; // Căn giữa theo chiều dọc
+		lblTitle.setBounds(labelX, labelY, labelWidth, labelHeight);
+		lblTitle.setFont(new Font("Arial", Font.BOLD, 25));
 		
-		JLabel lblNewLabel = new JLabel("Mã hóa đơn: ");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel = new myJLabel("Mã hóa đơn: ");
 		lblNewLabel.setBounds(22, 32, 118, 25);
 		panel.add(lblNewLabel);
 		
 		txtNhpMCn = new JTextField();
 		txtNhpMCn.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtNhpMCn.setText("Nhập mã cần tìm");
 		txtNhpMCn.setBounds(150, 28, 253, 34);
 		panel.add(txtNhpMCn);
 		txtNhpMCn.setColumns(10);
 		
-		JButton btnNewButton = new JButton("Tìm hóa đơn");
-		btnNewButton.setForeground(new Color(255, 255, 255));
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton.setBorder(BorderFactory.createLineBorder(new Color(235, 0, 255)));
-		btnNewButton.setBackground(new Color(255, 150, 238));
+		btnNewButton = new myJButton("Tìm hóa đơn");
 		btnNewButton.setBounds(413, 27, 161, 34);
 		panel.add(btnNewButton);
+
+		btnNewButton.addActionListener(this);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(10, 105, 541, 628);
+		panel_1.setBounds(10, 155, 541, 628);
 		panel_1.setBorder(BorderFactory.createTitledBorder("Hóa đơn đã bán hàng"));
 		add(panel_1);
 		panel_1.setLayout(null);
 		panel_1.setBackground(null);
 		
-		String cols[] = { "STT", "MaSP", "TenSP", "SL", "Gia" };
-		DefaultTableModel model = new DefaultTableModel(cols, 0);
+		String cols[] = { "MaSP", "TenSP", "SL", "Gia" };
+		model = new DefaultTableModel(cols, 0);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(Color.WHITE);
@@ -83,6 +208,7 @@ public class GD_TraSanPham extends JPanel {
 		panel_1.add(panel_2);
 		panel_2.setLayout(null);
 		table = new JTable(model);
+		table.addMouseListener(this);
 		JScrollPane scrollpane = new JScrollPane(table);
 		scrollpane.setBounds(0, 0, 521, 176);
 		panel_2.add(scrollpane);
@@ -101,17 +227,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5.setLayout(null);
 		panel_5.setBackground(null);
 		
-		JLabel lblNewLabel_1 = new JLabel("Mã hóa đơn:");
+		myJLabel lblNewLabel_1 = new myJLabel("Mã hóa đơn:");
 		lblNewLabel_1.setBounds(5, 10, 86, 19);
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel_5.add(lblNewLabel_1);
 		
-		JPanel panel_6 = new JPanel();
-		panel_6.setBackground(Color.WHITE);
-		panel_6.setBounds(130, 10, 348, 20);
-		FlowLayout flowLayout = (FlowLayout) panel_6.getLayout();
-		flowLayout.setHgap(10);
-		panel_5.add(panel_6);
+		txtHoaDon = new JTextField();
+		txtHoaDon.setBackground(Color.WHITE);
+		txtHoaDon.setBounds(130, 10, 348, 20);
+		panel_5.add(txtHoaDon);
 		
 		JPanel panel_5_1 = new JPanel();
 		panel_5_1.setBackground(null);
@@ -119,15 +242,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_1.setBounds(10, 48, 488, 40);
 		panel_3.add(panel_5_1);
 		
-		JLabel lblNewLabel_1_1 = new JLabel("Mã nhân viên:");
-		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_1 = new myJLabel("Mã nhân viên:");
 		lblNewLabel_1_1.setBounds(5, 10, 97, 19);
 		panel_5_1.add(lblNewLabel_1_1);
 		
-		JPanel panel_6_1 = new JPanel();
-		panel_6_1.setBackground(Color.WHITE);
-		panel_6_1.setBounds(130, 10, 348, 20);
-		panel_5_1.add(panel_6_1);
+		txtMaNV = new JTextField();
+		txtMaNV.setBackground(Color.WHITE);
+		txtMaNV.setBounds(130, 10, 348, 20);
+		panel_5_1.add(txtMaNV);
 		
 		JPanel panel_5_2 = new JPanel();
 		panel_5_2.setBackground(null);
@@ -135,15 +257,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_2.setBounds(10, 88, 488, 40);
 		panel_3.add(panel_5_2);
 		
-		JLabel lblNewLabel_1_2 = new JLabel("Mã KM:");
-		lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_2 = new myJLabel("Mã KM:");
 		lblNewLabel_1_2.setBounds(5, 10, 86, 19);
 		panel_5_2.add(lblNewLabel_1_2);
 		
-		JPanel panel_6_2 = new JPanel();
-		panel_6_2.setBackground(Color.WHITE);
-		panel_6_2.setBounds(130, 10, 348, 20);
-		panel_5_2.add(panel_6_2);
+		txtMaKM = new JTextField();
+		txtMaKM.setBackground(Color.WHITE);
+		txtMaKM.setBounds(130, 10, 348, 20);
+		panel_5_2.add(txtMaKM);
 		
 		JPanel panel_5_3 = new JPanel();
 		panel_5_3.setBackground(null);
@@ -151,15 +272,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_3.setBounds(10, 128, 488, 40);
 		panel_3.add(panel_5_3);
 		
-		JLabel lblNewLabel_1_3 = new JLabel("Mã KH:");
-		lblNewLabel_1_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_3 = new myJLabel("Mã KH:");
 		lblNewLabel_1_3.setBounds(5, 10, 86, 19);
 		panel_5_3.add(lblNewLabel_1_3);
 		
-		JPanel panel_6_3 = new JPanel();
-		panel_6_3.setBackground(Color.WHITE);
-		panel_6_3.setBounds(130, 10, 348, 20);
-		panel_5_3.add(panel_6_3);
+		txtMaKH = new JTextField();
+		txtMaKH.setBackground(Color.WHITE);
+		txtMaKH.setBounds(130, 10, 348, 20);
+		panel_5_3.add(txtMaKH);
 		
 		JPanel panel_5_4 = new JPanel();
 		panel_5_4.setBackground(null);
@@ -167,15 +287,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_4.setBounds(10, 167, 488, 40);
 		panel_3.add(panel_5_4);
 		
-		JLabel lblNewLabel_1_4 = new JLabel("Họ và tên:");
-		lblNewLabel_1_4.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_4 = new myJLabel("Họ và tên:");
 		lblNewLabel_1_4.setBounds(5, 10, 86, 19);
 		panel_5_4.add(lblNewLabel_1_4);
 		
-		JPanel panel_6_4 = new JPanel();
-		panel_6_4.setBackground(Color.WHITE);
-		panel_6_4.setBounds(130, 10, 348, 20);
-		panel_5_4.add(panel_6_4);
+		txtHoTen = new JTextField();
+		txtHoTen.setBackground(Color.WHITE);
+		txtHoTen.setBounds(130, 10, 348, 20);
+		panel_5_4.add(txtHoTen);
 		
 		JPanel panel_5_5 = new JPanel();
 		panel_5_5.setBackground(null);
@@ -183,15 +302,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_5.setBounds(10, 207, 488, 40);
 		panel_3.add(panel_5_5);
 		
-		JLabel lblNewLabel_1_5 = new JLabel("Giới tính:");
-		lblNewLabel_1_5.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_5 = new myJLabel("Giới tính:");
 		lblNewLabel_1_5.setBounds(5, 10, 86, 19);
 		panel_5_5.add(lblNewLabel_1_5);
 		
-		JPanel panel_6_5 = new JPanel();
-		panel_6_5.setBackground(Color.WHITE);
-		panel_6_5.setBounds(130, 10, 348, 20);
-		panel_5_5.add(panel_6_5);
+		txtGioiTinh = new JTextField();
+		txtGioiTinh.setBackground(Color.WHITE);
+		txtGioiTinh.setBounds(130, 10, 348, 20);
+		panel_5_5.add(txtGioiTinh);
 		
 		JPanel panel_5_6 = new JPanel();
 		panel_5_6.setBackground(null);
@@ -199,15 +317,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_6.setBounds(10, 247, 488, 40);
 		panel_3.add(panel_5_6);
 		
-		JLabel lblNewLabel_1_6 = new JLabel("Số điện thoại:");
-		lblNewLabel_1_6.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_6 = new myJLabel("Số điện thoại:");
 		lblNewLabel_1_6.setBounds(5, 10, 115, 19);
 		panel_5_6.add(lblNewLabel_1_6);
 		
-		JPanel panel_6_6 = new JPanel();
-		panel_6_6.setBackground(Color.WHITE);
-		panel_6_6.setBounds(130, 10, 348, 20);
-		panel_5_6.add(panel_6_6);
+		txtSDT = new JTextField();
+		txtSDT.setBackground(Color.WHITE);
+		txtSDT.setBounds(130, 10, 348, 20);
+		panel_5_6.add(txtSDT);
 		
 		JPanel panel_5_7 = new JPanel();
 		panel_5_7.setBackground(null);
@@ -215,15 +332,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_7.setBounds(10, 285, 488, 40);
 		panel_3.add(panel_5_7);
 		
-		JLabel lblNewLabel_1_7 = new JLabel("Ngày mua:");
-		lblNewLabel_1_7.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_7 = new myJLabel("Ngày mua:");
 		lblNewLabel_1_7.setBounds(5, 10, 86, 19);
 		panel_5_7.add(lblNewLabel_1_7);
 		
-		JPanel panel_6_7 = new JPanel();
-		panel_6_7.setBackground(Color.WHITE);
-		panel_6_7.setBounds(130, 10, 348, 20);
-		panel_5_7.add(panel_6_7);
+		txtNgayMua = new JTextField();
+		txtNgayMua.setBackground(Color.WHITE);
+		txtNgayMua.setBounds(130, 10, 348, 20);
+		panel_5_7.add(txtNgayMua);
 		
 		JPanel panel_5_8 = new JPanel();
 		panel_5_8.setBackground(null);
@@ -231,20 +347,19 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_8.setBounds(10, 325, 488, 40);
 		panel_3.add(panel_5_8);
 		
-		JLabel lblNewLabel_1_8 = new JLabel("Thành tiền:");
-		lblNewLabel_1_8.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_8 = new myJLabel("Thành tiền:");
 		lblNewLabel_1_8.setBounds(5, 10, 86, 19);
 		panel_5_8.add(lblNewLabel_1_8);
 		
-		JPanel panel_6_8 = new JPanel();
-		panel_6_8.setBackground(Color.WHITE);
-		panel_6_8.setBounds(130, 10, 348, 20);
-		panel_5_8.add(panel_6_8);
+		txtThanhTien = new JTextField();
+		txtThanhTien.setBackground(Color.WHITE);
+		txtThanhTien.setBounds(130, 10, 348, 20);
+		panel_5_8.add(txtThanhTien);
 		
 		JPanel panel_1_1 = new JPanel();
 		panel_1_1.setBackground(null);
 		panel_1_1.setBorder(BorderFactory.createTitledBorder("Hóa đơn đã bán hàng"));
-		panel_1_1.setBounds(575, 105, 541, 628);
+		panel_1_1.setBounds(575, 155, 541, 628);
 		add(panel_1_1);
 		panel_1_1.setLayout(null);
 		
@@ -254,9 +369,10 @@ public class GD_TraSanPham extends JPanel {
 		panel_2_1.setBounds(10, 74, 521, 126);
 		panel_1_1.add(panel_2_1);
 		
-		DefaultTableModel model_1 = new DefaultTableModel(cols, 0);
+		model_1 = new DefaultTableModel(cols, 0);
 		table_1 = new JTable(model_1);
 		JScrollPane scrollpane_1 = new JScrollPane(table_1);
+		table_1.addMouseListener(this);
 		scrollpane_1.setBounds(0, 0, 521, 176);
 		panel_2_1.add(scrollpane_1);
 		
@@ -273,15 +389,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_9.setBounds(10, 10, 488, 40);
 		panel_3_1.add(panel_5_9);
 		
-		JLabel lblNewLabel_1_9 = new JLabel("Mã hóa đơn:");
-		lblNewLabel_1_9.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_9 = new myJLabel("Mã hóa đơn:");
 		lblNewLabel_1_9.setBounds(5, 10, 86, 19);
 		panel_5_9.add(lblNewLabel_1_9);
 		
-		JPanel panel_6_9 = new JPanel();
-		panel_6_9.setBackground(Color.WHITE);
-		panel_6_9.setBounds(130, 10, 348, 20);
-		panel_5_9.add(panel_6_9);
+		txtHoaDon_1 = new JTextField();
+		txtHoaDon_1.setBackground(Color.WHITE);
+		txtHoaDon_1.setBounds(130, 10, 348, 20);
+		panel_5_9.add(txtHoaDon_1);
 		
 		JPanel panel_5_1_1 = new JPanel();
 		panel_5_1_1.setBackground(null);
@@ -289,15 +404,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_1_1.setBounds(10, 48, 488, 40);
 		panel_3_1.add(panel_5_1_1);
 		
-		JLabel lblNewLabel_1_1_1 = new JLabel("Mã nhân viên:");
-		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_1_1 = new myJLabel("Mã nhân viên:");
 		lblNewLabel_1_1_1.setBounds(5, 10, 102, 19);
 		panel_5_1_1.add(lblNewLabel_1_1_1);
 		
-		JPanel panel_6_1_1 = new JPanel();
-		panel_6_1_1.setBackground(Color.WHITE);
-		panel_6_1_1.setBounds(130, 10, 348, 20);
-		panel_5_1_1.add(panel_6_1_1);
+		txtMaNV_1 = new JTextField();
+		txtMaNV_1.setBackground(Color.WHITE);
+		txtMaNV_1.setBounds(130, 10, 348, 20);
+		panel_5_1_1.add(txtMaNV_1);
 		
 		JPanel panel_5_2_1 = new JPanel();
 		panel_5_2_1.setBackground(null);
@@ -305,15 +419,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_2_1.setBounds(10, 88, 488, 40);
 		panel_3_1.add(panel_5_2_1);
 		
-		JLabel lblNewLabel_1_2_1 = new JLabel("Mã KH:");
-		lblNewLabel_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_2_1 = new myJLabel("Mã KH:");
 		lblNewLabel_1_2_1.setBounds(5, 10, 86, 19);
 		panel_5_2_1.add(lblNewLabel_1_2_1);
 		
-		JPanel panel_6_2_1 = new JPanel();
-		panel_6_2_1.setBackground(Color.WHITE);
-		panel_6_2_1.setBounds(130, 10, 348, 20);
-		panel_5_2_1.add(panel_6_2_1);
+		txtMaKH_1 = new JTextField();
+		txtMaKH_1.setBackground(Color.WHITE);
+		txtMaKH_1.setBounds(130, 10, 348, 20);
+		panel_5_2_1.add(txtMaKH_1);
 		
 		JPanel panel_5_3_1 = new JPanel();
 		panel_5_3_1.setBackground(null);
@@ -321,15 +434,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_3_1.setBounds(10, 128, 488, 40);
 		panel_3_1.add(panel_5_3_1);
 		
-		JLabel lblNewLabel_1_3_1 = new JLabel("Họ và tên:");
-		lblNewLabel_1_3_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_3_1 = new myJLabel("Họ và tên:");
 		lblNewLabel_1_3_1.setBounds(5, 10, 86, 19);
 		panel_5_3_1.add(lblNewLabel_1_3_1);
 		
-		JPanel panel_6_3_1 = new JPanel();
-		panel_6_3_1.setBackground(Color.WHITE);
-		panel_6_3_1.setBounds(130, 10, 348, 20);
-		panel_5_3_1.add(panel_6_3_1);
+		txtHoTen_1 = new JTextField();
+		txtHoTen_1.setBackground(Color.WHITE);
+		txtHoTen_1.setBounds(130, 10, 348, 20);
+		panel_5_3_1.add(txtHoTen_1);
 		
 		JPanel panel_5_4_1 = new JPanel();
 		panel_5_4_1.setBackground(null);
@@ -337,15 +449,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_4_1.setBounds(10, 167, 488, 40);
 		panel_3_1.add(panel_5_4_1);
 		
-		JLabel lblNewLabel_1_4_1 = new JLabel("Giới tính:");
-		lblNewLabel_1_4_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_4_1 = new myJLabel("Giới tính:");
 		lblNewLabel_1_4_1.setBounds(5, 10, 86, 19);
 		panel_5_4_1.add(lblNewLabel_1_4_1);
 		
-		JPanel panel_6_4_1 = new JPanel();
-		panel_6_4_1.setBackground(Color.WHITE);
-		panel_6_4_1.setBounds(130, 10, 348, 20);
-		panel_5_4_1.add(panel_6_4_1);
+		txtGioiTinh_1 = new JTextField();
+		txtGioiTinh_1.setBackground(Color.WHITE);
+		txtGioiTinh_1.setBounds(130, 10, 348, 20);
+		panel_5_4_1.add(txtGioiTinh_1);
 		
 		JPanel panel_5_5_1 = new JPanel();
 		panel_5_5_1.setBackground(null);
@@ -353,15 +464,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_5_1.setBounds(10, 207, 488, 40);
 		panel_3_1.add(panel_5_5_1);
 		
-		JLabel lblNewLabel_1_5_1 = new JLabel("Số điện thoại:");
-		lblNewLabel_1_5_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_5_1 = new myJLabel("Số điện thoại:");
 		lblNewLabel_1_5_1.setBounds(5, 10, 103, 19);
 		panel_5_5_1.add(lblNewLabel_1_5_1);
 		
-		JPanel panel_6_5_1 = new JPanel();
-		panel_6_5_1.setBackground(Color.WHITE);
-		panel_6_5_1.setBounds(130, 10, 348, 20);
-		panel_5_5_1.add(panel_6_5_1);
+		txtSDT_1 = new JTextField();
+		txtSDT_1.setBackground(Color.WHITE);
+		txtSDT_1.setBounds(130, 10, 348, 20);
+		panel_5_5_1.add(txtSDT_1);
 		
 		JPanel panel_5_6_1 = new JPanel();
 		panel_5_6_1.setBackground(null);
@@ -369,15 +479,14 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_6_1.setBounds(10, 247, 488, 40);
 		panel_3_1.add(panel_5_6_1);
 		
-		JLabel lblNewLabel_1_6_1 = new JLabel("Ngày trả:");
-		lblNewLabel_1_6_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_6_1 = new myJLabel("Ngày trả:");
 		lblNewLabel_1_6_1.setBounds(5, 10, 86, 19);
 		panel_5_6_1.add(lblNewLabel_1_6_1);
 		
-		JPanel panel_6_6_1 = new JPanel();
-		panel_6_6_1.setBackground(Color.WHITE);
-		panel_6_6_1.setBounds(130, 10, 348, 20);
-		panel_5_6_1.add(panel_6_6_1);
+		txtNgayTra = new JTextField();
+		txtNgayTra.setBackground(Color.WHITE);
+		txtNgayTra.setBounds(130, 10, 348, 20);
+		panel_5_6_1.add(txtNgayTra);
 		
 		JPanel panel_5_7_1 = new JPanel();
 		panel_5_7_1.setBackground(null);
@@ -385,51 +494,315 @@ public class GD_TraSanPham extends JPanel {
 		panel_5_7_1.setBounds(10, 285, 488, 40);
 		panel_3_1.add(panel_5_7_1);
 		
-		JLabel lblNewLabel_1_7_1 = new JLabel("Số tiền trả:");
-		lblNewLabel_1_7_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		myJLabel lblNewLabel_1_7_1 = new myJLabel("Số tiền trả:");
 		lblNewLabel_1_7_1.setBounds(5, 10, 86, 19);
 		panel_5_7_1.add(lblNewLabel_1_7_1);
+
+		txtTienTra = new JTextField();
+		txtTienTra.setBackground(Color.WHITE);
+		txtTienTra.setBounds(130, 10, 348, 20);
+		panel_5_7_1.add(txtTienTra);
 		
-		JPanel panel_6_7_1 = new JPanel();
-		panel_6_7_1.setBackground(Color.WHITE);
-		panel_6_7_1.setBounds(130, 10, 348, 20);
-		panel_5_7_1.add(panel_6_7_1);
-		
-		txtNhpLDo = new JTextField();
-		txtNhpLDo.setText("Nhập lý do trả hàng");
+		txtNhpLDo = new PlaceholderTextField();
+		txtNhpLDo.setPlaceholder("Nhập lý do trả hàng");
 		txtNhpLDo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtNhpLDo.setBounds(10, 566, 367, 31);
 		panel_1_1.add(txtNhpLDo);
 		txtNhpLDo.setColumns(10);
 		
-		JButton btnNewButton_1 = new JButton("Xác nhận");
-		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton_1.setForeground(new Color(255, 255, 255));
-		btnNewButton_1.setBorder(BorderFactory.createLineBorder(new Color(235, 0, 255)));
-		btnNewButton_1.setBackground(new Color(255, 150, 238));
+		btnNewButton_1 = new myJButton("Xác nhận");
+		btnNewButton_1.setBlue();
 		btnNewButton_1.setBounds(387, 566, 144, 31);
 		panel_1_1.add(btnNewButton_1);
+		btnNewButton_1.addActionListener(this);
 		
-		txtNhpMSn = new JTextField();
-		txtNhpMSn.setText("Nhập mã sản phẩm");
+		txtNhpMSn = new PlaceholderTextField();
+		txtNhpMSn.setPlaceholder("Nhập mã sản phẩm");
 		txtNhpMSn.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtNhpMSn.setColumns(10);
 		txtNhpMSn.setBounds(10, 21, 254, 31);
 		panel_1_1.add(txtNhpMSn);
 		
-		txtNhpSLng = new JTextField();
-		txtNhpSLng.setText("Nhập số lượng");
+		txtNhpSLng = new PlaceholderTextField();
+		txtNhpSLng.setPlaceholder("Nhập số lượng");
 		txtNhpSLng.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtNhpSLng.setColumns(10);
 		txtNhpSLng.setBounds(274, 21, 144, 31);
 		panel_1_1.add(txtNhpSLng);
 		
-		JButton btnThm = new JButton("Thêm");
-		btnThm.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnThm = new myJButton("Thêm");
 		btnThm.setBounds(428, 18, 103, 34);
-		btnThm.setForeground(new Color(255, 255, 255));
-		btnThm.setBorder(BorderFactory.createLineBorder(new Color(235, 0, 255)));
-		btnThm.setBackground(new Color(255, 150, 238));
 		panel_1_1.add(btnThm);
+		btnThm.addActionListener(this);
+	}
+
+	private String taoMaHoaDon() {
+		// HDddmmyyxxxxxxx
+        Date date = new Date(); 
+        DateFormat dateFormat = new SimpleDateFormat("ddMMyy");  
+        String strDate = dateFormat.format(date);
+        
+        int number = HoaDon_DAO.laySLHoaDonTheoNgay(strDate) + 1;
+        int desiredWidth = 7; // Total width including leading zeros
+
+        // Convert the integer to a formatted string
+        String formattedString = String.format("%0" + desiredWidth + "d", number);
+        
+		return "HD" + strDate + formattedString;
+	}
+
+	private Date getDate() {
+		Date date = new Date(), date_1 = null; 
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+	    String strDate = dateFormat.format(date);
+	    
+	    try {
+	    	date_1 = dateFormat.parse(strDate);
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+	    
+	    return date_1;
+	}
+
+	private void capnhatThanhTien() {
+		double tien = 0;
+		for (ChiTietHoaDon _e : list) {
+			tien += _e.getThanhTien();
+		}
+		txtTienTra.setText(String.valueOf(tien));
+	}
+
+	public long countDaysFromToday(Date date) {
+        // Tính khoảng cách giữa hai ngày
+        long diffInMillies = Math.abs((new Date()).getTime() - date.getTime());
+        return TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if (o == btnNewButton) {
+			String ma = txtNhpMCn.getText();
+			HoaDon_DAO.docTubang();
+			SanPham_Dao.docTubang();
+			ChiTietHoaDon_DAO.docTubang();
+			model.getDataVector().removeAllElements();
+			model_1.getDataVector().removeAllElements();
+			list.clear();
+			
+			HoaDon hd = HoaDon_DAO.layHoaDonTheoMa(ma);
+			ArrayList<ChiTietHoaDon> lst = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(ma);
+
+			if (hd == null) {
+				JOptionPane.showMessageDialog(this, "Không tìm thấy hóa đơn");
+				return;
+			}
+			
+			currentHoaDon = hd;
+			
+			if (countDaysFromToday(hd.getNgayXuat()) > 7) {
+				JOptionPane.showMessageDialog(this, "Ngày xuất của hóa đơn đã mua quá 7 ngày trước");
+				return;
+			}
+
+			for (int i = 0; i < lst.size(); i++) {
+				ChiTietHoaDon cthd = lst.get(i);
+				model.addRow(
+						new Object[] {
+								//i+1,
+								cthd.getSanPham().getMaSP(),
+								cthd.getSanPham().getTenSP(),
+								cthd.getSoLuong(),
+								cthd.getThanhTien()
+						}
+					);
+			}
+
+			double tien = 0;
+			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(hd.getMaHD());
+			for (ChiTietHoaDon _e : cthd_list) {
+				tien += _e.getThanhTien();
+			}
+
+			txtHoaDon.setText(hd.getMaHD());
+			txtMaNV.setText(hd.getNhanVien().getMaNV());
+			txtMaKM.setText(hd.getKhuyenMai().getMaKM());
+			txtMaKH.setText(hd.getKhachHang().getMaKhachHang());
+			txtHoTen.setText(hd.getKhachHang().getTenKhachHang());
+			txtGioiTinh.setText(hd.getKhachHang().isGioiTinh()? "Nam" : "Nữ");
+			txtSDT.setText(hd.getKhachHang().getSoDienThoai());
+			txtNgayMua.setText(hd.getNgayXuat().toString());
+			txtThanhTien.setText(String.valueOf(tien));
+
+			
+			txtHoaDon_1.setText(taoMaHoaDon()); // TODO: Tạo mã hóa đơn tự động
+			txtMaNV_1.setText(hd.getNhanVien().getMaNV()); //TODO: Lấy nhân viên đang dùng app
+			txtMaKH_1.setText(hd.getKhachHang().getMaKhachHang());
+			txtHoTen_1.setText(hd.getKhachHang().getTenKhachHang());
+			txtGioiTinh_1.setText(hd.getKhachHang().isGioiTinh()? "Nam" : "Nữ");
+			txtSDT_1.setText(hd.getKhachHang().getSoDienThoai());
+			txtNgayTra.setText(getDate().toString());
+			txtThanhTien.setText("0");
+			
+
+			HoaDonTra = new HoaDon();
+			HoaDonTra.setMaHD(taoMaHoaDon());
+			HoaDonTra.setNhanVien(hd.getNhanVien());
+			HoaDonTra.setKhachHang(hd.getKhachHang());
+			HoaDonTra.setNgayXuat(getDate());
+		}
+		if (o == btnThm) {
+			if (currentHoaDon == null) {
+				JOptionPane.showMessageDialog(this, "Vui lòng tìm hóa đơn trước");
+				return;
+			}
+			String maSP = txtNhpMSn.getText();
+			String sl = txtNhpSLng.getText();
+			
+			// Kiểm tra mã Sản Pham
+			ChiTietHoaDon cthd = null;
+			
+			ArrayList<ChiTietHoaDon> cthd_list = ChiTietHoaDon_DAO.layChiTietHoaDonTheoMaHD(currentHoaDon.getMaHD());
+			for (ChiTietHoaDon _e : cthd_list) {
+				if (maSP.equals(_e.getSanPham().getMaSP())) {
+					cthd = _e;
+					break;
+				}
+			}
+
+			if (cthd == null) {
+				JOptionPane.showMessageDialog(this, "Sản phẩm bạn nhập không có trong hóa đơn");
+				return;
+			}
+			if (cthd.getSoLuong() < Integer.parseInt(sl)) {
+				JOptionPane.showMessageDialog(this, "Số lượng sản phẩm cần trả vượt quá số lượng sản phẩm đã mua");
+				return;
+			}
+			
+			for (int i = 0; i < model_1.getRowCount(); i++) {
+				if (model_1.getValueAt(i, 0).equals(maSP)) {
+					if (Integer.parseInt(sl) <= 0) {
+						model_1.removeRow(i);
+						{
+							for (ChiTietHoaDon _f : list) {
+								if (_f.getSanPham().getMaSP().equals(maSP)) {
+									list.remove(_f);
+									break;
+								}
+							}
+						}
+						capnhatThanhTien();
+						return;
+					}
+					model_1.setValueAt(sl, i, 2);
+					{
+						for (ChiTietHoaDon _f : list) {
+							if (_f.getSanPham().getMaSP().equals(maSP)) {
+								_f.setSoLuong(Integer.parseInt(sl));
+								break;
+							}
+						}
+					}
+					capnhatThanhTien();
+					return;
+				}
+			}
+
+			if (Integer.parseInt(sl) > 0)
+				model_1.addRow(
+						new Object[] {
+								cthd.getSanPham().getMaSP(),
+								cthd.getSanPham().getTenSP(),
+								sl,
+								cthd.getThanhTien()
+						}
+				);
+			list.add(new ChiTietHoaDon(HoaDonTra, cthd.getSanPham(), Integer.parseInt(sl)));
+			capnhatThanhTien();
+		}
+		if (o == btnNewButton_1) {
+			if (currentHoaDon == null) {
+				JOptionPane.showMessageDialog(this, "Vui lòng tìm hóa đơn trước");
+				return;
+			}
+			HoaDonTra.setGhiChu(txtNhpLDo.getText());
+			HoaDonTra.setLoaiHD("Hóa đơn trả");
+			if (!HoaDon_DAO.them(HoaDonTra)) {
+				JOptionPane.showMessageDialog(this, "Lưu hóa đơn thất bại");
+				return;
+			}
+			
+			for (ChiTietHoaDon x : list) {
+				ChiTietHoaDon_DAO.them(x);
+			}
+			
+			txtHoaDon.setText("");
+			txtMaNV.setText("");
+			txtMaKM.setText("");
+			txtMaKH.setText("");
+			txtHoTen.setText("");
+			txtGioiTinh.setText("");
+			txtSDT.setText("");
+			txtNgayMua.setText("");
+			txtThanhTien.setText("");
+
+			txtHoaDon_1.setText(""); 
+			txtMaNV_1.setText("");
+			txtMaKH_1.setText("");
+			txtHoTen_1.setText("");
+			txtGioiTinh_1.setText("");
+			txtSDT_1.setText("");
+			txtNgayTra.setText("");
+			txtTienTra.setText("");
+			
+
+			model.getDataVector().removeAllElements();
+			model_1.getDataVector().removeAllElements();
+			currentHoaDon = null;
+			HoaDonTra = null;
+
+			JOptionPane.showMessageDialog(this, "Đã lưu hóa đơn trả hàng");
+		}
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		Object o = e.getSource();
+		if (o == table || o == table_1) {
+			int row = ((JTable)o).getSelectedRow();
+			if (row >= 0) {
+				String maSP = ((JTable)o).getValueAt(row, 0).toString();
+				String sl = ((JTable)o).getValueAt(row, 2).toString();
+				txtNhpMSn.setText(maSP);
+				txtNhpSLng.setText(sl);
+			}
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

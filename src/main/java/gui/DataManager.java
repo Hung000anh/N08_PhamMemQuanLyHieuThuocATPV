@@ -2,6 +2,8 @@ package gui;
 
 import java.util.ArrayList;
 
+import entity.ChiTietHoaDon;
+
 
 
 public class DataManager {
@@ -11,6 +13,15 @@ public class DataManager {
 	private static String rolePassword = "QLpassword";
 	private static boolean loadSDTCho = false;
 	private static String maNhanVien;
+	private static ArrayList<ChiTietHoaDon> dsCTHDTam=new ArrayList<ChiTietHoaDon>();
+	
+	
+	public static ArrayList<ChiTietHoaDon> getDsCTHDTam() {
+		return dsCTHDTam;
+	}
+	public static void setDsCTHDTam(ArrayList<ChiTietHoaDon> dsCTHDTam) {
+		DataManager.dsCTHDTam = dsCTHDTam;
+	}
 	public static String getUserName() {
 		return userName;
 	}

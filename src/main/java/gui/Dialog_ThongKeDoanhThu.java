@@ -2,11 +2,11 @@ package gui;
 
 import javax.swing.JPanel;
 import java.awt.Color;
-
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+
+import dao.ThongKe_Dao;
 
 public class Dialog_ThongKeDoanhThu extends JPanel {
 
@@ -16,13 +16,14 @@ public class Dialog_ThongKeDoanhThu extends JPanel {
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
+	private ThongKe_Dao tk_dao = new ThongKe_Dao();
 
 	/**
 	 * Create the panel.
 	 */
 	public Dialog_ThongKeDoanhThu() {
 		setLayout(null);
-		setSize(1140, 600);
+		setBounds(0, 0, 1200, 602);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(0, 204, 0));
@@ -108,5 +109,21 @@ public class Dialog_ThongKeDoanhThu extends JPanel {
 		textField_4.setColumns(10);
 		textField_4.setBounds(34, 50, 144, 26);
 		panel_4.add(textField_4);
+	}
+	
+	public void setDoanhThu(String dt) {
+		textField.setText(dt);
+	}
+	
+	public void setDoanhThuThuoc(String dt) {
+		textField_2.setText(dt);
+	}
+	
+	public void setDoanhThuDCYT(String dt) {
+		textField_3.setText(dt);
+	}
+	
+	public void setDoanhThuTPCN(String dt) {
+		textField_4.setText(dt);
 	}
 }

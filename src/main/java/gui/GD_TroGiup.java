@@ -10,11 +10,16 @@ import javax.swing.border.TitledBorder;
 import java.awt.FlowLayout;
 import javax.swing.border.EtchedBorder;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 public class GD_TroGiup extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	private JButton btnUser;
 
 	public GD_TroGiup() {
 		setBackground(new Color(246, 245, 255));
@@ -33,7 +38,21 @@ public class GD_TroGiup extends JPanel {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		panel.add(lblNewLabel);
-		
+		btnUser = new JButton();
+		btnUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Dialog_User user=new Dialog_User();
+				user.setVisible(true);
+			}
+		});
+		btnUser.setBackground(Color.decode("#B5E6FB"));
+		btnUser.setBorderPainted(false);
+		btnUser.setIcon(new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png"));
+		btnUser.setBounds(1092, 5, 45, 45);
+		ImageIcon iconProfile = new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png");
+		iconProfile = new ImageIcon(iconProfile.getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH));
+		btnUser.setIcon(iconProfile);
+		panel.add(btnUser);
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(SystemColor.window);
 		panel_1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2),
