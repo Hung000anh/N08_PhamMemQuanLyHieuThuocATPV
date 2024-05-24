@@ -29,7 +29,7 @@ public class KhuyenMaiSanPham_Dao {
             Connection con = Database.getInstance().getConnection();
             
             java.util.Date ngayHienTai = new java.util.Date();
-            
+             
             // Cập nhật trạng thái của các bản ghi có ngày bắt đầu <= ngày hiện tại và ngày kết thúc >= ngày hiện tại
             String updateActiveSql = "UPDATE KhuyenMaiSanPham SET trangThai = 1 WHERE ngayBatDau <= ? AND ngayKetThuc >= ? AND trangThai = 0"; 
             PreparedStatement updateActiveStatement = con.prepareStatement(updateActiveSql);

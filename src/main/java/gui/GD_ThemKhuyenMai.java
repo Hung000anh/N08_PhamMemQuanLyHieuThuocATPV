@@ -48,7 +48,7 @@ public class GD_ThemKhuyenMai extends JFrame implements ItemListener, MouseListe
 
 	
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(new Runnable() { 
             public void run() {
                 try {
                     GD_ThemKhuyenMai frame = new GD_ThemKhuyenMai();

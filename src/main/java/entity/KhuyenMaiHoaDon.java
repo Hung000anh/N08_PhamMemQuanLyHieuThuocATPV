@@ -14,7 +14,7 @@ public class KhuyenMaiHoaDon {
 	
 	
 	public KhuyenMaiHoaDon(String maKM, String tenKM, Date ngayBatDau, Date ngayKetThuc, Boolean loaiChuongTrinh,
-			Boolean trangThai, Double giaTriHoaDon, Double giamGiaHoaDon) {
+			Boolean trangThai, Double giaTriHoaDon, Double giamGiaHoaDon)  {
 		super();
 		this.maKM = maKM;
 		this.tenKM = tenKM;

@@ -25,7 +25,7 @@ public class SanPham implements Serializable{
 		super();
 		this.maSP = maSP;
 		this.tenSP = tenSP;
-		this.loai = loai;
+		this.loai = loai; 
 		this.ngayHetHan = ngayHetHan;
 		this.ngaySanXuat = ngaySanXuat;
 		this.donGiaNhap = donGiaNhap;
