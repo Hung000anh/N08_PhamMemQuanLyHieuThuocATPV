@@ -156,7 +156,7 @@ public class GD_DangNhap extends JFrame implements ActionListener{
 						DataManager.setRolePassword("NVpassword");
 						
 					   
-					    gD_TrangChu.btnNhanVien.setEnabled(false);
+					    gD_TrangChu.btnNhanVien.setEnabled(false); 
 					   
 					}
 	            gD_TrangChu.setVisible(true);

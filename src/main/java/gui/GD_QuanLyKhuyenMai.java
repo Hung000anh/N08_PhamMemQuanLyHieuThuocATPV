@@ -44,7 +44,7 @@ public class GD_QuanLyKhuyenMai extends JPanel implements ActionListener, MouseL
     private JButton btnSua;
     private JButton btnXemChiTiet;
     private JButton btnTim;
-    private JTable table;
+    private JTable table; 
 	private JComboBox txtLoai;
 
     public GD_QuanLyKhuyenMai() {
