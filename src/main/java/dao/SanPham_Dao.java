@@ -250,10 +250,11 @@ public class SanPham_Dao {
             return false; // Trả về false nếu có lỗi xảy ra trong quá trình xóa
         }
     }
-    public void goMaKhuyenMaiChoSanPham(String maSanPham) {
+    public void goMaKhuyenMaiChoSanPham(String maSanPham, String maKhuyenMai) {
         try (Connection con = Database.getInstance().getConnection();
-             PreparedStatement stmt = con.prepareStatement("UPDATE SanPham SET maKhuyenMai = NULL WHERE maSanPham = ?")) {
+             PreparedStatement stmt = con.prepareStatement("UPDATE SanPham SET maKhuyenMai = NULL WHERE maSanPham = ? AND maKhuyenMai = ?")) {
             stmt.setString(1, maSanPham);
+            stmt.setString(2, maKhuyenMai);
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Lỗi khi sửa mã khuyến mãi cho sản phẩm: " + e.getMessage());
