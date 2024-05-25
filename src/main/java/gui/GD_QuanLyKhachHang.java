@@ -32,7 +32,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-import dao.*;
+import dao.KhachHang_Dao;
 import entity.KhachHang;
 
 public class GD_QuanLyKhachHang extends JPanel implements ActionListener, MouseListener {
@@ -55,11 +55,9 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener, MouseL
 	private JButton btnTim;
 	private JButton btnXoaRong;
 	private JButton btnSua;
-	private JButton btnXoa;
 	private JButton btnThem;
 	private JComboBox<String> comboBoxLoaiTim;
 	private Date date;
-	private JButton btnUser;
 
 	public GD_QuanLyKhachHang() {
 		setBackground(new Color(246, 245, 255));
@@ -77,21 +75,7 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener, MouseL
 		lblNewLabel.setBounds(0, 0, 1140, 60);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(lblNewLabel);
-		btnUser = new JButton();
-		btnUser.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Dialog_User user=new Dialog_User();
-				user.setVisible(true);
-			}
-		});
-		btnUser.setBackground(Color.decode("#B5E6FB"));
-		btnUser.setBorderPainted(false);
-		btnUser.setIcon(new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png"));
-		btnUser.setBounds(1092, 5, 45, 45);
-		ImageIcon iconProfile = new ImageIcon("D://BaiTapLonPTUD_NHOM4//icon//icon_profile.png");
-		iconProfile = new ImageIcon(iconProfile.getImage().getScaledInstance(45, 45, java.awt.Image.SCALE_SMOOTH));
-		btnUser.setIcon(iconProfile);
-		panel.add(btnUser);
+
 		JPanel tt_KhachHang = new JPanel();
 		tt_KhachHang.setBackground(SystemColor.window);
 		tt_KhachHang.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2),
@@ -188,25 +172,17 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener, MouseL
 		btnThem = new JButton("Thêm");
 		btnThem.setToolTipText("");
 		btnThem.setFont(new Font("Arial", Font.BOLD, 16));
-		btnThem.setBounds(30, 38, 100, 40);
+		btnThem.setBounds(30, 38, 120, 40);
 		btnThem.setBackground(Color.decode("#4db05e"));
 //		btnThem.setBorderPainted(false);
 		chucNang.add(btnThem);
-
-		btnXoa = new JButton("Xóa");
-		btnXoa.setToolTipText("");
-		btnXoa.setFont(new Font("Arial", Font.BOLD, 16));
-		btnXoa.setBorderPainted(false);
-		btnXoa.setBackground(Color.decode("#ee1919"));
-		btnXoa.setBounds(150, 38, 100, 40);
-		chucNang.add(btnXoa);
 
 		btnSua = new JButton("Sửa");
 		btnSua.setToolTipText("thêm thông tin\r\n khách hàng");
 		btnSua.setFont(new Font("Arial", Font.BOLD, 16));
 		btnSua.setBorderPainted(false);
 		btnSua.setBackground(Color.decode("#26bfbf"));
-		btnSua.setBounds(270, 38, 100, 40);
+		btnSua.setBounds(180, 38, 120, 40);
 		chucNang.add(btnSua);
 
 		btnXoaRong = new JButton("Xóa rỗng");
@@ -214,7 +190,7 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener, MouseL
 		btnXoaRong.setFont(new Font("Arial", Font.BOLD, 15));
 		btnXoaRong.setBorderPainted(false);
 		btnXoaRong.setBackground(SystemColor.activeCaptionBorder);
-		btnXoaRong.setBounds(390, 38, 100, 40);
+		btnXoaRong.setBounds(330, 38, 120, 40);
 		chucNang.add(btnXoaRong);
 
 		textTuKhoaTim = new JTextField();
@@ -234,7 +210,7 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener, MouseL
 		btnTim.setFont(new Font("Arial", Font.BOLD, 16));
 		btnTim.setBorderPainted(false);
 		btnTim.setBackground(new Color(74, 131, 215));
-		btnTim.setBounds(510, 38, 100, 40);
+		btnTim.setBounds(480, 38, 120, 40);
 		chucNang.add(btnTim);
 
 		JLabel danhSach = new JLabel("Danh sách khách hàng");
@@ -256,14 +232,13 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener, MouseL
 		add(scroll);
 		btnXoaRong.addActionListener(this);
 		btnThem.addActionListener(this);
-		btnXoa.addActionListener(this);
 		btnSua.addActionListener(this);
 		btnTim.addActionListener(this);
 		btnThem.addActionListener(this);
 		rdoNam.addActionListener(this);
 		rdoNu.addActionListener(this);
 		table.addMouseListener(this);
-
+		loadMa();
 		loadData();
 	}
 
@@ -488,8 +463,6 @@ public class GD_QuanLyKhachHang extends JPanel implements ActionListener, MouseL
 			them();
 		} else if (obj.equals(btnXoaRong)) {
 			xoaTrang();
-		} else if (obj.equals(btnXoa)) {
-			xoa();
 		} else if (obj.equals(btnSua)) {
 			sua();
 		} else if (obj.equals(btnTim)) {
