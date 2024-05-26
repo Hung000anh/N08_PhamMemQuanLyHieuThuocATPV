@@ -258,6 +258,18 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		            return;
 		        }
 		        
+		        SanPham_Dao spd = new SanPham_Dao();
+//			    ArrayList<SanPham> danhSachSanPham = spd.docTubang();
+//			    for(SanPham sp : danhSachSanPham)
+//			    {
+//			    	if(sp.getMaSP().equals(txtMaSP.getText()));
+//			    	{
+//			    		JOptionPane.showMessageDialog(null, "Mã trùng");
+//			            return;
+//			    	}
+//			    }
+			    
+		        
 		        // Kiểm tra định dạng ngày tháng 
 		        String ngaySX = textNgaySX.getText();
 		        
@@ -301,13 +313,17 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		            JOptionPane.showMessageDialog(null, "Số lượng tồn và giá nhập phải là số nguyên dương hoặc số thực!");
 		            return;
 		        }
+		        
+		       
+			    
+		        
 		        Double dbGiaNhap = Double.parseDouble(giaNhap);
 		        int intSoLuongTon = Integer.parseInt(soLuongTon);
 		        Double dbGiaBan = dbGiaNhap + dbGiaNhap * 0.2;
 		        SanPham sanPham = new SanPham(txtMaSP.getText(), textTenSP.getText(), textLoaiSP.getText(), date1, date2, dbGiaNhap, intSoLuongTon, dbGiaBan, filePath, donviTinh, null);
 		        
 		        // Tiến hành thêm sản phẩm vào cơ sở dữ liệu
-		        SanPham_Dao spd = new SanPham_Dao();
+		        
 		        spd.themSanPham(sanPham);
 		        
 		        // Đoạn mã thêm sản phẩm vào cơ sở dữ liệu ở đây
@@ -400,7 +416,7 @@ public class GD_QuanLySanPham extends JPanel implements ActionListener, MouseLis
 		        Double dbGiaNhap = Double.parseDouble(giaNhap);
 		        int intSoLuongTon = Integer.parseInt(soLuongTon);
 		        Double dbGiaBan = dbGiaNhap + dbGiaNhap * 0.2;
-		        SanPham sanPham = new SanPham(txtMaSP.getText(), textTenSP.getText(), textLoaiSP.getText(), date1, date2, dbGiaNhap, intSoLuongTon, dbGiaBan , donviTinh, filePath , null);
+		        SanPham sanPham = new SanPham(txtMaSP.getText(), textTenSP.getText(), textLoaiSP.getText(), date1, date2, dbGiaNhap, intSoLuongTon, dbGiaBan ,  filePath ,donviTinh, null);
 //		        System.out.println(sanPham.getHinhAnhSanPham());
 //		        System.out.println(filePath);
 		        // Tiến hành thêm sản phẩm vào cơ sở dữ liệu
