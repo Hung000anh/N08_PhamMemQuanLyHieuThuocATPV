@@ -195,14 +195,14 @@ public class SanPham_Dao {
             stmt.setDouble(6, sp.getDonGiaNhap());
             stmt.setDouble(8, sp.getDonGiaBan());
             stmt.setInt(7, sp.getSoluongTon());
-            stmt.setString(9, sp.getDonViTinh());
-            stmt.setString(10, sp.getHinhAnhSanPham());
+            stmt.setString(9, sp.getHinhAnhSanPham());
+            stmt.setString(10, sp.getDonViTinh());
             stmt.setNull(11, Types.VARCHAR); // Đặt giá trị NULL cho trường maKM
             int affectedRows = stmt.executeUpdate(); // Lấy số bản ghi bị ảnh hưởng bởi câu lệnh DELETE
             stmt.close();
             return affectedRows > 0; // Trả về true nếu có bản ghi nào bị xóa, ngược lại trả về false
         } catch (SQLException e) {
-            System.err.println("Lỗi khi xóa sản phẩm: " + e.getMessage());
+            System.err.println("Lỗi khi thêm sản phẩm: " + e.getMessage());
             return false; // Trả về false nếu có lỗi xảy ra trong quá trình xóa
         }
         
@@ -222,8 +222,8 @@ public class SanPham_Dao {
             stmt.setDouble(5, sp.getDonGiaNhap());
             stmt.setDouble(6, sp.getDonGiaBan());
             stmt.setInt(7, sp.getSoluongTon());
-            stmt.setString(9, sp.getDonViTinh());
-            stmt.setString(8, sp.getHinhAnhSanPham());
+            stmt.setString(8, sp.getDonViTinh());
+            stmt.setString(9, sp.getHinhAnhSanPham());
             stmt.setString(10, sp.getMaSP());
             int affectedRows = stmt.executeUpdate(); // Lấy số bản ghi bị ảnh hưởng bởi câu lệnh DELETE
             stmt.close();
@@ -302,7 +302,7 @@ public class SanPham_Dao {
 
                 KhuyenMaiSanPham khuyenMai = new KhuyenMaiSanPham(rs.getString(11));
 
-                sp = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, soluongTon, donGiaBan, DonViTinh, hinhAnhSanPham, khuyenMai);
+                sp = new SanPham(maSP, tenSP, loai, ngayHetHan, ngaySanXuat, donGiaNhap, soluongTon, donGiaBan,hinhAnhSanPham, DonViTinh,  khuyenMai);
             }
             rs.close();
             statement.close();
